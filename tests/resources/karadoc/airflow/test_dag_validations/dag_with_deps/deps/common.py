@@ -1,0 +1,1 @@
+SCHEDULE_INTERVAL = "0 0 * * *"

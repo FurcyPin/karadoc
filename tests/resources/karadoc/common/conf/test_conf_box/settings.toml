@@ -1,0 +1,6 @@
+[default]
+custom.variable_A = "A"
+custom.variable_B = "B"
+
+[test]
+custom.variable_A = "OVERRIDE"

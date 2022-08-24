@@ -1,0 +1,3 @@
+[default]
+  dynaconf_include = ["conf/spark/settings.toml"]
+

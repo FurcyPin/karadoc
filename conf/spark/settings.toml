@@ -1,0 +1,10 @@
+[development.spark]
+  master = "local[4]"
+
+[development.spark.conf]
+  spark.executor.cores = 2
+  spark.executor.memory = "3g"
+  spark.driver.memory = "3g"
+  spark.driver.extraJavaOptions = "-Dlog4j.configuration=conf/spark/log4j.properties"
+  spark.sql.shuffle.partitions = 5
+  spark.sql.crossJoin.enabled = false

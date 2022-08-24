@@ -1,0 +1,2 @@
+*.sh    text eol=lf
+bin/karadoc text eol=lf

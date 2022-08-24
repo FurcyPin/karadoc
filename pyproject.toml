@@ -1,0 +1,131 @@
+[tool.poetry]
+name = "karadoc"
+version = "0.0.3"
+description = "Karadoc is a data engineering Python framework built on top of PySpark that simplifies ETL/ELT"
+authors = ["Furcy Pin", "Adel Skhiri"]
+license = "Apache-2.0"
+keywords = ["PySpark", "Data", "ETL", "ELT"]
+readme = "README.md"
+homepage = "https://github.com/FurcyPin/karadoc"
+repository = "https://github.com/FurcyPin/karadoc"
+
+[tool.poetry.dependencies]
+python = ">=3.6.2,<3.11"
+
+# Config Management
+dynaconf = "^2.2.3"
+
+# Coloring Terminal Output
+termcolor = "^1.1.0"
+
+# Graph
+networkx = "^2.2"
+graphviz = "^0.12"
+
+# Metadata table exports (used by command list_connections)
+tabulate = "^0.8.9"
+xlsxwriter = "^3.0.1"
+
+# Observability
+# opencensus = "^0.9.0"
+# opencensus-context = "^0.1.2"
+# opencensus-ext-azure = "^1.1.4"
+
+#####################################
+## Dependencies used by connectors ##
+#####################################
+# Azure Keyvault
+azure-keyvault = "^1.1.0"
+
+# Google Libraries
+google-cloud-bigquery = "^2.31.0"
+
+
+[tool.poetry.dev-dependencies]
+black = "^22.6.0"
+isort = "^5.10.1"
+flake8 = "^5.0.4"
+mypy = "^0.971"
+bandit = "^1.6.0"
+safety = "^2.1.1"
+pytest = "^6.2.0"
+pytest-cov = "^3.0.0"
+pipdeptree = "^2.2.1"
+
+pyspark = "^3.0.0"
+apache-airflow="^2.2.0"
+
+# Dependencies used by analyze_timeline
+matplotlib = "~3.1.1"
+pandas = "1.1.5|1.4.3"
+bigquery-frame = "~0.2.11"
+
+
+[tool.poetry.scripts]
+karadoc = 'karadoc.launcher:main'
+
+
+[build-system]
+requires = [
+    "setuptools==58.5.2",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+known_first_party = "karadoc"
+
+[tool.mypy]
+# --strict
+disallow_any_generics = true
+# mypy does not allow a subclass of a class of type Any. We put it to false until libraries will be type hinted
+disallow_subclassing_any = false
+# Some ds libraries are not type hinted yet so we set this to true
+ignore_missing_imports = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = false
+implicit_reexport = false
+strict_equality = true
+# --strict end
+exclude = ['env/', 'venv/', "build/", 'tests']
+
+
+[tool.pytest.ini_options]
+addopts = [
+    "-ra",
+    "--cov=karadoc",
+    "--doctest-modules"
+]
+
+testpaths = [
+    "karadoc",
+    "tests/karadoc",
+    "tests/test_launcher.py"
+]
+
+junit_family = "xunit2"
