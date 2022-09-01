@@ -62,3 +62,10 @@ jobs:
 
       - name: Create coverage.xml
         run: poetry run coverage xml
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' && matrix.poetry-version == '1.1.14'
