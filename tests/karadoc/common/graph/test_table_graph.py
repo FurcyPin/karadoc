@@ -115,6 +115,20 @@ class TestTableGraph(TestCase):
         self.assertSetEqual(set(subgraph.nodes), {"schema.t0", "schema.t1", "schema.t2", "schema.t12"})
         self.assertSetEqual(set(subgraph.edges), {("schema.t0", "schema.t2"), ("schema.t1", "schema.t12")})
 
+    def test_get_oriented_neighbor_subgraph_with_depth_2(self):
+        graph = build_test_graph()
+        subgraph = get_oriented_neighbor_subgraph(graph, 0, 0, ["2+schema.t12"])
+        self.assertSetEqual(set(subgraph.nodes), {"schema.t0", "schema.t1", "schema.t2", "schema.t12"})
+        self.assertSetEqual(
+            set(subgraph.edges),
+            {
+                ("schema.t0", "schema.t1"),
+                ("schema.t0", "schema.t2"),
+                ("schema.t1", "schema.t12"),
+                ("schema.t2", "schema.t12"),
+            },
+        )
+
     def test_get_orphans(self):
         graph = build_test_graph()
         actual = table_graph.get_orphans(graph)
