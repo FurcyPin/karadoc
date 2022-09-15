@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import dynaconf
 from dynaconf.utils.boxing import DynaBox
@@ -204,34 +204,6 @@ def get_action_file_name(conf_key: str) -> str:
     if action_file_name_conf:
         return ConfBox(action_file_name_conf).get(conf_key)
     raise MissingConfigurationException(conf_id=f"{get_env()}.get_action_file_name")
-
-
-def get_write_options_for_format(output_format: str) -> Dict:
-    """Return the configured write options for the given format
-
-    Example:
-
-    In your settings.toml:
-
-    .. code-block:: python
-
-        [default.spark.write.options.text]
-            compression = "gzip"
-
-        or
-
-        [default.spark.write.options]
-          text.compression = "gzip"
-
-    In your code:
-
-    compression = get_write_options_for_format("text")
-    """
-    format_write_options = dynaconf.settings.get("spark", {}).get("write", {}).get("options", {}).get(output_format)
-    if format_write_options is not None:
-        return format_write_options.to_dict()
-    else:
-        return {}
 
 
 def get_observability_conf() -> Optional[ConfBox]:

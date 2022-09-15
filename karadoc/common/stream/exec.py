@@ -61,13 +61,12 @@ def write_stream_output(job: SparkStreamJob, df, no_export: bool, streaming_mode
     """
     if df and type(df) is DataFrame:
         if df.columns:
-            ds_writer = None
             if no_export:
                 print("WARN: The job export has been disabled.")
             if job.external_output is not None and not no_export:
                 ds_writer = job.write_external_output(df, job.external_output)
             else:
-                ds_writer = df.writeStream.outputMode("append").format("console")
+                ds_writer = job.write_table(df)
             __start_stream_writer(ds_writer, job, streaming_mode, batch_interval)
         else:
             print("WARN: The job returned a DataFrame with zero columns. The output will not be serialized.")
@@ -77,8 +76,11 @@ def __start_stream_writer(ds_writer: DataStreamWriter, job: SparkStreamJob, stre
     checkpoint_location = get_checkpoint_location(job.output)
     ds_writer = ds_writer.option("checkpointLocation", checkpoint_location)
     streaming_modes = ["once", "microbatch"]
-    if streaming_mode == "microbatch" and batch_interval is not None:
-        ds_writer = ds_writer.trigger(processingTime=batch_interval)
+    if streaming_mode == "microbatch":
+        if batch_interval is None:
+            raise ValueError("batch_interval is required for the microbatch mode")
+        else:
+            ds_writer = ds_writer.trigger(processingTime=batch_interval)
     elif streaming_mode == "once":
         ds_writer = ds_writer.trigger(once=True)
     else:

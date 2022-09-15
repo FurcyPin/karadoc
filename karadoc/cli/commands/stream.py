@@ -16,6 +16,10 @@ from karadoc.common.model import variables
 from karadoc.common.stream.spark_stream_job import SparkStreamJob
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.connection_validations import validate_connections
+from karadoc.common.validations.job_validations import (
+    validate_inputs,
+    validate_output_partition,
+)
 
 
 def inspect_df(df: DataFrame):
@@ -33,6 +37,8 @@ def inspect_job(job: SparkStreamJob):
 def _run_job(args: Namespace, job: SparkStreamJob, **kwargs):
     stream.exec.print_job_properties(job)
     fail_if_results(validate_connections(job))
+    fail_if_results(validate_inputs(job))
+    fail_if_results(validate_output_partition(job))
     if job.disable:
         if not args.dry:
             raise JobDisabledException()

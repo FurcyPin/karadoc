@@ -3,6 +3,7 @@ import re
 from typing import List, Optional, Tuple, Type
 
 from karadoc.common.conf import get_model_folder_location
+from karadoc.common.job_core.job_base import JobBase
 from karadoc.common.model import file_index
 
 
@@ -15,11 +16,10 @@ def get_data_location(table_name: str) -> str:
     return "data/hive/warehouse/%s.db/%s" % (schema_name, table_name)
 
 
-def get_folder_location(table_name: str) -> Optional[str]:
+def get_folder_location(table_name: str, job_type: Type[JobBase]) -> Optional[str]:
     (schema_name, table_name, _) = parse_table_name(table_name)
-    from karadoc.common.run.spark_batch_job import SparkBatchJob
 
-    path = file_index.get_action_file(schema_name, table_name, SparkBatchJob)
+    path = file_index.get_action_file(schema_name, table_name, job_type)
     if path:
         return os.path.split(path)[0]
     else:
@@ -53,10 +53,10 @@ def parse_table_name(table_name: str) -> Tuple[str, str, str]:
         raise ValueError("Incorrect table name : %s" % table_name)
 
 
-def table_exists(table_name: str) -> bool:
-    folder_location = get_folder_location(table_name)
+def table_exists(table_name: str, job_type: Type[JobBase]) -> bool:
+    folder_location = get_folder_location(table_name, job_type)
     if folder_location:
-        return os.path.isdir(get_folder_location(table_name))
+        return os.path.isdir(folder_location)
     else:
         return False
 

@@ -1,9 +1,10 @@
-from typing import Generator
+from typing import Generator, Union
 
 from karadoc.common import table_utils
 from karadoc.common.job_core.has_inputs import HasInputs
 from karadoc.common.job_core.has_keys import HasKeys
 from karadoc.common.job_core.has_output import HasOutput
+from karadoc.common.job_core.job_base import JobBase
 from karadoc.common.validations import (
     ValidationResult,
     ValidationResultTemplate,
@@ -35,10 +36,10 @@ ValidationResult_JobLoadError = ValidationResultTemplate(
 )
 
 
-def validate_inputs(job: HasInputs, **_) -> Generator[ValidationResult, None, None]:
+def validate_inputs(job: Union[HasInputs, JobBase], **_) -> Generator[ValidationResult, None, None]:
     """Check that inputs correspond to inputs managed by karadoc"""
     for input_table in job.list_input_tables():
-        if not table_utils.table_exists(input_table):
+        if not table_utils.table_exists(input_table, type(job)):
             yield ValidationResult_UnknownInput(table=input_table)
 
 

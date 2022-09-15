@@ -189,6 +189,8 @@ class ValidateCommand(Command):
         return_code |= _validate_action_files(
             job_type=SparkStreamJob,
             validations=[
+                validate_inputs,
+                validate_output_partition,
                 validate_connections,
             ],
             envs=args.envs,

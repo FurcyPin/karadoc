@@ -1,9 +1,11 @@
+from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Union
 
 from pyspark.sql import DataFrame
 
 from karadoc.common import conf
 from karadoc.common.job_core.has_spark import HasSpark, _table_name_to_hdfs_path
+from karadoc.common.job_core.job_base import JobBase
 from karadoc.common.table_utils import parse_table_name
 from karadoc.common.utils.assert_utils import assert_true
 
@@ -11,9 +13,10 @@ WASB_SCHEMES = ["wasb", "wasbs"]
 ABFS_SCHEMES = ["abfs", "abfss"]
 
 
-class HasInputs(HasSpark):
+class HasInputs(HasSpark, JobBase, ABC):
     def __init__(self) -> None:
         super().__init__()
+        JobBase.__init__(self)
         # Private attributes
         self.__inputs: Dict[str, Union[str, Dict[str, str]]] = {}
         """Stores the inputs as declared in the action file"""
@@ -92,6 +95,11 @@ class HasInputs(HasSpark):
         """
         return [input_table["table"] for input_table in self.__standardized_inputs.values()]
 
+    @abstractmethod
+    def get_reader(self):
+        """Return a :class:`DataStreamReader` Or `DataFrameReader` that can be used to read data"""
+        pass
+
     def read_table(self, table_alias: str, schema=None) -> DataFrame:
         """Read a table based on its alias
 
@@ -123,11 +131,11 @@ class HasInputs(HasSpark):
         :param read_options: Optional, options passed to the DataFrameReader.
         :return: a spark Dataframe
         """
-        from karadoc.common.run import load_populate
+        from karadoc.common.job_core.load import load_non_runnable_action_file
 
         if input_format is None:
-            previous_populate = load_populate(table_full_name)
-            input_format = previous_populate.output_format
+            input_job = load_non_runnable_action_file(table_full_name, type(self))
+            input_format = input_job.output_format
 
         df = self._read_path(self.hdfs_input(table_full_name), input_format, schema, read_options)
 
@@ -149,7 +157,8 @@ class HasInputs(HasSpark):
 
     def _read_path(self, table_path, input_format, schema=None, options=None):
         assert_true(input_format is not None)
-        df_reader = self.spark.read
+
+        df_reader = self.get_reader()
         if schema is not None:
             df_reader = df_reader.schema(schema)
         if options is not None:
