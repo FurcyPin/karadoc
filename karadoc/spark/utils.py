@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import SparkSession
 
 
 def get_spark_session(app_name: Optional[str] = None, extra_spark_conf: Optional[dict] = None) -> SparkSession:
@@ -50,17 +50,3 @@ def get_spark_session(app_name: Optional[str] = None, extra_spark_conf: Optional
     # we reset the builder options
     spark.Builder._options = {}
     return spark
-
-
-def write_table(df: DataFrame, path: str, output_format: str, output_mode: str, output_options=None, partitions=None):
-    # TODO: this late import is a temporary workaround for cyclic dependencies
-    from karadoc.common import conf
-
-    if output_options is None:
-        output_options = {}
-    if partitions is None:
-        partitions = []
-    writer = df.write.partitionBy(partitions).mode(output_mode).format(output_format)
-    write_options = conf.get_write_options_for_format(output_format)
-    options = {**write_options, **output_options}
-    writer.options(**options).save(path)

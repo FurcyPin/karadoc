@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from typing import List, Optional, Tuple, Union
 
 from pyspark.sql import DataFrame
@@ -5,7 +6,6 @@ from pyspark.sql import DataFrame
 from karadoc.common import conf
 from karadoc.common.job_core.has_spark import HasSpark, _table_name_to_hdfs_path
 from karadoc.common.table_utils import parse_table_name
-from karadoc.spark.utils import write_table
 
 
 def _output_partition_to_dynamic_partitions(partition) -> List[str]:
@@ -17,11 +17,10 @@ def _output_partition_to_dynamic_partitions(partition) -> List[str]:
     return dynamic_partitions
 
 
-class HasOutput(HasSpark):
+class HasOutput(HasSpark, ABC):
     def __init__(self) -> None:
         # Attributes that the user may change
         self.output_partition: List[Union[Tuple[str, ...], str]] = []
-        self.output_format = "parquet"
         self.output_mode = "OVERWRITE"
         self.output_options = {}
 
@@ -62,15 +61,9 @@ class HasOutput(HasSpark):
         else:
             return []
 
+    @abstractmethod
     def write_table(self, df: DataFrame):
-        write_table(
-            df=df,
-            path=self.hdfs_output(),
-            output_format=self.output_format,
-            output_mode=self.output_mode,
-            output_options=self.output_options,
-            partitions=self.dynamic_partitions(),
-        )
+        pass
 
     def hdfs_output(self) -> str:
         (schema_name, table_name, _) = parse_table_name(self.output)

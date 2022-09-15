@@ -18,3 +18,53 @@ def get_spark_conf(env: Optional[str] = None) -> Dict[str, object]:
         return {}
     else:
         return ConfBox(dynabox).to_flat_dict()
+
+
+def get_batch_default_output_format(env: Optional[str] = None) -> str:
+    return (
+        _get_settings_for_env(env)
+        .get("spark", {})
+        .get("write", {})
+        .get("batch", {})
+        .get("default_format", default="parquet")
+    )
+
+
+def get_stream_default_output_format(env: Optional[str] = None) -> str:
+    return (
+        _get_settings_for_env(env)
+        .get("spark", {})
+        .get("write", {})
+        .get("stream", {})
+        .get("default_format", default="parquet")
+    )
+
+
+def get_write_options_for_format(output_format: str, env: Optional[str] = None) -> Dict:
+    """Return the configured write options for the given format
+
+    Example:
+
+    In your settings.toml:
+
+    .. code-block:: python
+
+        [default.spark.write.options.text]
+            compression = "gzip"
+
+        or
+
+        [default.spark.write.options]
+          text.compression = "gzip"
+
+    In your code:
+
+    compression = get_write_options_for_format("text")
+    """
+    format_write_options = (
+        _get_settings_for_env(env).get("spark", {}).get("write", {}).get("options", {}).get(output_format)
+    )
+    if format_write_options is not None:
+        return format_write_options.to_dict()
+    else:
+        return {}
