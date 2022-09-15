@@ -66,11 +66,9 @@ karadoc = 'karadoc.launcher:main'
 
 
 [build-system]
-requires = [
-    "setuptools==58.5.2",
-    "wheel",
-]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 
 [tool.black]
 line-length = 120
