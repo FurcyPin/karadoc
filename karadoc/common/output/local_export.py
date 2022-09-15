@@ -1,13 +1,17 @@
 from io import StringIO
-from typing import Dict, Optional, Union
+from typing import TYPE_CHECKING, Dict, Optional, Union
 
-import pandas as pd
 from pyspark.sql import DataFrame
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 default_encoding = "UTF-8"
 
 
-def write_pandas_dataframes_to_xlsx(dfs: Union[pd.DataFrame, Dict[str, pd.DataFrame]], output: str, **options) -> None:
+def write_pandas_dataframes_to_xlsx(
+    dfs: Union["pd.DataFrame", Dict[str, "pd.DataFrame"]], output: str, **options
+) -> None:
     """Writes one or multiple DataFrames (as dicts) in an Excel file (with one sheet per DataFrame if multiple
     DataFrames were given).
 
@@ -27,6 +31,8 @@ def write_pandas_dataframes_to_xlsx(dfs: Union[pd.DataFrame, Dict[str, pd.DataFr
     :param options: extra options to pass to `pandas.DataFrame.to_excel()`
     :return:
     """
+    import pandas as pd
+
     if isinstance(dfs, pd.DataFrame):
         dfs = {"Sheet1": dfs}
     writer = pd.ExcelWriter(output, engine="xlsxwriter")

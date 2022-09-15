@@ -1,6 +1,5 @@
 from typing import List
 
-from pyspark.ml.feature import QuantileDiscretizer
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as f
 from pyspark.sql.types import IntegerType
@@ -63,6 +62,8 @@ def _quantile_discretize_numeric_col(df: DataFrame, nb_buckets: int, ignore_colu
     :param nb_buckets: the number of buckets to make
     :return: a DataFrame with the same column names, with numerical columns converted into string buckets.
     """
+    from pyspark.ml.feature import QuantileDiscretizer
+
     num_types = ["bigint", "double", "int", "float"]  # excluding 'boolean'
     num_cols = [col_name for col_name, type in df.dtypes if type in num_types and col_name not in ignore_columns]
 

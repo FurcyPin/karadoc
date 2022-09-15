@@ -2,16 +2,9 @@ import os
 from math import ceil
 from typing import List
 
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib import use
-from pandas.plotting import register_matplotlib_converters
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as f
 from pyspark.sql.types import StringType
-
-register_matplotlib_converters()
-use("Agg")
 
 FEATURES = ["val_count", "val_frequency"]
 COLOR_PAL = [
@@ -106,6 +99,14 @@ def draw(df: DataFrame, cohort_cols: List[str], filepath: str, filename: str):  
     :param filename: The name of the .png file created
     :return:
     """
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from matplotlib import use
+    from pandas.plotting import register_matplotlib_converters
+
+    register_matplotlib_converters()
+    use("Agg")
+
     df_analysed = __null_fields_to_missing_or_other(df)
     dataset, figsize, keys, status_list, has_status_cohort = __configure_draw(df_analysed, cohort_cols)
     nb_keys = len(keys)
