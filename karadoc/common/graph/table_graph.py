@@ -55,9 +55,9 @@ def __breadth_first_search(  # NOSONAR
             if (source, dest) not in ignored_edges:
                 if visit_edge is not None:
                     visit_edge(source, dest)
-                if _node not in already_seen:
-                    already_seen.add(_node)
-                    next_to_visit.add(_node)
+                if neighbor not in already_seen:
+                    already_seen.add(neighbor)
+                    next_to_visit.add(neighbor)
 
     while len(next_to_visit) > 0 and (max_depth is None or depth <= max_depth):
         to_visit = next_to_visit
