@@ -1,6 +1,11 @@
+import os
+import sys
+from pathlib import Path
 from typing import Optional
 
 from pyspark.sql import SparkSession
+
+from karadoc.common.conf import get_libs_folder_location
 
 
 def get_spark_session(app_name: Optional[str] = None, extra_spark_conf: Optional[dict] = None) -> SparkSession:
@@ -45,8 +50,20 @@ def get_spark_session(app_name: Optional[str] = None, extra_spark_conf: Optional
     if app_name is None:
         app_name = conf.APPLICATION_NAME.lower()
     spark: SparkSession = builder.appName(app_name).getOrCreate()
+    _add_libs_folder_to_spark_python_path(spark)
 
     # As a workaround to this spark issue https://issues.apache.org/jira/browse/SPARK-38870,
     # we reset the builder options
     spark.Builder._options = {}
     return spark
+
+
+def _add_libs_folder_to_spark_python_path(spark: SparkSession) -> None:
+    # This simulates the first time the karadoc module is imported
+    libs_folder = str(Path(get_libs_folder_location()).absolute())
+    spark_env = spark.sparkContext.environment
+    sys.path.extend([libs_folder])
+    if "PYTHONPATH" not in spark_env:
+        spark_env["PYTHONPATH"] = libs_folder
+    else:
+        spark_env["PYTHONPATH"] += os.pathsep + libs_folder

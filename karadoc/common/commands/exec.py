@@ -7,7 +7,6 @@ import sys
 import traceback
 from argparse import ArgumentParser, Namespace
 from os.path import basename, dirname, isfile
-from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Type, Union
 
 from karadoc.common import conf
@@ -16,7 +15,7 @@ from karadoc.common.commands.command import Command
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.conf import APPLICATION_DESCRIPTION, APPLICATION_NAME
 from karadoc.common.exceptions import CommandValidationError, LoggedException
-from karadoc.common.observability import LogEvent, get_logging_context, logging
+from karadoc.common.observability import LogEvent, get_logging_context
 from karadoc.common.observability.conf import setup_observability
 from karadoc.common.observability.console_event import ConsoleEvent
 from karadoc.common.utils.assert_utils import assert_true
@@ -157,10 +156,6 @@ def do_command(
         parser.print_help()
 
 
-def __add_libs_folder_to_python_path():
-    sys.path.insert(0, str(Path(conf.get_libs_folder_location())))
-
-
 def __run_command(argv: List[str]) -> ReturnCode:
     parser = ArgumentParser(description=APPLICATION_DESCRIPTION, prog=APPLICATION_NAME.lower())
     parser.add_argument("-v", "--verbose", default=False, action="store_true", help="Activate verbose mode")
@@ -185,7 +180,6 @@ def _run_command_unsafe(command_line: Union[str, Sequence[str]]) -> ReturnCode:
     stopwatch = Stopwatch()
     argv = _split_command_line(command_line) if isinstance(command_line, str) else command_line
     command = " ".join(argv)
-    __add_libs_folder_to_python_path()
     # Workaround: we detect the --verbose option as soon as possible before starting to log events.
     if "-v" in argv or "--verbose" in argv:
         verbose = True

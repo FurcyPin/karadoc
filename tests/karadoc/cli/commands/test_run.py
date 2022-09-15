@@ -131,6 +131,24 @@ class TestRun(unittest.TestCase):
             Path(f"{warehouse_dir}/test_schema.db/test_table_spark_conf_overwrite/day=2018-02-02").is_dir()
         )
 
+    @mock_settings_for_test({"libs": "tests/resources/karadoc/cli/commands/test_run/libs"})
+    def test_run_with_populate_with_udf_in_libs_folder(self):
+        """
+        GIVEN a POPULATE that uses a UDF that uses another function
+        WHEN we run it
+        THEN no import error should happen
+        The error that usually happens is "ModuleNotFoundError: No module named 'udfs' at pyspark/serializers.py"
+        """
+        # This simulates the first time the karadoc module is imported
+        from karadoc.common.conf.package import (  # noqa: E402
+            _add_libs_folder_to_python_path,
+        )
+
+        _add_libs_folder_to_python_path()
+
+        karadoc.cli.run_command("run --tables test_schema.udf_table")
+        self.assertTrue(Path(f"{warehouse_dir}/test_schema.db/udf_table").is_dir())
+
     def test_run_with_partition_range(self):
         karadoc.cli.run_command(
             'run --vars day=day_range("2018-02-02","2018-02-05") --tables test_schema.partition_table'
