@@ -17,3 +17,8 @@ os.environ["MERGE_ENABLED_FOR_DYNACONF"] = "true"
 from karadoc import cli  # noqa: E402
 
 cli = cli
+
+# This makes sure that the content libs/ folder is added to the python path in every situation
+from karadoc.common.conf.package import _add_libs_folder_to_python_path  # noqa: E402
+
+_add_libs_folder_to_python_path()

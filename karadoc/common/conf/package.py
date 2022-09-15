@@ -1,3 +1,6 @@
+import os
+import sys
+from pathlib import Path
 from typing import List, Optional
 
 import dynaconf
@@ -213,3 +216,12 @@ def get_observability_conf() -> Optional[ConfBox]:
 
     if observability_conf:
         return ConfBox(observability_conf)
+
+
+def _add_libs_folder_to_python_path():
+    libs_folder = str(Path(get_libs_folder_location()).absolute())
+    sys.path.extend([libs_folder])
+    if os.getenv("PYTHONPATH") is None:
+        os.environ["PYTHONPATH"] = libs_folder
+    else:
+        os.environ["PYTHONPATH"] += os.pathsep + libs_folder
