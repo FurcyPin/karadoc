@@ -26,6 +26,7 @@ config_mock = mock_settings_for_test_class(
         "model_dir": "tests/resources/karadoc/cli/commands/test_stream_with_external_io/model",
         "spark_stream_dir": "test_working_dir/spark/stream",
         "connection": {"dummy": {"type": "tests.resources.connectors.dummy"}},
+        "warehouse_dir": "test_working_dir/hive/warehouse",
     }
 )
 
@@ -36,11 +37,15 @@ class TestStreamWithExternalIO(PySparkTest):
 
     @config_mock
     def setUp(self) -> None:
-        shutil.rmtree(conf.get_spark_stream_dir(), ignore_errors=True)
+        shutil.rmtree(conf.get_warehouse_folder_location(), ignore_errors=True)
+        shutil.rmtree(conf.get_streaming_checkpoint_folder_location(), ignore_errors=True)
+        shutil.rmtree(conf.get_spark_stream_tmp_dir(), ignore_errors=True)
 
     @config_mock
     def tearDown(self) -> None:
-        shutil.rmtree(conf.get_spark_stream_dir(), ignore_errors=True)
+        shutil.rmtree(conf.get_warehouse_folder_location(), ignore_errors=True)
+        shutil.rmtree(conf.get_streaming_checkpoint_folder_location(), ignore_errors=True)
+        shutil.rmtree(conf.get_spark_stream_tmp_dir(), ignore_errors=True)
 
     def test_stream_with_external_input(self):
         """When we execute a stream with external inputs, it should call DummyConnector.read"""
@@ -149,7 +154,7 @@ class TestStreamWithExternalIO(PySparkTest):
             with self.assertRaises(ActionFileLoadingError) as cm:
                 karadoc.cli.run_command("stream --dry --tables " + table)
             the_exception = cm.exception
-            self.assertIn(f"Could not load STREAM file for table {table}", str(the_exception))
+            self.assertIn(f"Could not load STREAM.py file for table {table}", str(the_exception))
             self.assertIn("should have the following signature", str(the_exception.__cause__))
 
     def test_stream_checkpointing(self):
