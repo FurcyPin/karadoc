@@ -16,4 +16,4 @@ class JobBase:
             (cls._action_file_name_conf_key is not None),
             "_action_file_name variable must be overwritten by the class that extends JobBase",
         )
-        return conf.get_action_file_name(cls._action_file_name_conf_key)
+        return f"{conf.get_action_file_name(cls._action_file_name_conf_key)}.py"

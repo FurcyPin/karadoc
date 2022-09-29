@@ -131,10 +131,14 @@ class HasInputs(HasSpark, JobBase, ABC):
         :param read_options: Optional, options passed to the DataFrameReader.
         :return: a spark Dataframe
         """
-        from karadoc.common.job_core.load import load_non_runnable_action_file
+        from karadoc.common.run import load_populate
+        from karadoc.common.stream import load_stream_file
 
         if input_format is None:
-            input_job = load_non_runnable_action_file(table_full_name, type(self))
+            try:
+                input_job = load_populate(table_full_name)
+            except FileNotFoundError:
+                input_job = load_stream_file(table_full_name)
             input_format = input_job.output_format
 
         df = self._read_path(self.hdfs_input(table_full_name), input_format, schema, read_options)

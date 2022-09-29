@@ -19,22 +19,27 @@ def _is_hidden(folder: str):
 
 # We use a cache here to avoid recomputing everything all the time.
 @lru_cache(maxsize=100)
-def __index_files_with_name_cached(file_name) -> Dict[str, Dict[str, str]]:
+def __index_files_with_name_cached(file_name: Optional[str]) -> Dict[str, Dict[str, str]]:
     """Recursively scan the model folder and returns all the relative paths of the files
-    indexed by schema and table names
+    indexed by schema and table names.
+    If file_name is None, return the path of the model folders that contain at least one file.
+
     :param file_name: name of the files to match
     :return:
     """
     schemas = {}
     for schema, table, folder in list_schema_table_folders():
         for file in os.listdir(folder):
+            if file_name is None:
+                schemas.setdefault(schema, {})[table] = folder
+                break
             if file == file_name:
                 schemas.setdefault(schema, {})[table] = os.path.join(folder, file)
 
     return schemas
 
 
-def __index_files_with_name(file_name) -> Dict[str, Dict[str, str]]:
+def __index_files_with_name(file_name: Optional[str]) -> Dict[str, Dict[str, str]]:
     """Recursively scan the model folder and returns all the relative paths of the files
     indexed by schema and table names
     :param file_name: name of the files to match
@@ -61,12 +66,12 @@ def list_schema_table_folders() -> Generator:
                     yield schema_name, table_name, os.path.join(dir, subdir)
 
 
-def __get_indexed_action_file(action_file_name: str) -> Dict[str, Dict[str, str]]:
+def __get_indexed_action_file(action_file_name: Optional[str]) -> Dict[str, Dict[str, str]]:
     """Recursively scan the model folder and returns all ACTION_FILE.py files relative paths
     indexed by schema and table names
     :return: A dict of dict
     """
-    return __index_files_with_name(f"{action_file_name}.py")
+    return __index_files_with_name(action_file_name)
 
 
 def list_action_files(job_type: Type[JobBase]) -> Iterable[Tuple[str, str, str]]:
@@ -80,15 +85,19 @@ def list_action_files(job_type: Type[JobBase]) -> Iterable[Tuple[str, str, str]]
             yield schema, table, stream
 
 
-def get_action_file(schema_name: str, table_name: str, job_type: Type[JobBase]) -> Optional[str]:
+def get_action_file(schema_name: str, table_name: str, job_type: Type[JobBase] = None) -> Optional[str]:
     """Recursively scan the model folder and return the path of the ACTION_FILE.py file for the given table_name
     :param schema_name: name of the schema
     :param table_name: name of the table
     :param job_type: job type defined in the action file. (e.g. SparkBathJob, QualityCheckJob ...)
     :return: A string path
     """
-    assert_true(issubclass(job_type, JobBase))
-    result = __get_indexed_action_file(job_type.get_action_file_name()).get(schema_name, {}).get(table_name)
+    if job_type is None:
+        action_file_name = None
+    else:
+        assert_true(issubclass(job_type, JobBase))
+        action_file_name = job_type.get_action_file_name()
+    result = __get_indexed_action_file(action_file_name).get(schema_name, {}).get(table_name)
     if result:
         return result
     else:

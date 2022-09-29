@@ -20,7 +20,7 @@ from karadoc.test_utils.spark import MockDataFrame, MockRow
 # For this reason, we define it here once, then apply it to the class AND the setUp and tearDown methods
 from karadoc.test_utils.stdio import captured_output
 
-warehouse_dir = "test_working_dir/test_run_warehouse"
+warehouse_dir = "test_working_dir/hive/warehouse"
 
 config_mock = mock_settings_for_test_class(
     {
@@ -37,13 +37,13 @@ config_mock = mock_settings_for_test_class(
 class TestStream(unittest.TestCase):
     @config_mock
     def setUp(self) -> None:
-        shutil.rmtree(warehouse_dir, ignore_errors=True)
+        shutil.rmtree(conf.get_warehouse_folder_location(), ignore_errors=True)
         shutil.rmtree(conf.get_streaming_checkpoint_folder_location(), ignore_errors=True)
         shutil.rmtree(conf.get_spark_stream_tmp_dir(), ignore_errors=True)
 
     @config_mock
     def tearDown(self) -> None:
-        shutil.rmtree(warehouse_dir, ignore_errors=True)
+        shutil.rmtree(conf.get_warehouse_folder_location(), ignore_errors=True)
         shutil.rmtree(conf.get_streaming_checkpoint_folder_location(), ignore_errors=True)
         shutil.rmtree(conf.get_spark_stream_tmp_dir(), ignore_errors=True)
 
@@ -94,7 +94,7 @@ class TestStream(unittest.TestCase):
         with self.assertRaises(ActionFileLoadingError) as cm:
             karadoc.cli.run_command("stream --tables test_schema.job_init_invalid --streaming-mode once")
         the_exception = cm.exception
-        self.assertIn("Could not load STREAM file for table test_schema.job_init_invalid", str(the_exception))
+        self.assertIn("Could not load STREAM.py file for table test_schema.job_init_invalid", str(the_exception))
         self.assertEqual(
             "Error: the spark context should not be initialized in an action file.", str(the_exception.__cause__)
         )

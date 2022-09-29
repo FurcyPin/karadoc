@@ -221,7 +221,7 @@ class TestRun(unittest.TestCase):
         with self.assertRaises(ActionFileLoadingError) as cm:
             karadoc.cli.run_command("run --tables test_schema.job_init_invalid")
         the_exception = cm.exception
-        self.assertIn("Could not load POPULATE file for table test_schema.job_init_invalid", str(the_exception))
+        self.assertIn("Could not load POPULATE.py file for table test_schema.job_init_invalid", str(the_exception))
         self.assertEqual(
             "Error: the spark context should not be initialized in an action file.", str(the_exception.__cause__)
         )

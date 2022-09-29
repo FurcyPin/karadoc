@@ -104,7 +104,7 @@ class TestRun(unittest.TestCase):
         with self.assertRaises(ActionFileLoadingError) as cm:
             karadoc.cli.run_command("run --dry --tables test_schema.var_bad_key_type")
         the_exception = cm.exception
-        self.assertIn("Could not load POPULATE file for table test_schema.var_bad_key_type", str(the_exception))
+        self.assertIn("Could not load POPULATE.py file for table test_schema.var_bad_key_type", str(the_exception))
         self.assertEqual(
             "Only strings are allowed as vars keys. Got key: 1 of type: int instead.", str(the_exception.__cause__)
         )
@@ -123,7 +123,7 @@ class TestRun(unittest.TestCase):
         with self.assertRaises(ActionFileLoadingError) as cm:
             karadoc.cli.run_command("run --dry --tables test_schema.var_bad_value_type")
         the_exception = cm.exception
-        self.assertIn("Could not load POPULATE file for table test_schema.var_bad_value_type", str(the_exception))
+        self.assertIn("Could not load POPULATE.py file for table test_schema.var_bad_value_type", str(the_exception))
         self.assertEqual(
             "Type list of variable 'var_bad' is not supported for variables. "
             "Only the following types are supported ['str', 'bool', 'int', 'float']",
@@ -139,7 +139,7 @@ class TestRun(unittest.TestCase):
         with self.assertRaises(ActionFileLoadingError) as cm:
             karadoc.cli.run_command("run --dry --tables test_schema.var_bad_value_type")
         the_exception = cm.exception
-        self.assertIn("Could not load POPULATE file for table test_schema.var_bad_value_type", str(the_exception))
+        self.assertIn("Could not load POPULATE.py file for table test_schema.var_bad_value_type", str(the_exception))
         self.assertEqual(
             "Type list of variable 'var_bad' is not supported for variables. "
             "Only the following types are supported ['str', 'bool', 'int', 'float']",
@@ -160,7 +160,7 @@ class TestRun(unittest.TestCase):
         with self.assertRaises(ActionFileLoadingError) as cm:
             karadoc.cli.run_command("run --dry --tables test_schema.var_bad_key_type")
         the_exception = cm.exception
-        self.assertIn("Could not load POPULATE file for table test_schema.var_bad_key_type", str(the_exception))
+        self.assertIn("Could not load POPULATE.py file for table test_schema.var_bad_key_type", str(the_exception))
         self.assertEqual(
             "Only strings are allowed as vars keys. Got key: 1 of type: int instead.", str(the_exception.__cause__)
         )
