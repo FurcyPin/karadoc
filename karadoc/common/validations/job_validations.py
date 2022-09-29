@@ -39,7 +39,7 @@ ValidationResult_JobLoadError = ValidationResultTemplate(
 def validate_inputs(job: Union[HasInputs, JobBase], **_) -> Generator[ValidationResult, None, None]:
     """Check that inputs correspond to inputs managed by karadoc"""
     for input_table in job.list_input_tables():
-        if not table_utils.table_exists(input_table, type(job)):
+        if not table_utils.table_exists(input_table):
             yield ValidationResult_UnknownInput(table=input_table)
 
 

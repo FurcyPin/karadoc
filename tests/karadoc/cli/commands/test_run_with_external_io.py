@@ -158,7 +158,7 @@ class TestRunWithExternalIO(unittest.TestCase):
             with self.assertRaises(ActionFileLoadingError) as cm:
                 karadoc.cli.run_command("run --dry --tables " + table)
             the_exception = cm.exception
-            self.assertIn(f"Could not load POPULATE file for table {table}", str(the_exception))
+            self.assertIn(f"Could not load POPULATE.py file for table {table}", str(the_exception))
 
     def test_run_with_load_external_inputs_as_view(self):
         """When performing a run of a Populate with external inputs, it should call DummyConnector.read once"""

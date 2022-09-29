@@ -94,7 +94,7 @@ def __load_action_file(job_type: Type[Job], full_table_name: str, passed_vars: O
     (schema_name, table_name, _) = parse_table_name(full_table_name)
     file_path = file_index.get_action_file(schema_name, table_name, job_type)
     if file_path is None:
-        expected_path = Path(f"**/{schema_name}.db") / table_name / f"{job_type.get_action_file_name()}.py"
+        expected_path = Path(f"**/{schema_name}.db") / table_name / f"{job_type.get_action_file_name()}"
         raise FileNotFoundError(
             f"Found no file matching the path '{expected_path}' for the table {full_table_name} "
             f"in the directory '{conf.get_model_folder_location()}'"

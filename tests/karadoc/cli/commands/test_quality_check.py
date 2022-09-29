@@ -281,3 +281,30 @@ class TestQualityCheck(unittest.TestCase):
             }
         )
         self.assertEqual(expected, self.result_df)
+
+    def test_quality_check_has_inputs(self):
+        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+            karadoc.cli.run_command("run --tables test_schema.input_table")
+            karadoc.cli.run_command(
+                "quality_check --output-alert-table test_schema.output_table --tables test_schema.has_inputs"
+            )
+
+        self.result_df.show(1, False)
+
+        expected = MockDataFrame(
+            {
+                MockRow(
+                    alert=MockRow(
+                        table="test_schema.has_inputs",
+                        name="alert_has_inputs",
+                        description="This is a dummy alert generated using inputs tables",
+                        severity="Debug",
+                        evaluation_date=Anything,
+                        status="ko",
+                        rank=Anything,
+                    ),
+                    columns={MockRow(key="id", value="1")},
+                )
+            }
+        )
+        self.assertEqual(expected, self.result_df)
