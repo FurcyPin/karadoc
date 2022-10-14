@@ -132,8 +132,8 @@ class HasInputs(HasSpark, JobBase, ABC):
         :param read_options: Optional, options passed to the DataFrameReader.
         :return: a spark Dataframe
         """
-        from karadoc.common.run import load_populate
-        from karadoc.common.stream import load_stream_file
+        from karadoc.common.run.exec import load_populate
+        from karadoc.common.stream.exec import load_stream_file
 
         if input_format is None:
             try:

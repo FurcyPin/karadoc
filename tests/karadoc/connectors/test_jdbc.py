@@ -24,5 +24,5 @@ class Jdbc(unittest.TestCase):
         jdbc = load_connector("sql-test", None)  # type: JdbcConnector
         self.assertEqual(
             jdbc._get_url(),
-            "jdbc:sqlserver://test_host;user=test_user;password=test_password;database=test_db;applicationName=KARADOC",
+            "jdbc:sqlserver://test_host;user=test_user;password=test_password;database=test_db;applicationName=karadoc",
         )

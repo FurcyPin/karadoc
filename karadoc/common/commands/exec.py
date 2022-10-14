@@ -11,6 +11,9 @@ from typing import Dict, List, Optional, Sequence, Type, Union
 
 from karadoc.common import conf
 from karadoc.common.class_utils import find_class_from_module
+from karadoc.common.commands.autocomplete.custom_completion_finder import (
+    CustomCompletionFinder,
+)
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.conf import APPLICATION_DESCRIPTION, APPLICATION_NAME
@@ -156,11 +159,17 @@ def do_command(
         parser.print_help()
 
 
-def __run_command(argv: List[str]) -> ReturnCode:
+def get_argument_parser(commands_by_name):
     parser = ArgumentParser(description=APPLICATION_DESCRIPTION, prog=APPLICATION_NAME.lower())
     parser.add_argument("-v", "--verbose", default=False, action="store_true", help="Activate verbose mode")
-    commands_by_name = load_commands()
     add_commands_to_parser(parser, commands_by_name, command_depth=COMMAND_ROOT_DEPTH)
+    CustomCompletionFinder()(parser, exit_method=sys.exit)
+    return parser
+
+
+def __run_command(argv: List[str]) -> ReturnCode:
+    commands_by_name = load_commands()
+    parser = get_argument_parser(commands_by_name)
     args = parser.parse_args(argv)
     args.raw_args = " ".join(argv)
 
