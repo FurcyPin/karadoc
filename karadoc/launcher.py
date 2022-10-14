@@ -1,8 +1,6 @@
 import sys
 from typing import List
 
-from pyspark.sql import SparkSession
-
 from karadoc.common.commands.exec import run_command
 from karadoc.common.commands.return_code import ReturnCode
 
@@ -17,5 +15,9 @@ def main(argv: List[str] = None):
     except Exception:
         sys.exit(return_code)
     finally:
-        if SparkSession._instantiatedSession is not None:
-            SparkSession._instantiatedSession.stop()
+        # This if statement prevent loading pyspark when we don't use it
+        if "pyspark" in sys.modules:
+            from pyspark.sql import SparkSession
+
+            if SparkSession._instantiatedSession is not None:
+                SparkSession._instantiatedSession.stop()

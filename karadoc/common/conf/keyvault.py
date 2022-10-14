@@ -1,8 +1,5 @@
 from typing import Optional
 
-from azure.common.credentials import ServicePrincipalCredentials
-from azure.keyvault import KeyVaultAuthentication, KeyVaultClient
-
 from karadoc.common import conf
 
 
@@ -36,6 +33,10 @@ def get_secret(  # nosec B107
     :param env: (Optional) Execution environment
     :return: the secret value
     """
+    # The azure library is quite heavy and loading at the top of the file makes autocomplete significantly slower
+    from azure.common.credentials import ServicePrincipalCredentials
+    from azure.keyvault import KeyVaultAuthentication, KeyVaultClient
+
     keyvault_conf = conf.get_vault_conf(conn_name, env)
 
     def auth_callback(server, resource, scope):

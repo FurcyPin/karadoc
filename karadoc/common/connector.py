@@ -1,12 +1,13 @@
 import importlib
 from abc import ABC
-from typing import Any, Dict, Optional
-
-from pyspark.sql import DataFrame, SparkSession
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from karadoc.common.class_utils import find_class_from_module
 from karadoc.common.conf import ConfBox, get_connection_conf
 from karadoc.common.conf.configurable_class import ConfigurableClass, ConfParam
+
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame, SparkSession
 
 
 class Connector(ABC):
@@ -40,10 +41,10 @@ class Connector(ABC):
       this job (not available in streaming)
     """
 
-    spark: SparkSession = None
-    conf: ConfBox = None
+    spark: "SparkSession" = None
+    conf: "ConfBox" = None
 
-    def __init__(self, spark: SparkSession, conf: ConfBox) -> None:
+    def __init__(self, spark: "SparkSession", conf: ConfBox) -> None:
         """Instantiates the `Connector` base abstract class
 
         :param spark: The Spark Session
@@ -52,7 +53,7 @@ class Connector(ABC):
         self.conf = conf
         self.spark = spark
 
-    def write(self, df: DataFrame, dest: Dict[str, Any]):
+    def write(self, df: "DataFrame", dest: Dict[str, Any]):
         """Write the given DataFrame to an external output described by `dest`
 
         :param df: the DataFrame to export
@@ -61,7 +62,7 @@ class Connector(ABC):
         """
         raise NotImplementedError()
 
-    def write_stream(self, df: DataFrame, dest: Dict[str, Any]):
+    def write_stream(self, df: "DataFrame", dest: Dict[str, Any]):
         """Write the given streaming DataFrame to an external output described by `dest`
 
         :param df:
@@ -70,7 +71,7 @@ class Connector(ABC):
         """
         raise NotImplementedError()
 
-    def read(self, source: Dict[str, Any]) -> DataFrame:
+    def read(self, source: Dict[str, Any]) -> "DataFrame":
         """Write the given external input described by `source` and return it as a DataFrame
 
         :param source:
@@ -78,7 +79,7 @@ class Connector(ABC):
         """
         raise NotImplementedError()
 
-    def read_stream(self, source: Dict[str, Any]) -> DataFrame:
+    def read_stream(self, source: Dict[str, Any]) -> "DataFrame":
         """Write the given external input described by `source` and return it as a streaming DataFrame
 
         :param source:
@@ -107,12 +108,12 @@ class ConfigurableConnector(ConfigurableClass, Connector, ABC):
         description="Set to true to disable this connector. Only disabled jobs may reference disabled connectors.",
     )
 
-    def __init__(self, spark: SparkSession, conf: ConfBox):
+    def __init__(self, spark: "SparkSession", conf: ConfBox):
         ConfigurableClass.__init__(self, conf)
         Connector.__init__(self, spark, conf)
 
 
-def load_connector(connection_name: str, spark: SparkSession) -> Connector:
+def load_connector(connection_name: str, spark: "SparkSession") -> Connector:
     """Load a connector configured with the given connection.
 
     This method will look in the settings.toml for an entry that looks like this:
@@ -133,7 +134,7 @@ def load_connector(connection_name: str, spark: SparkSession) -> Connector:
     return _load_connector_for_env(connection_name, spark, None)
 
 
-def _load_connector_for_env(connection_name: str, spark: SparkSession, env: Optional[str]) -> Connector:
+def _load_connector_for_env(connection_name: str, spark: "SparkSession", env: Optional[str]) -> Connector:
     """Load a connector for the specified connection name in the specified dynaconf environment.
 
     This method will look in the settings.toml for an entry that looks like this:

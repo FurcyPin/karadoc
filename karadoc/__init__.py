@@ -8,7 +8,7 @@ import os
 os.environ["MERGE_ENABLED_FOR_DYNACONF"] = "true"
 
 # For some reason, the following code sample fails when unit tests are run within PyCharm,
-# but does not fail when run outside of PyCharm:
+# but does not fail when run outside PyCharm:
 #
 #    import karadoc
 #    karadoc.cli.run_command(...)

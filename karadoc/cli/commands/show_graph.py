@@ -1,7 +1,5 @@
 from argparse import ArgumentParser, Namespace
 
-import networkx as nx
-
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.tables_option import TablesOption
 from karadoc.common.graph import table_graph
@@ -64,6 +62,8 @@ class ShowGraphCommand(Command):
 
     @staticmethod
     def do_command(args: Namespace) -> None:
+        import networkx as nx
+
         index = table_index.build_table_index()
         graph = table_graph.build_graph(index)
 

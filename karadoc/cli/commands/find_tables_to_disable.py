@@ -1,24 +1,23 @@
 from argparse import ArgumentParser, Namespace
-from typing import List
-
-import networkx as nx
-from pyspark import Row
-from pyspark.sql import DataFrame
+from typing import TYPE_CHECKING, List
 
 from karadoc.common.commands.command import Command
 from karadoc.common.graph import table_graph
 from karadoc.common.graph.table_graph import find_tables_to_disable
 from karadoc.common.model import table_index
-from karadoc.common.output.local_export import local_export_dataframe
+from karadoc.common.run.spark_batch_job import SparkBatchJob
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.graph_validations import validate_graph
 
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
 
-def _str_list_to_df(data: List[str]) -> DataFrame:
+
+def _str_list_to_df(data: List[str]) -> "DataFrame":
     """Builds a Spark DataFrame out of a List[str]."""
-    from karadoc.common import Job
+    from pyspark import Row
 
-    job = Job()
+    job = SparkBatchJob()
     job.init()
     df = job.spark.createDataFrame([Row(t) for t in data], schema="full_table_name STRING")
     df = df.orderBy("full_table_name")
@@ -52,6 +51,8 @@ class FindTablesToDisableCommand(Command):
 
     @staticmethod
     def do_command(args: Namespace):
+        from karadoc.common.output.local_export import local_export_dataframe
+
         binary_formats = ["xlsx"]
         if args.output is None and args.format in binary_formats:
             args.output = f"connections.{args.format}"
@@ -59,6 +60,7 @@ class FindTablesToDisableCommand(Command):
         index = table_index.build_table_index()
         graph = table_graph.build_graph(index)
         validation_results = validate_graph(graph)
+        import networkx as nx
 
         graph: nx.DiGraph = nx.transitive_reduction(graph)
 

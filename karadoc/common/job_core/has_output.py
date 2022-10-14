@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple, Union
-
-from pyspark.sql import DataFrame
+from typing import TYPE_CHECKING, List, Optional, Tuple, Union
 
 from karadoc.common import conf
 from karadoc.common.job_core.has_spark import HasSpark, _table_name_to_hdfs_path
 from karadoc.common.table_utils import parse_table_name
+
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
 
 
 def _output_partition_to_dynamic_partitions(partition) -> List[str]:
@@ -62,7 +63,7 @@ class HasOutput(HasSpark, ABC):
             return []
 
     @abstractmethod
-    def write_table(self, df: DataFrame):
+    def write_table(self, df: "DataFrame"):
         pass
 
     def hdfs_output(self) -> str:

@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Union
-
-from pyspark.sql import DataFrame
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from karadoc.common import conf
 from karadoc.common.job_core.has_spark import HasSpark, _table_name_to_hdfs_path
@@ -11,6 +9,9 @@ from karadoc.common.utils.assert_utils import assert_true
 
 WASB_SCHEMES = ["wasb", "wasbs"]
 ABFS_SCHEMES = ["abfs", "abfss"]
+
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
 
 
 class HasInputs(HasSpark, JobBase, ABC):
@@ -100,7 +101,7 @@ class HasInputs(HasSpark, JobBase, ABC):
         """Return a :class:`DataStreamReader` Or `DataFrameReader` that can be used to read data"""
         pass
 
-    def read_table(self, table_alias: str, schema=None) -> DataFrame:
+    def read_table(self, table_alias: str, schema=None) -> "DataFrame":
         """Read a table based on its alias
 
         :param table_alias: the alias of the table following this pattern: db_name.table_name
@@ -116,7 +117,7 @@ class HasInputs(HasSpark, JobBase, ABC):
 
     def _read_input_table(
         self, table_full_name: str, schema=None, input_format: str = None, read_options: dict = None
-    ) -> DataFrame:
+    ) -> "DataFrame":
         """Read a table based on its full name.
 
         End-users should NOT use this method directly.

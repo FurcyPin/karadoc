@@ -7,7 +7,7 @@ def read_spark_table(table_full_name: str) -> DataFrame:
     :param table_full_name:
     :return: a Spark DataFrame
     """
-    from karadoc.common import Job
+    from karadoc.common.run import Job
 
     job = Job()
     job.init()

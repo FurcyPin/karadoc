@@ -1,9 +1,7 @@
 from argparse import ArgumentParser, Namespace
-from typing import Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 
-from pyspark.sql import DataFrame
-
-from karadoc.common import conf, run
+from karadoc.common import conf
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.help import LineBreakHelpFormatter
 from karadoc.common.commands.options.dry_option import DryOption
@@ -16,6 +14,11 @@ from karadoc.common.commands.spark import init_job
 from karadoc.common.commands.utils import run_job_with_logging
 from karadoc.common.exceptions import JobDisabledException
 from karadoc.common.model import variables
+from karadoc.common.run.exec import (
+    load_runnable_populate,
+    print_job_properties,
+    write_output,
+)
 from karadoc.common.run.spark_batch_job import SparkBatchJob
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.connection_validations import validate_connections
@@ -24,8 +27,11 @@ from karadoc.common.validations.job_validations import (
     validate_output_partition,
 )
 
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
 
-def inspect_df(df: DataFrame):
+
+def inspect_df(df: "DataFrame"):
     """Function used for unit tests. Mock this function to be able to inspect the produced DataFrame
     during the execution of the command."""
     pass
@@ -37,17 +43,18 @@ def inspect_job(job: SparkBatchJob):
     pass
 
 
-def _run_table(job: SparkBatchJob, args) -> Optional[DataFrame]:
+def _run_table(job: SparkBatchJob, args) -> Optional["DataFrame"]:
     """Computes the Spark DataFrame build by a SparkBatchJob with the specified args.
 
     :param job:
     :param args:
     :return:
     """
-    df: Optional[DataFrame] = None
+
+    df: Optional["DataFrame"] = None
     if args.remote_env is not None:
         job._configure_remote_input(args.remote_env)
-    run.print_job_properties(job)
+    print_job_properties(job)
     fail_if_results(validate_inputs(job))
     fail_if_results(validate_output_partition(job))
     fail_if_results(validate_connections(job))
@@ -71,11 +78,11 @@ def _run_table(job: SparkBatchJob, args) -> Optional[DataFrame]:
 
 
 def _run_model(args: Namespace, model_id: str, job_vars: Dict[str, str], **kwargs):
-    job: SparkBatchJob = run.load_runnable_populate(model_id, job_vars)
+    job: SparkBatchJob = load_runnable_populate(model_id, job_vars)
     df = _run_table(job, args)
     inspect_df(df)
     if df is not None:
-        run.write_output(job, df, no_write=args.no_write, no_export=args.no_export)
+        write_output(job, df, no_write=args.no_write, no_export=args.no_export)
     inspect_job(job)
 
 

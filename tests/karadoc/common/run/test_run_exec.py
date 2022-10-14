@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from karadoc.common.run import load_populate, load_runnable_populate
+from karadoc.common.run.exec import load_populate, load_runnable_populate
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
 
 

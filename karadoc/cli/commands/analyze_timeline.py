@@ -1,7 +1,6 @@
 from argparse import ArgumentParser, Namespace
 
 from karadoc.common import conf
-from karadoc.common.analyze import draw_timeline_analysis, timeline_analysis
 from karadoc.common.analyze.analyze_job import AnalyzeJob
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.dry_option import DryOption
@@ -41,6 +40,8 @@ class AnalyzeTimelineCommand(Command):
 
     @staticmethod
     def do_command(args: Namespace) -> ReturnCode:
+        from karadoc.common.analyze import draw_timeline_analysis, timeline_analysis
+
         for table in args.tables:
             print("starting analyzing table %s" % table)
             data_location = get_data_location(table)
