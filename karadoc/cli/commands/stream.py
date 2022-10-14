@@ -1,9 +1,8 @@
 import sys
 from argparse import ArgumentParser, Namespace
+from typing import TYPE_CHECKING
 
-from pyspark.sql import DataFrame
-
-from karadoc.common import conf, stream
+from karadoc.common import conf
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.dry_option import DryOption
 from karadoc.common.commands.options.spark_conf_option import SparkConfOption
@@ -21,8 +20,11 @@ from karadoc.common.validations.job_validations import (
     validate_output_partition,
 )
 
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
 
-def inspect_df(df: DataFrame):
+
+def inspect_df(df: "DataFrame"):
     """Function used for unit tests. Mock this function to be able to inspect the produced DataFrame
     during the execution of the command."""
     pass
@@ -35,7 +37,9 @@ def inspect_job(job: SparkStreamJob):
 
 
 def _run_job(args: Namespace, job: SparkStreamJob, **kwargs):
-    stream.exec.print_job_properties(job)
+    from karadoc.common.stream.exec import print_job_properties, write_stream_output
+
+    print_job_properties(job)
     fail_if_results(validate_connections(job))
     fail_if_results(validate_inputs(job))
     fail_if_results(validate_output_partition(job))
@@ -54,7 +58,7 @@ def _run_job(args: Namespace, job: SparkStreamJob, **kwargs):
         job.init(app_name=args.raw_args, spark_conf=args.spark_conf)
         df = job.stream()
         inspect_df(df)
-        stream.exec.write_stream_output(job, df, args.no_export, args.streaming_mode, args.batch_interval)
+        write_stream_output(job, df, args.no_export, args.streaming_mode, args.batch_interval)
     elif not conf.is_dev_env():
         job.init()
     inspect_job(job)
@@ -93,10 +97,12 @@ class StreamCommand(Command):
 
     @staticmethod
     def do_command(args: Namespace):
+        from karadoc.common.stream.exec import load_runnable_stream_file
+
         return_code = ReturnCode.Success
         vars_list = variables.expand_vars(args.vars)
         jobs = [
-            (table, job_vars, stream.exec.load_runnable_stream_file(table, job_vars))
+            (table, job_vars, load_runnable_stream_file(table, job_vars))
             for table in args.tables
             for job_vars in vars_list
         ]

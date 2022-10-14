@@ -1,4 +1,4 @@
-from karadoc.common import Job
+from karadoc.common.run import Job
 
 from .dep2.sub_dep import value
 

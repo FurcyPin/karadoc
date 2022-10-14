@@ -3,11 +3,13 @@ from argparse import ArgumentParser, Namespace
 
 from termcolor import colored
 
+from karadoc.common import conf
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.spark import init_job
 from karadoc.common.conf import CONNECTION_GROUP, get_conn_conf_id
 from karadoc.common.connector import load_connector
+from karadoc.common.run.spark_batch_job import SparkBatchJob
 
 
 def check_connection(conn_name, job):
@@ -35,9 +37,7 @@ def check_connection(conn_name, job):
 
 
 def check_connections(args) -> ReturnCode:
-    from karadoc.common import Job, conf
-
-    job = Job()
+    job = SparkBatchJob()
     init_job(job=job, raw_args=args.raw_args)
     return_code = ReturnCode.Success
     for conn_name in sorted(conf.list_connection_names()):

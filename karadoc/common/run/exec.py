@@ -1,6 +1,4 @@
-from typing import Dict, Optional
-
-from pyspark.sql import DataFrame
+from typing import TYPE_CHECKING, Dict, Optional
 
 from karadoc.common.job_core.load import (
     load_non_runnable_action_file,
@@ -9,6 +7,9 @@ from karadoc.common.job_core.load import (
 from karadoc.common.output.printing import pretty_format
 from karadoc.common.run.spark_batch_job import SparkBatchJob
 from karadoc.common.utils.assert_utils import assert_true
+
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
 
 
 def load_populate(full_table_name: str) -> SparkBatchJob:
@@ -55,11 +56,13 @@ def print_job_properties(job: SparkBatchJob):
         print(pretty_format(job.external_outputs))
 
 
-def write_output(job: SparkBatchJob, df: DataFrame, no_write: bool = False, no_export: bool = False):
+def write_output(job: SparkBatchJob, df: "DataFrame", no_write: bool = False, no_export: bool = False):
     """Serialize the output of a SparkBatchJob if it exists and is not empty, and if its schema is correctly defined.
 
     :param no_write:
     """
+    from pyspark.sql import DataFrame
+
     if df is None:
         return
 

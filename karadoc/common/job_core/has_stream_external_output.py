@@ -1,14 +1,21 @@
-from typing import Dict, Optional, Union
-
-from pyspark.sql import DataFrame
-from pyspark.sql.streaming import DataStreamWriter
+from typing import TYPE_CHECKING, Dict, Optional, Union
 
 from karadoc.common.conf import CONNECTION_GROUP
 
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
+    from pyspark.sql.streaming import DataStreamWriter
 
-def _write_stream_external_output_signature_check(df: DataFrame, dest: Dict) -> DataStreamWriter:
-    """We uses this empty method when to check the signature of the equivalent method defined in the STREAM files"""
-    pass
+
+def _write_stream_external_output_signature_check():
+    from pyspark.sql import DataFrame
+    from pyspark.sql.streaming import DataStreamWriter
+
+    def write_stream_external_output_signature_check(df: DataFrame, dest: Dict) -> DataStreamWriter:
+        """Empty method used to check the signature of the equivalent method defined in the POPULATE files"""
+        pass
+
+    return write_stream_external_output_signature_check
 
 
 class HasStreamExternalOutput:
@@ -19,11 +26,11 @@ class HasStreamExternalOutput:
         # Attributes that the user is not supposed to change
         self.__write_external_output = None
 
-    def _write_external_output_default(self, df: DataFrame, dest: Dict) -> DataStreamWriter:
+    def _write_external_output_default(self, df: "DataFrame", dest: Dict) -> "DataStreamWriter":
         connector = self.get_output_connector(dest)
         return connector.write_stream(df, dest)
 
-    def write_external_output(self, df: DataFrame, dest: Dict) -> DataStreamWriter:
+    def write_external_output(self, df: "DataFrame", dest: Dict) -> "DataStreamWriter":
         """Writes a given DataFrame to a given external output
 
         :param df: The DataFrame to write

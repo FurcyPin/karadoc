@@ -1,25 +1,22 @@
 from argparse import ArgumentParser
-from typing import List, Tuple
+from typing import TYPE_CHECKING, List, Tuple
 
-import pyspark.sql.functions as f
-from pyspark.sql import DataFrame
-
-from karadoc.common import Job, run
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.read_from_option import ReadFromOption
 from karadoc.common.commands.options.tables_option import TablesOption
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.spark import init_job
 from karadoc.common.quality import CheckSeverity, alert
-from karadoc.common.quality.exec import execute_alert
-from karadoc.common.spark_utils import quote_idempotent, unquote
+from karadoc.common.run.spark_batch_job import SparkBatchJob
+
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
 
 
-def _get_key_columns(job: Job):
+def _get_key_columns(job: SparkBatchJob):
     """Returns the set of all flat keys used as part of primary or secondary keys. It does not contain duplicate names
 
-    >>> from karadoc.common import Job
-    >>> job = Job()
+    >>> job = SparkBatchJob()
     >>> _get_key_columns(job)
     []
     >>> job.primary_key = 'abc'
@@ -42,11 +39,10 @@ def _get_key_columns(job: Job):
     return list({column: None for tup in [key] + job.standardized_secondary_keys for column in tup}.keys())
 
 
-def _get_keys(job: Job) -> List[Tuple[str, ...]]:
+def _get_keys(job: SparkBatchJob) -> List[Tuple[str, ...]]:
     """Returns the set of all columns used as part of primary or secondary keys
 
-    >>> from karadoc.common import Job
-    >>> job = Job()
+    >>> job = SparkBatchJob()
     >>> _get_keys(job)
     []
     >>> job.primary_key = 'c1'
@@ -84,13 +80,18 @@ class NoKeyDefinedException(Exception):
         self.table = table
 
 
-def _check_key_uniqueness(df: DataFrame, key: Tuple[str, ...], table: str, output_alert_table: str):
+def _check_key_uniqueness(df: "DataFrame", key: Tuple[str, ...], table: str, output_alert_table: str):
+    from karadoc.common.quality.exec import execute_alert
+    from karadoc.common.spark_utils import quote_idempotent, unquote
+
     @alert(
         description="Check that the following key has no duplicates: %s" % str(key),
         severity=CheckSeverity.Critical,
         name=f"check_key_uniqueness:{key}",
     )
-    def check_key_uniqueness() -> DataFrame:
+    def check_key_uniqueness() -> "DataFrame":
+        import pyspark.sql.functions as f
+
         key_cols_aliased = [f.col(c).alias(unquote(c)) for c in key]
         key_cols = [quote_idempotent(c) for c in key]
 
@@ -100,14 +101,18 @@ def _check_key_uniqueness(df: DataFrame, key: Tuple[str, ...], table: str, outpu
     execute_alert(table, check_key_uniqueness, {}, output_alert_table)
 
 
-def _check_keys_uniqueness(df: DataFrame, keys: List[Tuple[str, ...]], table: str, output_alert_table: str):
+def _check_keys_uniqueness(df: "DataFrame", keys: List[Tuple[str, ...]], table: str, output_alert_table: str):
     if len(keys) == 0:
         raise NoKeyDefinedException(table=table)
     for key in keys:
         _check_key_uniqueness(df, key, table, output_alert_table)
 
 
-def _check_non_null_keys(df: DataFrame, key_columns: List[str], table: str, output_alert_table: str):
+def _check_non_null_keys(df: "DataFrame", key_columns: List[str], table: str, output_alert_table: str):
+    import pyspark.sql.functions as f
+
+    from karadoc.common.quality.exec import execute_alert
+
     @alert(
         description="Checks that the following columns are never null: %s" % str(key_columns),
         severity=CheckSeverity.Critical,
@@ -152,8 +157,10 @@ class CheckKeysCommand(Command):
 
     @staticmethod
     def do_command(args) -> ReturnCode:
+        from karadoc.common.run.exec import load_populate
+
         for table in args.tables:
-            job = run.load_populate(table)
+            job = load_populate(table)
             init_job(job=job, raw_args=args.raw_args)
             if args.remote_env is not None:
                 job._configure_remote_input(args.remote_env)

@@ -1,14 +1,15 @@
 import os
 import sys
 from pathlib import Path
-from typing import Optional
-
-from pyspark.sql import SparkSession
+from typing import TYPE_CHECKING, Optional
 
 from karadoc.common.conf import get_libs_folder_location
 
+if TYPE_CHECKING:
+    from pyspark.sql import SparkSession
 
-def get_spark_session(app_name: Optional[str] = None, extra_spark_conf: Optional[dict] = None) -> SparkSession:
+
+def get_spark_session(app_name: Optional[str] = None, extra_spark_conf: Optional[dict] = None) -> "SparkSession":
     """Gets an existing :class:`SparkSession` or, if there is no existing one, creates a new one.
 
     Spark default settings can be set via the `{env}.spark.conf` in `settings.toml`, and can also be overridden
@@ -36,6 +37,8 @@ def get_spark_session(app_name: Optional[str] = None, extra_spark_conf: Optional
     :return:
     """
     # TODO: this late import is a temporary workaround for cyclic dependencies
+    from pyspark.sql import SparkSession
+
     from karadoc.common import conf
     from karadoc.spark.conf import get_spark_conf
 
@@ -58,7 +61,7 @@ def get_spark_session(app_name: Optional[str] = None, extra_spark_conf: Optional
     return spark
 
 
-def _add_libs_folder_to_spark_python_path(spark: SparkSession) -> None:
+def _add_libs_folder_to_spark_python_path(spark: "SparkSession") -> None:
     # This simulates the first time the karadoc module is imported
     libs_folder = str(Path(get_libs_folder_location()).absolute())
     spark_env = spark.sparkContext.environment

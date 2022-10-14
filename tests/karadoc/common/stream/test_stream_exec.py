@@ -2,7 +2,7 @@ import shutil
 from unittest import TestCase
 
 from karadoc.common import conf
-from karadoc.common.stream import load_runnable_stream_file, load_stream_file
+from karadoc.common.stream.exec import load_runnable_stream_file, load_stream_file
 from karadoc.common.stream_utils import stream_to_batch
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
 from karadoc.test_utils.spark import MockDataFrame, MockRow

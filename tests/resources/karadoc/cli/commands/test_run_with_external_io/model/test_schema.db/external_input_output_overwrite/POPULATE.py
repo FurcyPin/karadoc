@@ -3,7 +3,7 @@ from typing import Dict
 from pyspark import Row
 from pyspark.sql import DataFrame
 
-from karadoc.common import Job
+from karadoc.common.run import Job
 from karadoc.common.utils.assert_utils import assert_true
 
 job = Job()

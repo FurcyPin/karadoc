@@ -1,7 +1,8 @@
 from enum import Enum
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
-from pyspark.sql import DataFrame
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
 
 
 class CheckSeverity(str, Enum):
@@ -46,15 +47,15 @@ class Metric(Check):
     pass
 
 
-def alert(description: str, severity: str, name=None) -> Callable[[Callable[[], DataFrame]], Alert]:
-    def decorator(func: Callable[[], DataFrame]) -> Alert:
+def alert(description: str, severity: str, name=None) -> Callable[[Callable[[], "DataFrame"]], Alert]:
+    def decorator(func: Callable[[], "DataFrame"]) -> Alert:
         return Alert(func, description, severity, name)
 
     return decorator
 
 
-def metric(description: str, severity: str, name=None) -> Callable[[Callable[[], DataFrame]], Metric]:
-    def decorator(func: Callable[[], DataFrame]) -> Metric:
+def metric(description: str, severity: str, name=None) -> Callable[[Callable[[], "DataFrame"]], Metric]:
+    def decorator(func: Callable[[], "DataFrame"]) -> Metric:
         return Metric(func, description, severity, name)
 
     return decorator

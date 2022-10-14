@@ -117,14 +117,8 @@ def check_method_signatures(method_name: str, actual: FunctionType, expected: Fu
     actual_args = inspect.getfullargspec(actual)
     expected_args = inspect.getfullargspec(expected)
     if actual_args != expected_args:
-        expected_signature = (
-            inspect.getsource(expected).split("\n")[0].replace("def _", "def ").replace("_signature_check", "")
-        )
-        raise TypeError(
-            'The method {name} should have the following signature\n"{signature}"'.format(
-                name=method_name, signature=expected_signature
-            )
-        )
+        expected_signature = inspect.getsource(expected).split("\n")[0]
+        raise TypeError(f'The method {method_name} should have the following signature\n"{expected_signature}"')
 
 
 def __set_job_attr_if_exists(mod: ModuleType, attr_name: str) -> None:
@@ -231,32 +225,34 @@ def _set_quality_check_job(mod: ModuleType) -> None:
 
 def _set_has_external_inputs(mod: ModuleType) -> None:
     if isinstance(mod.job, HasExternalInputs):
-        __load_optional_method(mod, HasExternalInputs, "read_external_input", _read_external_input_signature_check)
-        __load_optional_method(mod, HasExternalInputs, "read_external_inputs", _read_external_inputs_signature_check)
+        __load_optional_method(mod, HasExternalInputs, "read_external_input", _read_external_input_signature_check())
+        __load_optional_method(mod, HasExternalInputs, "read_external_inputs", _read_external_inputs_signature_check())
 
 
 def _set_has_stream_external_inputs(mod: ModuleType) -> None:
     if isinstance(mod.job, HasStreamExternalInputs):
         __load_optional_method(
-            mod, HasStreamExternalInputs, "read_external_input", _read_stream_external_input_signature_check
+            mod, HasStreamExternalInputs, "read_external_input", _read_stream_external_input_signature_check()
         )
         __load_optional_method(
-            mod, HasStreamExternalInputs, "read_external_inputs", _read_stream_external_inputs_signature_check
+            mod, HasStreamExternalInputs, "read_external_inputs", _read_stream_external_inputs_signature_check()
         )
 
 
 def _set_has_external_outputs(mod: ModuleType) -> None:
     if isinstance(mod.job, HasExternalOutputs):
-        __load_optional_method(mod, HasExternalOutputs, "write_external_output", _write_external_output_signature_check)
         __load_optional_method(
-            mod, HasExternalOutputs, "write_external_outputs", _write_external_outputs_signature_check
+            mod, HasExternalOutputs, "write_external_output", _write_external_output_signature_check()
+        )
+        __load_optional_method(
+            mod, HasExternalOutputs, "write_external_outputs", _write_external_outputs_signature_check()
         )
 
 
 def _set_has_stream_external_output(mod: ModuleType) -> None:
     if isinstance(mod.job, HasStreamExternalOutput):
         __load_optional_method(
-            mod, HasStreamExternalOutput, "write_external_output", _write_stream_external_output_signature_check
+            mod, HasStreamExternalOutput, "write_external_output", _write_stream_external_output_signature_check()
         )
 
 

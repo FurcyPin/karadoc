@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 import karadoc
-from karadoc.common.run import load_populate
+from karadoc.common.run.exec import load_populate
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
 
 

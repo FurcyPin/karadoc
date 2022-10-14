@@ -1,9 +1,7 @@
 from argparse import ArgumentParser, Namespace
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from pyspark.sql import DataFrame
-
-from karadoc.common import Job, conf, run
+from karadoc.common import conf
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.help import LineBreakHelpFormatter
 from karadoc.common.commands.options.dry_option import DryOption
@@ -16,7 +14,6 @@ from karadoc.common.commands.spark import init_job
 from karadoc.common.exceptions import JobDisabledException
 from karadoc.common.job_core.has_spark import _partition_to_path
 from karadoc.common.model import variables
-from karadoc.common.nonreg import DataframeComparator, NonregResult
 from karadoc.common.run.spark_batch_job import SparkBatchJob
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.connection_validations import validate_connections
@@ -24,6 +21,11 @@ from karadoc.common.validations.job_validations import (
     validate_inputs,
     validate_output_partition,
 )
+
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
+
+    from karadoc.common.nonreg import NonregResult
 
 
 def _get_join_cols(args, job):
@@ -36,8 +38,12 @@ def _get_join_cols(args, job):
     return join_cols
 
 
-def _check_nonreg(job: Job, df: DataFrame, args):
+def _check_nonreg(job: SparkBatchJob, df: "DataFrame", args):
     """Compare the output of a Populate with the currently existing one."""
+    from pyspark.sql import DataFrame
+
+    from karadoc.common.nonreg import DataframeComparator
+
     if conf.is_dev_env():
         job.spark.conf.set("spark.sql.shuffle.partitions", "200")
 
@@ -85,23 +91,25 @@ def get_previous_df(job, compare_env):
     return previous_df
 
 
-def inspect_nonreg_results(df: NonregResult):
+def inspect_nonreg_results(df: "NonregResult"):
     """Function used for unit tests. Mock this function to be able to inspect the produced DataFrame
     during the execution of the command."""
     pass
 
 
-def _run_table(job: SparkBatchJob, args) -> Optional[DataFrame]:
+def _run_table(job: "SparkBatchJob", args) -> Optional["DataFrame"]:
     """Computes the Spark DataFrame build by a SparkBatchJob with the specified args.
 
     :param job:
     :param args:
     :return:
     """
-    df: Optional[DataFrame] = None
+    from karadoc.common.run.exec import print_job_properties
+
+    df: Optional["DataFrame"] = None
     if args.remote_env is not None:
         job._configure_remote_input(args.remote_env)
-    run.print_job_properties(job)
+    print_job_properties(job)
     fail_if_results(validate_inputs(job))
     fail_if_results(validate_output_partition(job))
     fail_if_results(validate_connections(job))
@@ -171,12 +179,14 @@ class NonregCommand(Command):
 
     @staticmethod
     def do_command(args: Namespace) -> ReturnCode:
+        from karadoc.common.run.exec import load_runnable_populate
+
         return_code = ReturnCode.Success
         vars_list = variables.expand_vars(args.vars)
         for table in args.tables:
             for vars in vars_list:
                 print("\nStarting table %s" % table)
-                job: SparkBatchJob = run.load_runnable_populate(table, vars)
+                job: SparkBatchJob = load_runnable_populate(table, vars)
                 df = _run_table(job, args)
                 if df is not None:
                     return_code = _check_nonreg(job, df, args)

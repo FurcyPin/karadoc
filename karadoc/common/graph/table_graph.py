@@ -1,17 +1,21 @@
-from typing import Callable, Dict, List, Optional, Set, Tuple
+from typing import TYPE_CHECKING, Callable, Dict, List, Optional, Set, Tuple
 
 import graphviz
-import networkx as nx
 
 from karadoc.common import table_utils
 from karadoc.common.graph.graph_filter import GraphFilter
 from karadoc.common.model.table_index import Populate, Table
 
+if TYPE_CHECKING:
+    import networkx as nx
 
-def build_graph(table_index: Dict[str, Table]) -> nx.DiGraph:
+
+def build_graph(table_index: Dict[str, Table]) -> "nx.DiGraph":
     """Generate the full dependency graph of the model
     :return: a directed graph of table names
     """
+    import networkx as nx
+
     graph: nx.DiGraph = nx.DiGraph()
     for table in table_index.values():
         graph.add_node(table.full_name)
@@ -22,7 +26,7 @@ def build_graph(table_index: Dict[str, Table]) -> nx.DiGraph:
 
 
 def __breadth_first_search(  # NOSONAR
-    graph: nx.DiGraph,
+    graph: "nx.DiGraph",
     upwards: bool,
     max_depth: Optional[int],
     starting_nodes: List[str],
@@ -71,8 +75,8 @@ def __breadth_first_search(  # NOSONAR
 
 
 def __build_oriented_neighbor_subgraph(
-    graph: nx.DiGraph,
-    new_graph: nx.DiGraph,
+    graph: "nx.DiGraph",
+    new_graph: "nx.DiGraph",
     upwards: bool,
     max_depth: Optional[int],
     starting_nodes: List[str],
@@ -120,8 +124,8 @@ def build_graph_filters(
 
 
 def get_filtered_subgraph(
-    graph: nx.DiGraph, graph_filters: List[GraphFilter], ignored_edges: List[Tuple[str, str]]
-) -> nx.DiGraph:
+    graph: "nx.DiGraph", graph_filters: List[GraphFilter], ignored_edges: List[Tuple[str, str]]
+) -> "nx.DiGraph":
     """Generate a new subgraph of the given 'graph' starting from the specified 'nodes',
         exploring upstream up to a depth of 'upstream_depth' and downstream up to a depth of 'downstream_depth'.
         A depth of 0 or less means no exploration in that direction.
@@ -132,7 +136,9 @@ def get_filtered_subgraph(
     :param ignored_edges:
     :return:
     """
-    new_graph: nx.DiGraph = nx.DiGraph()
+    import networkx as nx
+
+    new_graph: "nx.DiGraph" = nx.DiGraph()
     for graph_filter in graph_filters:
         __build_oriented_neighbor_subgraph(
             graph, new_graph, True, graph_filter.upstream_depth, [graph_filter.node], ignored_edges
@@ -143,7 +149,7 @@ def get_filtered_subgraph(
     return new_graph
 
 
-def get_orphans(graph: nx.DiGraph) -> List[str]:
+def get_orphans(graph: "nx.DiGraph") -> List[str]:
     """Returns the list of nodes without any predecessors.
 
     :param graph:
@@ -156,7 +162,7 @@ def get_orphans(graph: nx.DiGraph) -> List[str]:
     return res
 
 
-def find_tables_to_disable(index: Dict[str, Table], graph: nx.DiGraph) -> List[str]:
+def find_tables_to_disable(index: Dict[str, Table], graph: "nx.DiGraph") -> List[str]:
     """Find tables that can be disabled. A table can be disabled if all three conditions below are met :
     - it has no external output
     - all of its direct successors are already disabled or can be disabled (recursively)
@@ -192,7 +198,9 @@ def find_tables_to_disable(index: Dict[str, Table], graph: nx.DiGraph) -> List[s
     return sorted([table for table, state in dead_tables.items() if state == "can be disabled"])
 
 
-def get_topological_sort(graph: nx.DiGraph) -> List[str]:
+def get_topological_sort(graph: "nx.DiGraph") -> List[str]:
+    import networkx as nx
+
     return list(nx.algorithms.topological_sort(graph))
 
 
@@ -225,7 +233,7 @@ def _format_table_node(table: str, table_name: str, populate: Populate, highligh
 
 
 def render_graph(
-    graph: nx.DiGraph,
+    graph: "nx.DiGraph",
     table_index: Dict[str, Table],
     highlight_tables: Optional[List[str]] = None,
     output_format: str = "png",

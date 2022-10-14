@@ -27,7 +27,7 @@ def write_pandas_dataframes_to_xlsx(
     When exporting multiple DataFrames, the sheet name length must not exceed 31 characters.
 
     :param dfs: A Pandas DataFrame or a Dict of multiple (sheet_name, DataFrame)
-    :param output: the path of the output excel file
+    :param output: the path of the output Excel file
     :param options: extra options to pass to `pandas.DataFrame.to_excel()`
     :return:
     """

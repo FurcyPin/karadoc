@@ -2,8 +2,6 @@ from argparse import ArgumentParser, Namespace
 
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.return_code import ReturnCode
-from karadoc.common.model.connection_index import list_connections_df
-from karadoc.common.output.local_export import local_export_dataframe
 
 
 class ListConnectionsCommand(Command):
@@ -35,6 +33,9 @@ class ListConnectionsCommand(Command):
 
     @staticmethod
     def do_command(args: Namespace) -> ReturnCode:
+        from karadoc.common.model.connection_index import list_connections_df
+        from karadoc.common.output.local_export import local_export_dataframe
+
         binary_formats = ["xlsx"]
         if args.output is None and args.format in binary_formats:
             args.output = f"connections.{args.format}"

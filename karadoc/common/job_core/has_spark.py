@@ -1,10 +1,11 @@
 import threading
-from typing import Optional
-
-from pyspark.sql import SparkSession
+from typing import TYPE_CHECKING, Optional
 
 from karadoc.common.exceptions import IllegalJobInitError
 from karadoc.spark.utils import get_spark_session
+
+if TYPE_CHECKING:
+    from pyspark.sql import SparkSession
 
 
 def _partition_to_path(partition) -> str:
@@ -34,7 +35,7 @@ class HasSpark:
 
     def __init__(self) -> None:
         # Attributes that the user is not supposed to change
-        self.__spark: Optional[SparkSession] = None
+        self.__spark: Optional["SparkSession"] = None
         self.__threadlocal_spark = threading.local()
 
     def init(self, app_name: str = None, spark_conf: dict = None):
@@ -57,7 +58,7 @@ class HasSpark:
         self.__init__()
 
     @property
-    def spark(self) -> Optional[SparkSession]:
+    def spark(self) -> Optional["SparkSession"]:
         if hasattr(self.__threadlocal_spark, "val"):
             return self.__threadlocal_spark.val
         else:
