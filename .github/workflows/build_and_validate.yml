@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.7", "3.8", "3.9"] # We don't validate 3.10 for now, as numpy seems to be incompatible
+        python-version: ["3.8", "3.9", "3.10"] # We don't validate 3.10 for now, as numpy seems to be incompatible
         poetry-version: ["1.1.14"]
         os: [ubuntu-latest, macos-latest] # We don't run on Windows atm, it's quite difficult to make Spark run on Windows
     runs-on: ${{ matrix.os }}

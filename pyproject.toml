@@ -10,10 +10,13 @@ homepage = "https://github.com/FurcyPin/karadoc"
 repository = "https://github.com/FurcyPin/karadoc"
 
 [tool.poetry.dependencies]
-python = ">=3.6.2,<3.11"
+python = ">=3.8.0,<3.11"
 
 # Config Management
 dynaconf = "^2.2.3"
+
+# Autocomplete
+argcomplete = "^2.0.0"
 
 # Coloring Terminal Output
 termcolor = "^1.1.0"
@@ -48,7 +51,7 @@ flake8 = "^5.0.4"
 mypy = "^0.971"
 bandit = "^1.6.0"
 safety = "^2.1.1"
-pytest = "^6.2.0"
+pytest = "^6.2.0" 
 pytest-cov = "^3.0.0"
 pipdeptree = "^2.2.1"
 
