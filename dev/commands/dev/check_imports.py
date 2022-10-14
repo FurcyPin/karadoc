@@ -7,15 +7,6 @@ from karadoc.common.commands.command import Command
 from karadoc.common.commands.return_code import ReturnCode
 
 
-def calc_container(path):
-    total_size = 0
-    for dirpath, dirnames, filenames in os.walk(path):
-        for f in filenames:
-            fp = os.path.join(dirpath, f)
-            total_size += os.path.getsize(fp)
-    return total_size
-
-
 def get_imported_modules_with_size() -> Dict[str, int]:
     res = dict()
     for key in sorted(sys.modules.keys()):

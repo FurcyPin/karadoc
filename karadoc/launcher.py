@@ -21,3 +21,7 @@ def main(argv: List[str] = None):
 
             if SparkSession._instantiatedSession is not None:
                 SparkSession._instantiatedSession.stop()
+
+
+if __name__ == "__main__":
+    main()

@@ -157,6 +157,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
-data
-experimental
-data
+# project files
+/data
+/model
+/experimental
+/test_working_dir

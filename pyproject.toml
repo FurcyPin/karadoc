@@ -125,8 +125,7 @@ addopts = [
 
 testpaths = [
     "karadoc",
-    "tests/karadoc",
-    "tests/test_launcher.py"
+    "tests/karadoc"
 ]
 
 junit_family = "xunit2"

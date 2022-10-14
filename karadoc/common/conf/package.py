@@ -10,8 +10,8 @@ from karadoc.common.conf.conf_box import ConfBox
 from karadoc.common.exceptions import MissingConfigurationException
 from karadoc.common.utils.assert_utils import assert_true
 
-APPLICATION_NAME = "KARADOC"
-APPLICATION_DESCRIPTION = "karadoc: a development environment for PySpark."
+APPLICATION_NAME = "karadoc"
+APPLICATION_DESCRIPTION = f"{APPLICATION_NAME}: a development environment for PySpark."
 CONNECTION_GROUP = "connection"
 SECRET_STORE_GROUP = "secret"  # nosec B105
 REMOTE_ENV_GROUP = "remote_env"

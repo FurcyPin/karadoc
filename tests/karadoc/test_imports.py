@@ -10,4 +10,11 @@ def test_imports_on_startup():
     modules_that_should_be_optional = ["pyspark", "numpy" "pandas", "azure", "networkx"]
     # ideally, yaml should be optional too, because it is very large, but dynaconf currently imports it directly
     # (cf: https://github.com/dynaconf/dynaconf/issues/820)
-    assert os.system(f"karadoc dev check_imports --fail-if-modules {' '.join(modules_that_should_be_optional)}") == 0
+    assert os.system("coverage run -m karadoc.launcher dev check_imports") == 0
+    assert (
+        os.system(
+            "coverage run -m karadoc.launcher "
+            f"dev check_imports --fail-if-modules {' '.join(modules_that_should_be_optional)}"
+        )
+        == 0
+    )

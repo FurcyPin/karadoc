@@ -1,3 +1,3 @@
 [default]
 dynaconf_include = ["conf/spark/settings.toml"]
-custom_command_packages = ["dev_commands"]
+custom_command_packages = ["dev.commands"]
