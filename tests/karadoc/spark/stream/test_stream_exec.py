@@ -6,13 +6,14 @@ from karadoc.common.stream_utils import stream_to_batch
 from karadoc.spark.stream.exec import load_runnable_stream_file, load_stream_file
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
 from karadoc.test_utils.spark import MockDataFrame, MockRow
+from tests.karadoc.test_utils import get_resource_folder_path
 
 # For some reason, when applied on the class, a patch decorator will NOT be applied to the setUp and tearDown functions
 # For this reason, we define it here once, then apply it to the class AND the setUp and tearDown methods
 config_mock = mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": "tests/resources/karadoc/spark/stream/model",
+        "model_dir": get_resource_folder_path(__name__) + "/model",
         "spark_stream_dir": "test_working_dir/spark/stream",
     }
 )

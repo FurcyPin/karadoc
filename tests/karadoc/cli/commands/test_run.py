@@ -11,6 +11,7 @@ from karadoc.test_utils.mock_settings import (
     mock_settings_for_test_class,
 )
 from karadoc.test_utils.stdio import captured_output
+from tests.karadoc.test_utils import get_resource_folder_path
 
 warehouse_dir = "test_working_dir/test_run_warehouse"
 
@@ -18,7 +19,7 @@ warehouse_dir = "test_working_dir/test_run_warehouse"
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": "tests/resources/karadoc/cli/commands/test_run/model",
+        "model_dir": get_resource_folder_path(__name__) + "/model",
         "warehouse_dir": warehouse_dir,
     }
 )
@@ -131,7 +132,7 @@ class TestRun(unittest.TestCase):
             Path(f"{warehouse_dir}/test_schema.db/test_table_spark_conf_overwrite/day=2018-02-02").is_dir()
         )
 
-    @mock_settings_for_test({"libs": "tests/resources/karadoc/cli/commands/test_run/libs"})
+    @mock_settings_for_test({"libs": get_resource_folder_path(__name__) + "/libs"})
     def test_run_with_populate_with_udf_in_libs_folder(self):
         """
         GIVEN a POPULATE that uses a UDF that uses another function

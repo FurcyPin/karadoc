@@ -3,6 +3,9 @@ from pyspark import StorageLevel
 from karadoc.common.spark_utils import get_schema_from_json
 from karadoc.spark.analyze import timeline_analysis
 from karadoc.test_utils import pyspark_test_class
+from tests.karadoc.test_utils import get_resource_folder_path
+
+test_resource_dir = get_resource_folder_path(__name__)
 
 
 class TestTimelineAnalysis(pyspark_test_class.PySparkTest):
@@ -75,20 +78,14 @@ class TestTimelineAnalysis(pyspark_test_class.PySparkTest):
     """
 
     def test_get_always_null_columns(self):
-        df = self.spark.read.option("header", "true").csv(
-            "tests/resources/karadoc/spark/analyze/test_timeline_analysis/sample_file"
-        )
+        df = self.spark.read.option("header", "true").csv(test_resource_dir + "/sample_file")
         actual = timeline_analysis._get_always_null_columns(df)
         expected = ["always_null_col"]
         self.assertEqual(expected, actual)
 
     def test_analyse_timeline(self):
         source_schema = get_schema_from_json(self.source_df_json_schema)
-        df = (
-            self.spark.read.option("header", "true")
-            .schema(source_schema)
-            .csv("tests/resources/karadoc/spark/analyze/test_timeline_analysis/sample_file")
-        )
+        df = self.spark.read.option("header", "true").schema(source_schema).csv(test_resource_dir + "/sample_file")
         actual = timeline_analysis.analyse_timeline(
             df, reference_time_col="reference_date", cohort_cols=["cohort"], nb_buckets=5
         ).persist(StorageLevel.DISK_ONLY)
@@ -166,11 +163,7 @@ class TestTimelineAnalysis(pyspark_test_class.PySparkTest):
 
     def test_analyse_timeline_with_multiple_cohort_columns(self):
         source_schema = get_schema_from_json(self.source_df_json_schema)
-        df = (
-            self.spark.read.option("header", "true")
-            .schema(source_schema)
-            .csv("tests/resources/karadoc/spark/analyze/test_timeline_analysis/sample_file")
-        )
+        df = self.spark.read.option("header", "true").schema(source_schema).csv(test_resource_dir + "/sample_file")
         actual = timeline_analysis.analyse_timeline(
             df, reference_time_col="reference_date", cohort_cols=["cohort", "string_col"], nb_buckets=5
         ).persist(StorageLevel.DISK_ONLY)

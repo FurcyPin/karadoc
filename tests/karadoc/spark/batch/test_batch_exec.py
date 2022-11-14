@@ -2,10 +2,14 @@ from unittest import TestCase
 
 from karadoc.spark.batch.exec import load_populate, load_runnable_populate
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
+from tests.karadoc.test_utils import get_resource_folder_path
 
 
 @mock_settings_for_test_class(
-    {"enable_file_index_cache": False, "model_dir": "tests/resources/karadoc/spark/batch/test_batch_exec/model"}
+    {
+        "enable_file_index_cache": False,
+        "model_dir": get_resource_folder_path(__name__) + "/model",
+    }
 )
 class TestRunExec(TestCase):
     def test_load_runnable_populate(self):

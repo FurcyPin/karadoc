@@ -8,6 +8,7 @@ from karadoc.test_utils.mock_settings import (
     mock_settings_for_test_class,
 )
 from karadoc.test_utils.strings import strip_margin
+from tests.karadoc.test_utils import get_resource_folder_path
 
 test_dir = "test_working_dir/find_tables_to_disable"
 
@@ -24,7 +25,7 @@ class TestFindTablesToDisable(unittest.TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": "tests/resources/karadoc/cli/commands/test_find_tables_to_disable/model",
+            "model_dir": get_resource_folder_path(__name__) + "/model",
         }
     )
     def test_find_tables_to_disable(self):
@@ -43,7 +44,7 @@ class TestFindTablesToDisable(unittest.TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": "tests/resources/karadoc/cli/commands/test_find_tables_to_disable/model_single_table",
+            "model_dir": get_resource_folder_path(__name__) + "/model_single_table",
         }
     )
     def test_find_tables_to_disable_single_table(self):
@@ -61,7 +62,7 @@ class TestFindTablesToDisable(unittest.TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": "tests/resources/karadoc/cli/commands/test_find_tables_to_disable/model",
+            "model_dir": get_resource_folder_path(__name__) + "/model",
         }
     )
     def show_graph_for_test_case(self):

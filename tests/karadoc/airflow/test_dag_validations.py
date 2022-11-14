@@ -5,8 +5,9 @@ from karadoc.airflow.dag_validations import (
 )
 from karadoc.common.commands.return_code import ReturnCode
 from tests.karadoc.airflow.validation_test_template import ValidationTestTemplate
+from tests.karadoc.test_utils import get_resource_folder_path
 
-test_resource_dir = "tests/resources/karadoc/airflow/test_dag_validations"
+test_resource_dir = get_resource_folder_path(__name__)
 
 
 class TestDagValidations(ValidationTestTemplate):

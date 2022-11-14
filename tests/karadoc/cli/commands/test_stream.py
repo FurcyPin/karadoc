@@ -19,13 +19,14 @@ from karadoc.test_utils.spark import MockDataFrame, MockRow
 # For some reason, when applied on the class, a patch decorator will NOT be applied to the setUp and tearDown functions
 # For this reason, we define it here once, then apply it to the class AND the setUp and tearDown methods
 from karadoc.test_utils.stdio import captured_output
+from tests.karadoc.test_utils import get_resource_folder_path
 
 warehouse_dir = "test_working_dir/hive/warehouse"
 
 config_mock = mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": "tests/resources/karadoc/cli/commands/test_stream/model",
+        "model_dir": get_resource_folder_path(__name__) + "/model",
         "spark_stream_dir": "test_working_dir/spark/stream",
         "connection": {"dummy": {"type": "tests.resources.connectors.dummy"}},
         "warehouse_dir": warehouse_dir,

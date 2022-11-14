@@ -6,6 +6,7 @@ from karadoc.common.commands.return_code import ReturnCode
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
 from karadoc.test_utils.spark import MockDataFrame, MockRow
 from tests.karadoc.spark.utils import read_spark_table
+from tests.karadoc.test_utils import get_resource_folder_path
 
 DEBUG = False
 
@@ -13,7 +14,7 @@ DEBUG = False
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": "tests/resources/karadoc/cli/commands/test_check_keys/model",
+        "model_dir": get_resource_folder_path(__name__) + "/model",
         "warehouse_dir": "test_working_dir/hive/warehouse",
     }
 )

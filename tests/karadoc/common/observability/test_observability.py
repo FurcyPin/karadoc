@@ -12,6 +12,7 @@ from karadoc.test_utils.mock_settings import (
     mock_settings_for_test_class,
 )
 from karadoc.test_utils.stdio import captured_output
+from tests.karadoc.test_utils import get_resource_folder_path
 
 
 @mock_settings_for_test_class({"observability": None})
@@ -65,7 +66,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": "tests/resources/karadoc/common/observability/test_observability/model",
+            "model_dir": get_resource_folder_path(__name__) + "/model",
             "warehouse_dir": "test_working_dir/hive/warehouse",
         }
     )
@@ -84,7 +85,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": "tests/resources/karadoc/common/observability/test_observability/model",
+            "model_dir": get_resource_folder_path(__name__) + "/model",
             "warehouse_dir": "test_working_dir/hive/warehouse",
         }
     )
@@ -108,7 +109,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": "tests/resources/karadoc/common/observability/test_observability/model",
+            "model_dir": get_resource_folder_path(__name__) + "/model",
             "warehouse_dir": "test_working_dir/hive/warehouse",
         }
     )
@@ -127,7 +128,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": "tests/resources/karadoc/common/observability/test_observability/model",
+            "model_dir": get_resource_folder_path(__name__) + "/model",
             "warehouse_dir": "test_working_dir/hive/warehouse",
             "custom_command_packages": [
                 "tests.resources.karadoc.common.observability.test_observability.custom_command_package"
@@ -149,7 +150,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": "tests/resources/karadoc/common/observability/test_observability/model",
+            "model_dir": get_resource_folder_path(__name__) + "/model",
             "warehouse_dir": "test_working_dir/hive/warehouse",
             "observability.handler.dummy": {"type": "tests.resources.observability.handlers.dummy", "level": "info"},
         }
@@ -170,7 +171,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": "tests/resources/karadoc/common/observability/test_observability/model",
+            "model_dir": get_resource_folder_path(__name__) + "/model",
             "warehouse_dir": "test_working_dir/hive/warehouse",
             "observability.handler.dummy": {
                 "type": "does.not.exists",

@@ -5,6 +5,7 @@ from pathlib import Path
 
 import karadoc
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
+from tests.karadoc.test_utils import get_resource_folder_path
 
 test_dir = "test_working_dir/analyze_timeline"
 
@@ -12,7 +13,7 @@ test_dir = "test_working_dir/analyze_timeline"
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": "tests/resources/karadoc/cli/commands/test_analyze_timeline/model",
+        "model_dir": get_resource_folder_path(__name__) + "/model",
         "analyze_timeline_dir": test_dir,
     }
 )
