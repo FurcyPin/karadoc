@@ -9,6 +9,7 @@ from karadoc.test_utils.mock_settings import (
     mock_settings_for_test,
     mock_settings_for_test_class,
 )
+from tests.karadoc.test_utils import get_resource_folder_path
 
 
 @mock_settings_for_test_class()
@@ -131,7 +132,7 @@ class TestConfBox(unittest.TestCase):
         import dynaconf
 
         old_settings = dynaconf.settings
-        dynaconf.settings = Settings("tests/resources/karadoc/common/conf/test_conf_box/settings.toml")
+        dynaconf.settings = Settings(get_resource_folder_path(__name__) + "/settings.toml")
         try:
             self.assertEqual("A", conf.get_custom_settings().get("variable_A"))
             self.assertEqual("B", conf.get_custom_settings().get("variable_B"))

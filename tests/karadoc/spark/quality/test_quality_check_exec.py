@@ -2,12 +2,13 @@ from unittest import TestCase
 
 from karadoc.spark.quality.exec import load_runnable_quality_check
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
+from tests.karadoc.test_utils import get_resource_folder_path
 
 
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": "tests/resources/karadoc/spark/quality/test_quality_check_exec/model",
+        "model_dir": get_resource_folder_path(__name__) + "/model",
     }
 )
 class TestExec(TestCase):

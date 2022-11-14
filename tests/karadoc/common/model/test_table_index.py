@@ -2,10 +2,11 @@ import unittest
 
 from karadoc.common.model import table_index
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
+from tests.karadoc.test_utils import get_resource_folder_path
 
 
 @mock_settings_for_test_class(
-    {"enable_file_index_cache": False, "model_dir": "tests/resources/karadoc/common/model/test_table_index/model"}
+    {"enable_file_index_cache": False, "model_dir": get_resource_folder_path(__name__) + "/model"}
 )
 class TableIndex(unittest.TestCase):
     def test_build_table_index(self):

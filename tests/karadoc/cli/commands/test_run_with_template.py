@@ -5,13 +5,14 @@ from pathlib import Path
 import karadoc
 from karadoc.spark.batch.exec import load_populate
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
+from tests.karadoc.test_utils import get_resource_folder_path
 
 
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
         "template_package": "tests.resources.karadoc.cli.commands.test_run_with_template.model_lib.template_test",
-        "model_dir": "tests/resources/karadoc/cli/commands/test_run_with_template/model",
+        "model_dir": get_resource_folder_path(__name__) + "/model",
         "warehouse_dir": "test_working_dir/hive/warehouse",
     }
 )

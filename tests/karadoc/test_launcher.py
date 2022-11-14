@@ -7,12 +7,13 @@ from pyspark.sql import SparkSession
 from karadoc import launcher
 from karadoc.spark.utils import get_spark_session
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
+from tests.karadoc.test_utils import get_resource_folder_path
 
 
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": "tests/resources/test_launcher/model",
+        "model_dir": get_resource_folder_path(__name__) + "/model",
         "warehouse_dir": "test_working_dir/hive/warehouse",
     }
 )

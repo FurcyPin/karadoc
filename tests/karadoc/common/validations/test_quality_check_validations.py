@@ -6,8 +6,9 @@ from karadoc.common.validations.quality_check_validations import (
 from tests.karadoc.common.validations.validation_test_template import (
     ValidationTestTemplate,
 )
+from tests.karadoc.test_utils import get_resource_folder_path
 
-test_resource_dir = "tests/resources/karadoc/common/validations/test_quality_check_validations"
+test_resource_dir = get_resource_folder_path(__name__)
 
 
 class TestQualityCheckValidations(ValidationTestTemplate):

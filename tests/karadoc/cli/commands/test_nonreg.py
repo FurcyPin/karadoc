@@ -10,12 +10,13 @@ from karadoc.test_utils.mock_settings import (
 )
 from karadoc.test_utils.spark import MockDataFrame, MockRow
 from karadoc.test_utils.stdio import captured_output
+from tests.karadoc.test_utils import get_resource_folder_path
 
 
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": "tests/resources/karadoc/cli/commands/test_nonreg_command/model",
+        "model_dir": get_resource_folder_path(__name__) + "/model",
         "warehouse_dir": "test_working_dir/hive/warehouse",
     }
 )

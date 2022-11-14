@@ -6,6 +6,7 @@ import networkx as nx
 from karadoc.common.graph import table_graph
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
 from karadoc.test_utils.strings import strip_margin
+from tests.karadoc.test_utils import get_resource_folder_path
 
 
 def mock_render(*args, **kwargs):
@@ -53,7 +54,7 @@ def get_oriented_neighbor_subgraph(
 
 
 @mock_settings_for_test_class(
-    {"enable_file_index_cache": False, "model_dir": "tests/resources/karadoc/common/graph/test_table_graph/model"}
+    {"enable_file_index_cache": False, "model_dir": get_resource_folder_path(__name__) + "/model"}
 )
 class TestTableGraph(TestCase):
     def test_build_graph(self):
@@ -192,7 +193,7 @@ class TestTableGraph(TestCase):
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": "tests/resources/karadoc/common/graph/test_table_graph/model_graph_partitions",
+        "model_dir": get_resource_folder_path(__name__) + "/model_graph_partitions",
     }
 )
 class TestTableGraphPartitions(TestCase):
