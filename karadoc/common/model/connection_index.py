@@ -5,9 +5,9 @@ from pyspark.sql import DataFrame
 from karadoc.common import conf
 from karadoc.common.conf import CONNECTION_GROUP
 from karadoc.common.model import file_index
-from karadoc.common.run.exec import load_populate
-from karadoc.common.stream.exec import load_stream_file
 from karadoc.common.table_utils import populate_exists, stream_file_exists
+from karadoc.spark.batch.exec import load_populate
+from karadoc.spark.stream.exec import load_stream_file
 
 
 def describe_connection(job, connection_name, source_details, full_table_name, direction, env: Optional[str]):
@@ -131,7 +131,7 @@ def list_connections_df(env: Optional[str]) -> DataFrame:
     :param env: Retrieves the connections properties for the specified environment
     :return: a Spark DataFrame
     """
-    from karadoc.common.run.spark_batch_job import SparkBatchJob
+    from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 
     job = SparkBatchJob()
     job.init()

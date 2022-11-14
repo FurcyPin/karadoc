@@ -1,6 +1,6 @@
 from pyspark.sql.types import StringType, StructField, StructType
 
-from karadoc.common.run import Job
+from karadoc.spark.batch import Job
 
 job = Job()
 

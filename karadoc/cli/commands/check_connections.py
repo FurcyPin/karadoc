@@ -9,7 +9,7 @@ from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.spark import init_job
 from karadoc.common.conf import CONNECTION_GROUP, get_conn_conf_id
 from karadoc.common.connector import load_connector
-from karadoc.common.run.spark_batch_job import SparkBatchJob
+from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 
 
 def check_connection(conn_name, job):

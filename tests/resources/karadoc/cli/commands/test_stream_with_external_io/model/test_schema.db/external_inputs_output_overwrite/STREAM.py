@@ -3,8 +3,8 @@ from typing import Dict
 from pyspark.sql import DataFrame
 from pyspark.sql.streaming import DataStreamWriter
 
-from karadoc.common.stream import Job
 from karadoc.common.stream_utils import batch_to_stream
+from karadoc.spark.stream import Job
 
 job = Job()
 

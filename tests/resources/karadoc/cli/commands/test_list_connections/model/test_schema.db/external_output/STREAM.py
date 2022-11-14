@@ -1,4 +1,4 @@
-from karadoc.common.stream import Job
+from karadoc.spark.stream import Job
 
 job = Job()
 

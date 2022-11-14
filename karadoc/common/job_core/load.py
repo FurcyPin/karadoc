@@ -9,32 +9,32 @@ from typing import Any, Callable, Dict, Optional, Type, TypeVar, Union, cast
 from karadoc.common import conf
 from karadoc.common.exceptions import ActionFileLoadingError, ForbiddenActionError
 from karadoc.common.job_core.has_before_after import HasBeforeAfter
-from karadoc.common.job_core.has_external_inputs import (
+from karadoc.common.job_core.has_vars import HasVars
+from karadoc.common.job_core.job_base import JobBase
+from karadoc.common.model import file_index
+from karadoc.common.table_utils import parse_table_name
+from karadoc.common.utils.assert_utils import assert_true
+from karadoc.spark.job_core.has_external_inputs import (
     HasExternalInputs,
     _read_external_input_signature_check,
     _read_external_inputs_signature_check,
 )
-from karadoc.common.job_core.has_external_outputs import (
+from karadoc.spark.job_core.has_external_outputs import (
     HasExternalOutputs,
     _write_external_output_signature_check,
     _write_external_outputs_signature_check,
 )
-from karadoc.common.job_core.has_spark import HasSpark
-from karadoc.common.job_core.has_stream_external_inputs import (
+from karadoc.spark.job_core.has_spark import HasSpark
+from karadoc.spark.job_core.has_stream_external_inputs import (
     HasStreamExternalInputs,
     _read_stream_external_input_signature_check,
     _read_stream_external_inputs_signature_check,
 )
-from karadoc.common.job_core.has_stream_external_output import (
+from karadoc.spark.job_core.has_stream_external_output import (
     HasStreamExternalOutput,
     _write_stream_external_output_signature_check,
 )
-from karadoc.common.job_core.has_vars import HasVars
-from karadoc.common.job_core.job_base import JobBase
-from karadoc.common.model import file_index
-from karadoc.common.quality.checks import Alert, Metric
-from karadoc.common.table_utils import parse_table_name
-from karadoc.common.utils.assert_utils import assert_true
+from karadoc.spark.quality.checks import Alert, Metric
 
 Job = TypeVar("Job", JobBase, JobBase)
 A = TypeVar("A")
@@ -187,28 +187,28 @@ def __load_optional_method(
 
 
 def _set_spark_batch_job(mod: ModuleType) -> None:
-    from karadoc.common.run.spark_batch_job import SparkBatchJob
+    from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 
     if isinstance(mod.job, SparkBatchJob):
         mod.job.run = mod.run
 
 
 def _set_spark_stream_job(mod: ModuleType) -> None:
-    from karadoc.common.stream.spark_stream_job import SparkStreamJob
+    from karadoc.spark.stream.spark_stream_job import SparkStreamJob
 
     if isinstance(mod.job, SparkStreamJob):
         mod.job.stream = mod.stream
 
 
 def _set_analyze_job(mod: ModuleType) -> None:
-    from karadoc.common.analyze.analyze_job import AnalyzeJob
+    from karadoc.spark.analyze.analyze_job import AnalyzeJob
 
     if isinstance(mod.job, AnalyzeJob):
         mod.job.analyze = mod.analyze
 
 
 def _set_quality_check_job(mod: ModuleType) -> None:
-    from karadoc.common.quality.quality_check_job import QualityCheckJob
+    from karadoc.spark.quality.quality_check_job import QualityCheckJob
 
     if isinstance(mod.job, QualityCheckJob):
         __load_optional_method(mod, HasBeforeAfter, "before_all")

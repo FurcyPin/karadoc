@@ -1,7 +1,6 @@
 from argparse import ArgumentParser, Namespace
 
 from karadoc.common import conf
-from karadoc.common.analyze.analyze_job import AnalyzeJob
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.dry_option import DryOption
 from karadoc.common.commands.options.read_from_option import ReadFromOption
@@ -14,6 +13,7 @@ from karadoc.common.table_utils import get_data_location
 from karadoc.common.utils.assert_utils import assert_true
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.job_validations import validate_inputs
+from karadoc.spark.analyze.analyze_job import AnalyzeJob
 
 
 def _print_job_properties(job: AnalyzeJob):
@@ -40,7 +40,7 @@ class AnalyzeTimelineCommand(Command):
 
     @staticmethod
     def do_command(args: Namespace) -> ReturnCode:
-        from karadoc.common.analyze import draw_timeline_analysis, timeline_analysis
+        from karadoc.spark.analyze import draw_timeline_analysis, timeline_analysis
 
         for table in args.tables:
             print("starting analyzing table %s" % table)

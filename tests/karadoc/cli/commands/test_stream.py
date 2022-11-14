@@ -99,7 +99,7 @@ class TestStream(unittest.TestCase):
             "Error: the spark context should not be initialized in an action file.", str(the_exception.__cause__)
         )
 
-    @mock.patch("karadoc.common.job_core.has_stream_external_output.HasStreamExternalOutput.write_external_output")
+    @mock.patch("karadoc.spark.job_core.has_stream_external_output.HasStreamExternalOutput.write_external_output")
     def test_stream_without_no_export_option(self, mock_write_external_output):
         """
         Given a STREAM.py with an external_output
@@ -109,7 +109,7 @@ class TestStream(unittest.TestCase):
         karadoc.cli.run_command("stream --tables test_schema.table_test_no_export_option --streaming-mode once")
         mock_write_external_output.assert_called()
 
-    @mock.patch("karadoc.common.job_core.has_stream_external_output.HasStreamExternalOutput.write_external_output")
+    @mock.patch("karadoc.spark.job_core.has_stream_external_output.HasStreamExternalOutput.write_external_output")
     def test_stream_with_no_export_option(self, mock_write_external_output):
         """
         Given a STREAM.py with an external_output

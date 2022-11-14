@@ -2,16 +2,12 @@ import traceback
 from argparse import ArgumentParser
 from typing import Callable, Iterator, List, Optional, Type
 
-from karadoc.common.analyze.analyze_job import AnalyzeJob
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.exceptions import ActionFileLoadingError
 from karadoc.common.job_core.job_base import JobBase
 from karadoc.common.job_core.load import load_non_runnable_action_file
 from karadoc.common.model import file_index
-from karadoc.common.quality.quality_check_job import QualityCheckJob
-from karadoc.common.run.spark_batch_job import SparkBatchJob
-from karadoc.common.stream.spark_stream_job import SparkStreamJob
 from karadoc.common.utils.assert_utils import assert_true
 from karadoc.common.validations import ValidationResult, ValidationSeverity
 from karadoc.common.validations.connection_validations import validate_connections
@@ -28,6 +24,10 @@ from karadoc.common.validations.quality_check_validations import (
 from karadoc.common.validations.unused_connection_validations import (
     validate_unused_connections,
 )
+from karadoc.spark.analyze.analyze_job import AnalyzeJob
+from karadoc.spark.batch.spark_batch_job import SparkBatchJob
+from karadoc.spark.quality.quality_check_job import QualityCheckJob
+from karadoc.spark.stream.spark_stream_job import SparkStreamJob
 
 TOTAL = "total"
 OK = "ok"

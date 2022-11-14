@@ -64,7 +64,7 @@ def populate_exists(full_table_name: str) -> bool:
     """
     :return: True if the given table has a {spark.batch}.py
     """
-    from karadoc.common.run.spark_batch_job import SparkBatchJob
+    from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 
     return __action_file_exists(full_table_name, SparkBatchJob)
 
@@ -73,7 +73,7 @@ def quality_check_exists(full_table_name: str) -> bool:
     """
     :return: True if the given table has a {spark.quality_check}.py
     """
-    from karadoc.common.quality.quality_check_job import QualityCheckJob
+    from karadoc.spark.quality.quality_check_job import QualityCheckJob
 
     return __action_file_exists(full_table_name, QualityCheckJob)
 
@@ -82,7 +82,7 @@ def stream_file_exists(full_table_name: str) -> bool:
     """
     :return: True if the given table has a {stream.batch}.py
     """
-    from karadoc.common.stream.spark_stream_job import SparkStreamJob
+    from karadoc.spark.stream.spark_stream_job import SparkStreamJob
 
     return __action_file_exists(full_table_name, SparkStreamJob)
 

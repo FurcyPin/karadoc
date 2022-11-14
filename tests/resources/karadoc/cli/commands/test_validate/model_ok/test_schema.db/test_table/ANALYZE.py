@@ -1,4 +1,4 @@
-from karadoc.common.analyze import Job
+from karadoc.spark.analyze import Job
 
 job = Job()
 

@@ -1,7 +1,7 @@
 from pyspark.sql import functions as f
 from udfs.dummy_udf import dummy_udf
 
-from karadoc.common.run import Job
+from karadoc.spark.batch import Job
 
 job = Job()
 

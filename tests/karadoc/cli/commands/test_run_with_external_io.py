@@ -179,7 +179,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         mock_inspect_df.assert_called_once()
         self.assertTrue(Path("test_working_dir/hive/warehouse/test_schema.db/load_external_inputs_as_view").is_dir())
 
-    @mock.patch("karadoc.common.job_core.has_external_outputs.HasExternalOutputs.write_external_outputs")
+    @mock.patch("karadoc.spark.job_core.has_external_outputs.HasExternalOutputs.write_external_outputs")
     def test_run_with_validate(self, mock_write_external_outputs):
         """When using the option --validate, the number of rows of the inputs, outputs and external inputs should
         be limited to 0, and no output nor external_output should be written."""
@@ -225,7 +225,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         the_exception = cm.exception
         self.assertIn("The connection test.connection.dummy is disabled", str(the_exception))
 
-    @mock.patch("karadoc.common.job_core.has_external_outputs.HasExternalOutputs.write_external_outputs")
+    @mock.patch("karadoc.spark.job_core.has_external_outputs.HasExternalOutputs.write_external_outputs")
     def test_run_without_no_export_option(self, mock_write_external_outputs):
         """
         Given a POPULATE.py with external_outputs
@@ -235,7 +235,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         karadoc.cli.run_command("run --tables test_schema.external_output")
         mock_write_external_outputs.assert_called()
 
-    @mock.patch("karadoc.common.job_core.has_external_outputs.HasExternalOutputs.write_external_outputs")
+    @mock.patch("karadoc.spark.job_core.has_external_outputs.HasExternalOutputs.write_external_outputs")
     def test_run_with_no_export_option(self, mock_write_external_outputs):
         """
         Given a POPULATE.py with external_outputs
