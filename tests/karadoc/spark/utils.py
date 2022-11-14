@@ -7,7 +7,7 @@ def read_spark_table(table_full_name: str) -> DataFrame:
     :param table_full_name:
     :return: a Spark DataFrame
     """
-    from karadoc.common.run.spark_batch_job import SparkBatchJob
+    from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 
     job = SparkBatchJob()
     job.init()

@@ -93,7 +93,7 @@ class TestNonReg(unittest.TestCase):
         karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
         karadoc.cli.run_command("nonreg --tables test_schema.table_from_var --vars var=b --join-cols id")
 
-        from karadoc.common.run.spark_batch_job import SparkBatchJob
+        from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 
         job = SparkBatchJob()
         job.init()

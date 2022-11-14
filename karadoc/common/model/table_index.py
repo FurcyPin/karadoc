@@ -2,7 +2,7 @@ from typing import Dict, List, Optional
 
 from karadoc.common import table_utils
 from karadoc.common.model import file_index
-from karadoc.common.run.exec import load_populate
+from karadoc.spark.batch.exec import load_populate
 
 
 class Populate:

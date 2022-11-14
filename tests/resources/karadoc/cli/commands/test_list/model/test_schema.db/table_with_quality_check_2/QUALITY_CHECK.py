@@ -1,3 +1,3 @@
-from karadoc.common.quality import Job
+from karadoc.spark.quality import Job
 
 job = Job()

@@ -1,4 +1,4 @@
-from karadoc.common.run import Job
+from karadoc.spark.batch import Job
 
 job = Job()
 

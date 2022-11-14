@@ -7,21 +7,21 @@ from karadoc.common.conf import (
     list_connection_names,
 )
 from karadoc.common.job_core.has_disable import HasDisable
-from karadoc.common.job_core.has_external_inputs import HasExternalInputs
-from karadoc.common.job_core.has_external_outputs import HasExternalOutputs
-from karadoc.common.job_core.has_stream_external_inputs import HasStreamExternalInputs
-from karadoc.common.job_core.has_stream_external_output import HasStreamExternalOutput
 from karadoc.common.job_core.job_base import JobBase
 from karadoc.common.job_core.load import load_non_runnable_action_file
 from karadoc.common.model import file_index
-from karadoc.common.quality.quality_check_job import QualityCheckJob
-from karadoc.common.run.spark_batch_job import SparkBatchJob
-from karadoc.common.stream.spark_stream_job import SparkStreamJob
 from karadoc.common.validations import (
     ValidationResult,
     ValidationResultTemplate,
     ValidationSeverity,
 )
+from karadoc.spark.batch.spark_batch_job import SparkBatchJob
+from karadoc.spark.job_core.has_external_inputs import HasExternalInputs
+from karadoc.spark.job_core.has_external_outputs import HasExternalOutputs
+from karadoc.spark.job_core.has_stream_external_inputs import HasStreamExternalInputs
+from karadoc.spark.job_core.has_stream_external_output import HasStreamExternalOutput
+from karadoc.spark.quality.quality_check_job import QualityCheckJob
+from karadoc.spark.stream.spark_stream_job import SparkStreamJob
 
 ValidationResult_UnusedConnection = ValidationResultTemplate(
     check_type="karadoc.connection.unused",

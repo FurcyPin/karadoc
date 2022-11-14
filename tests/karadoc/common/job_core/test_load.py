@@ -3,9 +3,9 @@ from unittest import TestCase
 from karadoc.common.exceptions import ActionFileLoadingError
 from karadoc.common.job_core.load import __load_file as load_file
 from karadoc.common.job_core.load import load_non_runnable_action_file
-from karadoc.common.quality.quality_check_job import QualityCheckJob
-from karadoc.common.run.spark_batch_job import SparkBatchJob
-from karadoc.common.stream.spark_stream_job import SparkStreamJob
+from karadoc.spark.batch.spark_batch_job import SparkBatchJob
+from karadoc.spark.quality.quality_check_job import QualityCheckJob
+from karadoc.spark.stream.spark_stream_job import SparkStreamJob
 
 model_dir = "tests/resources/karadoc/common/job_core/test_load/model"
 

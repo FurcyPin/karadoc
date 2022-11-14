@@ -5,7 +5,7 @@ from typing import List
 from karadoc.common import table_utils
 from karadoc.common.commands.command import Command
 from karadoc.common.model import file_index
-from karadoc.common.run.exec import load_populate, print_job_properties
+from karadoc.spark.batch.exec import load_populate, print_job_properties
 
 
 def list_tables():

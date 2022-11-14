@@ -5,9 +5,9 @@ from karadoc.common.commands.command import Command
 from karadoc.common.graph import table_graph
 from karadoc.common.graph.table_graph import find_tables_to_disable
 from karadoc.common.model import table_index
-from karadoc.common.run.spark_batch_job import SparkBatchJob
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.graph_validations import validate_graph
+from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 
 if TYPE_CHECKING:
     from pyspark.sql import DataFrame

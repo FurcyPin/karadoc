@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from karadoc.common.run.spark_batch_job import HasKeys
+from karadoc.spark.batch.spark_batch_job import HasKeys
 
 
 class TestHasKeys(TestCase):

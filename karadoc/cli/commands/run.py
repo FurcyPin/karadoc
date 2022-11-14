@@ -14,18 +14,18 @@ from karadoc.common.commands.spark import init_job
 from karadoc.common.commands.utils import run_job_with_logging
 from karadoc.common.exceptions import JobDisabledException
 from karadoc.common.model import variables
-from karadoc.common.run.exec import (
-    load_runnable_populate,
-    print_job_properties,
-    write_output,
-)
-from karadoc.common.run.spark_batch_job import SparkBatchJob
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.connection_validations import validate_connections
 from karadoc.common.validations.job_validations import (
     validate_inputs,
     validate_output_partition,
 )
+from karadoc.spark.batch.exec import (
+    load_runnable_populate,
+    print_job_properties,
+    write_output,
+)
+from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 
 if TYPE_CHECKING:
     from pyspark.sql import DataFrame

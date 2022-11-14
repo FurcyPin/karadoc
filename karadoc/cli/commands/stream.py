@@ -12,13 +12,13 @@ from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.utils import run_job_with_logging
 from karadoc.common.exceptions import JobDisabledException
 from karadoc.common.model import variables
-from karadoc.common.stream.spark_stream_job import SparkStreamJob
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.connection_validations import validate_connections
 from karadoc.common.validations.job_validations import (
     validate_inputs,
     validate_output_partition,
 )
+from karadoc.spark.stream.spark_stream_job import SparkStreamJob
 
 if TYPE_CHECKING:
     from pyspark.sql import DataFrame
@@ -37,7 +37,7 @@ def inspect_job(job: SparkStreamJob):
 
 
 def _run_job(args: Namespace, job: SparkStreamJob, **kwargs):
-    from karadoc.common.stream.exec import print_job_properties, write_stream_output
+    from karadoc.spark.stream.exec import print_job_properties, write_stream_output
 
     print_job_properties(job)
     fail_if_results(validate_connections(job))
@@ -97,7 +97,7 @@ class StreamCommand(Command):
 
     @staticmethod
     def do_command(args: Namespace):
-        from karadoc.common.stream.exec import load_runnable_stream_file
+        from karadoc.spark.stream.exec import load_runnable_stream_file
 
         return_code = ReturnCode.Success
         vars_list = variables.expand_vars(args.vars)

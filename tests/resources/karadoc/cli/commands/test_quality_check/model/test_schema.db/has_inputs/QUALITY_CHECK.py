@@ -1,4 +1,4 @@
-from karadoc.common.quality import CheckSeverity, Job, alert
+from karadoc.spark.quality import CheckSeverity, Job, alert
 
 job = Job()
 

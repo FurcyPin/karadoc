@@ -6,8 +6,8 @@ from karadoc.common.commands.options.read_from_option import ReadFromOption
 from karadoc.common.commands.options.tables_option import TablesOption
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.spark import init_job
-from karadoc.common.quality import CheckSeverity, alert
-from karadoc.common.run.spark_batch_job import SparkBatchJob
+from karadoc.spark.batch.spark_batch_job import SparkBatchJob
+from karadoc.spark.quality import CheckSeverity, alert
 
 if TYPE_CHECKING:
     from pyspark.sql import DataFrame
@@ -81,8 +81,8 @@ class NoKeyDefinedException(Exception):
 
 
 def _check_key_uniqueness(df: "DataFrame", key: Tuple[str, ...], table: str, output_alert_table: str):
-    from karadoc.common.quality.exec import execute_alert
     from karadoc.common.spark_utils import quote_idempotent, unquote
+    from karadoc.spark.quality.exec import execute_alert
 
     @alert(
         description="Check that the following key has no duplicates: %s" % str(key),
@@ -111,7 +111,7 @@ def _check_keys_uniqueness(df: "DataFrame", keys: List[Tuple[str, ...]], table: 
 def _check_non_null_keys(df: "DataFrame", key_columns: List[str], table: str, output_alert_table: str):
     import pyspark.sql.functions as f
 
-    from karadoc.common.quality.exec import execute_alert
+    from karadoc.spark.quality.exec import execute_alert
 
     @alert(
         description="Checks that the following columns are never null: %s" % str(key_columns),
@@ -157,7 +157,7 @@ class CheckKeysCommand(Command):
 
     @staticmethod
     def do_command(args) -> ReturnCode:
-        from karadoc.common.run.exec import load_populate
+        from karadoc.spark.batch.exec import load_populate
 
         for table in args.tables:
             job = load_populate(table)

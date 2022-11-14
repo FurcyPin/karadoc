@@ -3,6 +3,13 @@
 
 # Release notes
 
+## 0.1.0
+
+### Breaking changes
+
+- Moved all spark-related code into a karadoc.spark module. Users must replace `from karadoc.common.run import Job`
+  and `from karadoc.common import Job` with `from karadoc.spark.batch import Job`
+
 ## 0.0.4
 
 ### Breaking changes

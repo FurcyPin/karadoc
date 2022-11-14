@@ -56,7 +56,7 @@ class HasKeys:
         """Primary key for the job in a standardized format.
 
         Examples:
-        >>> from karadoc.common.run import Job
+        >>> from karadoc.spark.batch import Job
         >>> job = Job()
         >>> job.primary_key = 'column_name_1'
         >>> job.standardized_primary_key

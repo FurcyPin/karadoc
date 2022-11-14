@@ -9,15 +9,15 @@ from karadoc.common.connector import (
 )
 from karadoc.common.exceptions import MissingConfigurationException
 from karadoc.common.job_core.has_disable import HasDisable
-from karadoc.common.job_core.has_external_inputs import HasExternalInputs
-from karadoc.common.job_core.has_external_outputs import HasExternalOutputs
-from karadoc.common.job_core.has_stream_external_inputs import HasStreamExternalInputs
-from karadoc.common.job_core.has_stream_external_output import HasStreamExternalOutput
 from karadoc.common.validations import (
     ValidationResult,
     ValidationResultTemplate,
     ValidationSeverity,
 )
+from karadoc.spark.job_core.has_external_inputs import HasExternalInputs
+from karadoc.spark.job_core.has_external_outputs import HasExternalOutputs
+from karadoc.spark.job_core.has_stream_external_inputs import HasStreamExternalInputs
+from karadoc.spark.job_core.has_stream_external_output import HasStreamExternalOutput
 
 ValidationResult_DisabledConnection = ValidationResultTemplate(
     check_type="karadoc.connection.disabled",
