@@ -9,7 +9,7 @@ from pyspark.sql import DataFrame
 import karadoc
 from karadoc.common import conf
 from karadoc.common.exceptions import ActionFileLoadingError
-from karadoc.common.stream_utils import batch_to_stream, stream_to_batch
+from karadoc.spark.stream_utils import batch_to_stream, stream_to_batch
 from karadoc.test_utils.assertion import Anything
 from karadoc.test_utils.mock_settings import (
     mock_settings_for_test,

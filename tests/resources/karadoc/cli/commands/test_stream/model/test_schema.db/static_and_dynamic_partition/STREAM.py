@@ -1,5 +1,5 @@
-from karadoc.common.stream_utils import batch_to_stream
 from karadoc.spark.stream import Job
+from karadoc.spark.stream_utils import batch_to_stream
 
 job = Job()
 
