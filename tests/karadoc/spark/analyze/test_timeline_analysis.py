@@ -1,6 +1,6 @@
 from pyspark import StorageLevel
+from spark_frame.schema_utils import schema_from_json
 
-from karadoc.common.spark_utils import get_schema_from_json
 from karadoc.spark.analyze import timeline_analysis
 from karadoc.test_utils import pyspark_test_class
 from tests.karadoc.test_utils import get_resource_folder_path
@@ -84,7 +84,7 @@ class TestTimelineAnalysis(pyspark_test_class.PySparkTest):
         self.assertEqual(expected, actual)
 
     def test_analyse_timeline(self):
-        source_schema = get_schema_from_json(self.source_df_json_schema)
+        source_schema = schema_from_json(self.source_df_json_schema)
         df = self.spark.read.option("header", "true").schema(source_schema).csv(test_resource_dir + "/sample_file")
         actual = timeline_analysis.analyse_timeline(
             df, reference_time_col="reference_date", cohort_cols=["cohort"], nb_buckets=5
@@ -162,7 +162,7 @@ class TestTimelineAnalysis(pyspark_test_class.PySparkTest):
         self.assertTrue(check_df_3.count() == 0)
 
     def test_analyse_timeline_with_multiple_cohort_columns(self):
-        source_schema = get_schema_from_json(self.source_df_json_schema)
+        source_schema = schema_from_json(self.source_df_json_schema)
         df = self.spark.read.option("header", "true").schema(source_schema).csv(test_resource_dir + "/sample_file")
         actual = timeline_analysis.analyse_timeline(
             df, reference_time_col="reference_date", cohort_cols=["cohort", "string_col"], nb_buckets=5

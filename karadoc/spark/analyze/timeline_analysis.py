@@ -4,9 +4,9 @@ from pyspark.sql import DataFrame
 from pyspark.sql import functions as f
 from pyspark.sql.types import IntegerType
 from pyspark.sql.window import Window
+from spark_frame.transformations import unpivot
+from spark_frame.utils import quote
 
-from karadoc.common import spark_utils
-from karadoc.common.spark_utils import quote
 from karadoc.common.utils.assert_utils import assert_true
 
 
@@ -35,7 +35,8 @@ def _get_always_null_columns(df: DataFrame) -> List[str]:
     """Compute the list of all columns that are always null.
 
     Example:
-    >>> spark = spark_utils.get_spark_session("doctest")
+    >>> from karadoc.spark.utils import get_spark_session
+    >>> spark = get_spark_session("doctest")
     >>> df = spark.createDataFrame([
     ...         (1, 'a', None, None),
     ...         (2, 'b', None, None),
@@ -98,7 +99,8 @@ def _compute_frequencies(df: DataFrame, nb_top_values: int) -> DataFrame:
 
     Example:
 
-    >>> spark = spark_utils.get_spark_session("doctest")
+    >>> from karadoc.spark.utils import get_spark_session
+    >>> spark = get_spark_session("doctest")
     >>> df = spark.createDataFrame([
     ...          ('2017-07-24 00:00:00', 'string_col', 'DOGS'),
     ...          ('2017-07-24 00:00:00', 'string_col', 'BIRDS'),
@@ -343,7 +345,8 @@ def _get_most_frequent_values(df: DataFrame, nb_top_values: int) -> DataFrame:
 
     Example:
 
-    >>> spark = spark_utils.get_spark_session("doctest")
+    >>> from karadoc.spark.utils import get_spark_session
+    >>> spark = get_spark_session("doctest")
     >>> df = spark.createDataFrame([
     ...          ('2017-07-24 00:00:00', 'always_null_col', None, 2),
     ...          ('2017-07-24 00:00:00', 'string_col', 'DOGS', 2),
@@ -414,7 +417,8 @@ def _prefix_columns(df: DataFrame) -> DataFrame:
     This is useful to avoid naming collisions
 
     Example:
-    >>> spark = spark_utils.get_spark_session("doctest")
+    >>> from karadoc.spark.utils import get_spark_session
+    >>> spark = get_spark_session("doctest")
     >>> df = spark.createDataFrame([], "a STRING, b STRING, c STRING, d INT")
     >>> _prefix_columns(df).columns
     ['_a', '_b', '_c', '_d']
@@ -471,7 +475,8 @@ def analyse_timeline(df: DataFrame, reference_time_col: str, cohort_cols: List[s
         When a value doesn't appear in a cohort group, a row is still added with a 0 count, to allow for easy plotting.
 
     Example:
-    >>> spark = spark_utils.get_spark_session("doctest")
+    >>> from karadoc.spark.utils import get_spark_session
+    >>> spark = get_spark_session("doctest")
     >>> df = spark.createDataFrame([
     ...          ('2017-07-24 00:00:00', 'DOGS',  1, None),
     ...          ('2017-07-24 00:00:00', 'DOGS',  1, None),
@@ -544,7 +549,7 @@ def analyse_timeline(df: DataFrame, reference_time_col: str, cohort_cols: List[s
     df_res3 = _quantile_discretize_numeric_col(df_res2, nb_buckets, always_null_columns).drop(reference_time_col)
 
     # Once the unpivot is done, we remove the underscore that we appended to the column names
-    df_res4 = spark_utils.unpivot(df_res3, ["cohort"], key_alias="key", value_alias="val").withColumn(
+    df_res4 = unpivot(df_res3, ["cohort"], key_alias="key", value_alias="val").withColumn(
         "key", f.expr("SUBSTR(key, 2)")
     )
     df_res5 = _compute_frequencies(df_res4, nb_buckets)

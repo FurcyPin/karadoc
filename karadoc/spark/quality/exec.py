@@ -3,9 +3,9 @@ from typing import Dict, Optional
 
 from pyspark.sql import Column, DataFrame, SparkSession
 from pyspark.sql import functions as f
+from spark_frame.functions import empty_array, generic_struct
 from termcolor import colored
 
-from karadoc.common import spark_utils
 from karadoc.common.exceptions.utils import display_exception
 from karadoc.common.job_core.load import (
     load_non_runnable_action_file,
@@ -54,7 +54,7 @@ def __create_alert_struct(table: str, alert: Alert, status: str) -> Column:
 
 def __alert_ok_dataframe(spark: SparkSession, table: str, alert: Alert) -> DataFrame:
     alert_col = __create_alert_struct(table, alert, status="ok")
-    values_col = spark_utils.empty_array("STRUCT<key: STRING, value: STRING>").alias("columns")
+    values_col = empty_array("STRUCT<key: STRING, value: STRING>").alias("columns")
     return spark.sql("SELECT 1").select(alert_col, values_col)
 
 
@@ -72,9 +72,7 @@ def __alert_exception_dataframe(spark: SparkSession, table: str, alert: Alert, e
 
 def __transform_alert_for_export(table: str, alert: Alert, df: DataFrame) -> DataFrame:
     alert_col = __create_alert_struct(table, alert, status="ko")
-    values_col = spark_utils.to_generic_struct(*df.columns, col_name_alias="key", col_value_alias="value").alias(
-        "columns"
-    )
+    values_col = generic_struct(*df.columns, col_name_alias="key", col_value_alias="value").alias("columns")
     return df.select(alert_col, values_col)
 
 

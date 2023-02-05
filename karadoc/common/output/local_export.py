@@ -1,10 +1,9 @@
 from io import StringIO
 from typing import TYPE_CHECKING, Dict, Optional, Union
 
-from pyspark.sql import DataFrame
-
 if TYPE_CHECKING:
     import pandas as pd
+    from pyspark.sql import DataFrame
 
 default_encoding = "UTF-8"
 
@@ -62,7 +61,7 @@ def __export_string(string: str, output: Optional[str]) -> None:
             f.write(string)
 
 
-def local_export_dataframe(df: DataFrame, output: Optional[str], format: str) -> None:
+def local_export_dataframe(df: "DataFrame", output: Optional[str], format: str) -> None:
     """Export a Spark DataFrame on the local filesystem with the given output and format.
 
     Supported formats are:
@@ -102,7 +101,7 @@ def local_export_dataframe(df: DataFrame, output: Optional[str], format: str) ->
         raise ValueError(f"Unknown format: {format}")
 
 
-def local_export_dataframes_xlsx(dataframes: Dict[str, DataFrame], output: str) -> None:
+def local_export_dataframes_xlsx(dataframes: Dict[str, "DataFrame"], output: str) -> None:
     """Export multiple Spark DataFrames on the local filesystem as an Excel file, with one tab per DataFrame.
 
     Supported formats are:
