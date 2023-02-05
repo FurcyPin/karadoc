@@ -81,7 +81,8 @@ class NoKeyDefinedException(Exception):
 
 
 def _check_key_uniqueness(df: "DataFrame", key: Tuple[str, ...], table: str, output_alert_table: str):
-    from karadoc.common.spark_utils import quote_idempotent, unquote
+    from spark_frame.utils import quote_idempotent, unquote
+
     from karadoc.spark.quality.exec import execute_alert
 
     @alert(

@@ -1,6 +1,4 @@
-from typing import Dict, Iterator, Optional
-
-from pyspark.sql import DataFrame
+from typing import TYPE_CHECKING, Dict, Iterator, Optional
 
 from karadoc.common import conf
 from karadoc.common.conf import CONNECTION_GROUP
@@ -8,6 +6,9 @@ from karadoc.common.model import file_index
 from karadoc.common.table_utils import populate_exists, stream_file_exists
 from karadoc.spark.batch.exec import load_populate
 from karadoc.spark.stream.exec import load_stream_file
+
+if TYPE_CHECKING:
+    from pyspark.sql import DataFrame
 
 
 def describe_connection(job, connection_name, source_details, full_table_name, direction, env: Optional[str]):
@@ -124,7 +125,7 @@ def __build_connections_generator(env: Optional[str]) -> Iterator[Dict[str, str]
                 )
 
 
-def list_connections_df(env: Optional[str]) -> DataFrame:
+def list_connections_df(env: Optional[str]) -> "DataFrame":
     """Builds a Spark DataFrame listing all external inputs/outputs used by POPULATE.py files, with their respective
     source/dest and connection properties.
 

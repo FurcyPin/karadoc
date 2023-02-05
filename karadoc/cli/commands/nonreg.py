@@ -24,8 +24,7 @@ from karadoc.spark.job_core.has_spark import _partition_to_path
 
 if TYPE_CHECKING:
     from pyspark.sql import DataFrame
-
-    from karadoc.common.nonreg import NonregResult
+    from spark_frame.data_diff.diff_results import DiffResult
 
 
 def _get_join_cols(args, job):
@@ -41,8 +40,8 @@ def _get_join_cols(args, job):
 def _check_nonreg(job: SparkBatchJob, df: "DataFrame", args):
     """Compare the output of a Populate with the currently existing one."""
     from pyspark.sql import DataFrame
-
-    from karadoc.common.nonreg import DataframeComparator
+    from spark_frame.data_diff.dataframe_comparator import DataframeComparator
+    from spark_frame.data_diff.diff_format_options import DiffFormatOptions
 
     if conf.is_dev_env():
         job.spark.conf.set("spark.sql.shuffle.partitions", "200")
@@ -68,11 +67,12 @@ def _check_nonreg(job: SparkBatchJob, df: "DataFrame", args):
         previous_df = previous_df.drop(*ignore_cols)
         df = df.drop(*ignore_cols)
 
-    from pyspark.storagelevel import StorageLevel
-
-    df.persist(StorageLevel.DISK_ONLY)
-    nonreg = DataframeComparator(nb_diffed_rows=args.nonreg_nb_rows, left_df_alias="before", right_df_alias="after")
-    nonreg_result = nonreg.compare_df(previous_df, df, join_cols=join_cols, show_examples=args.show_examples)
+    df.localCheckpoint()
+    nonreg = DataframeComparator(
+        DiffFormatOptions(nb_diffed_rows=args.nonreg_nb_rows, left_df_alias="before", right_df_alias="after")
+    )
+    nonreg_result = nonreg.compare_df(previous_df, df, join_cols=join_cols)
+    nonreg_result.display(show_examples=args.show_examples)
     inspect_nonreg_results(nonreg_result)
     if nonreg_result.is_ok:
         return ReturnCode.Success
@@ -91,7 +91,7 @@ def get_previous_df(job, compare_env):
     return previous_df
 
 
-def inspect_nonreg_results(df: "NonregResult"):
+def inspect_nonreg_results(df: "DiffResult"):
     """Function used for unit tests. Mock this function to be able to inspect the produced DataFrame
     during the execution of the command."""
     pass

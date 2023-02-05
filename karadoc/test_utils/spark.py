@@ -2,8 +2,8 @@ from typing import Dict, List, Set, Union
 
 from pyspark import Row
 from pyspark.sql import DataFrame
+from spark_frame.utils import quote_columns
 
-from karadoc.common import spark_utils
 from karadoc.spark.utils import get_spark_session
 
 
@@ -114,7 +114,8 @@ class MockDataFrame:
 
     Example:
 
-    >>> spark = spark_utils.get_spark_session("doctest")
+    >>> from karadoc.spark.utils import get_spark_session
+    >>> spark = get_spark_session("doctest")
     >>> spark.createDataFrame([Row(a=1), Row(a=2)]) == MockDataFrame([MockRow(a=1), MockRow(a=2)])
     True
     >>> spark.createDataFrame([Row(a=1), Row(a=2)]) == MockDataFrame([MockRow(a=2), MockRow(a=1)])
@@ -133,7 +134,7 @@ class MockDataFrame:
 
     def __eq__(self, other):
         if isinstance(other, DataFrame):
-            other = other.select(spark_utils.quote_columns(sorted(other.columns)))
+            other = other.select(quote_columns(sorted(other.columns)))
             other_rows = other.collect()
             if isinstance(self.rows, Set):
                 return _compare_list_ignore_order(self.rows, other_rows)
@@ -148,7 +149,8 @@ class MockDataFrame:
     def to_dataframe(self) -> DataFrame:
         """Transforms this MockDataFrame into a regular pyspark.sql.DataFrame
 
-        >>> spark = spark_utils.get_spark_session("doctest")
+        >>> from karadoc.spark.utils import get_spark_session
+        >>> spark = get_spark_session("doctest")
         >>> MockDataFrame([MockRow(a=1, b=[2], c={3})]).to_dataframe().show()
         +---+---+---+
         |  a|  b|  c|

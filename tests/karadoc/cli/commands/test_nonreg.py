@@ -2,8 +2,9 @@ import shutil
 import unittest
 from unittest import mock
 
+from spark_frame.data_diff.diff_results import DiffResult
+
 import karadoc
-from karadoc.common.nonreg import NonregResult
 from karadoc.test_utils.mock_settings import (
     mock_settings_for_test,
     mock_settings_for_test_class,
@@ -34,15 +35,14 @@ class TestNonReg(unittest.TestCase):
         """
         karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
 
-        def inspect_nonreg_results(nonreg_results: NonregResult):
+        def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertTrue(nonreg_results.is_ok)
 
         with captured_output() as (out, err), mock.patch(
             "karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results
         ):
             karadoc.cli.run_command("nonreg --tables test_schema.table_from_var --vars var=a")
-            self.assertIn("Row count: ok", out.getvalue())
-            self.assertIn("Diff: ok", out.getvalue())
+            self.assertIn("diff ok!", out.getvalue())
 
     def test_nonreg_not_ok(self):
         """Given a table test_schema.test_table
@@ -51,19 +51,19 @@ class TestNonReg(unittest.TestCase):
         """
         karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
 
-        def inspect_nonreg_results(nonreg_results: NonregResult):
+        def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertFalse(nonreg_results.is_ok)
 
         with captured_output() as (out, err), mock.patch(
             "karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results
         ):
             karadoc.cli.run_command("nonreg --tables test_schema.table_from_var --vars var=b")
-            self.assertIn("Row count: ok", out.getvalue())
-            self.assertIn("Diff: not ok", out.getvalue())
-            self.assertIn("1 rows disappeared", out.getvalue())
-            self.assertIn("|`column name`|`total nb diff`|before|after|`nb differences`|", out.getvalue())
-            self.assertIn("|var          |1              |a     |b    |1               |", out.getvalue())
-            self.assertIn("Diff: not ok", out.getvalue())
+            self.assertIn("Row count ok", out.getvalue())
+            self.assertIn("diff NOT ok", out.getvalue())
+            self.assertIn("1 (100.0%) rows have changed", out.getvalue())
+            self.assertIn("|column_name|total_nb_diff|left_value|right_value|nb_differences|", out.getvalue())
+            self.assertIn("|var        |1            |a         |b          |1             |", out.getvalue())
+            self.assertIn("diff NOT ok", out.getvalue())
 
     def test_nonreg_with_show_examples(self):
         """
@@ -73,18 +73,18 @@ class TestNonReg(unittest.TestCase):
         """
         karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
 
-        def inspect_nonreg_results(nonreg_results: NonregResult):
+        def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertFalse(nonreg_results.is_ok)
 
         with captured_output() as (out, err), mock.patch(
             "karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results
         ):
             karadoc.cli.run_command("nonreg --tables test_schema.table_from_var --vars var=b --show-examples")
-            self.assertIn("Row count: ok", out.getvalue())
-            self.assertIn("Diff: not ok", out.getvalue())
+            self.assertIn("Row count ok", out.getvalue())
+            self.assertIn("diff NOT ok", out.getvalue())
             self.assertIn("Detailed examples :", out.getvalue())
-            self.assertIn("|id |before.var|after.var|", out.getvalue())
-            self.assertIn("|1  |a         |b        |", out.getvalue())
+            self.assertIn("| id|before__var|after__var|", out.getvalue())
+            self.assertIn("|  1|          a|         b|", out.getvalue())
 
     def test_nonreg_is_not_writing(self):
         """Given a table test_schema.test_table
@@ -111,7 +111,7 @@ class TestNonReg(unittest.TestCase):
         karadoc.cli.run_command("run --tables test_schema.partitioned_table --vars day=2018-02-01")
         karadoc.cli.run_command("run --tables test_schema.partitioned_table --vars day=2018-02-02")
 
-        def inspect_nonreg_results(nonreg_results: NonregResult):
+        def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertTrue(nonreg_results.is_ok)
 
         with mock.patch("karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results):
@@ -128,7 +128,7 @@ class TestNonReg(unittest.TestCase):
         with mock_settings_for_test({"warehouse_dir": "test_working_dir/hive/warehouse_2"}):
             karadoc.cli.run_command("run --tables test_schema.partitioned_table --vars day=2018-02-02")
 
-        def inspect_nonreg_results(nonreg_results: NonregResult):
+        def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertTrue(nonreg_results.is_ok)
 
         test_env_conf = {
@@ -149,7 +149,7 @@ class TestNonReg(unittest.TestCase):
         """
         karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
 
-        def inspect_nonreg_results(nonreg_results: NonregResult):
+        def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertFalse(nonreg_results.is_ok)
 
         with mock.patch("karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results):
