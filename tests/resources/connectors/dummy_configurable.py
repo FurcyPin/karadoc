@@ -9,8 +9,8 @@ from karadoc.common import conf
 from karadoc.common.conf import ConfBox
 from karadoc.common.conf.configurable_class import ConfParam
 from karadoc.common.connector import ConfigurableConnector
-from karadoc.common.stream_utils import batch_to_stream
 from karadoc.common.utils.assert_utils import assert_true
+from karadoc.spark.stream_utils import batch_to_stream
 
 
 def side_effect(s, url):
