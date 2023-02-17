@@ -12,7 +12,7 @@ from tests.karadoc.test_utils import get_resource_folder_path
     {
         "enable_file_index_cache": False,
         "template_package": "tests.resources.karadoc.cli.commands.test_run_with_template.model_lib.template_test",
-        "model_dir": get_resource_folder_path(__name__) + "/model",
+        "model_dir": get_resource_folder_path(__name__) + "/models",
         "warehouse_dir": "test_working_dir/hive/warehouse",
     }
 )

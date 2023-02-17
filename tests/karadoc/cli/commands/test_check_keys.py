@@ -14,7 +14,7 @@ DEBUG = False
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": get_resource_folder_path(__name__) + "/model",
+        "model_dir": get_resource_folder_path(__name__) + "/models",
         "warehouse_dir": "test_working_dir/hive/warehouse",
     }
 )

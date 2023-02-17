@@ -18,7 +18,7 @@ class TestQualityCheckValidations(ValidationTestTemplate):
         - And the command fails
         """
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_quality_check_duplicate_alerts",
+            test_model_dir=f"{test_resource_dir}/models_quality_check_duplicate_alerts",
             expected_template=ValidationResult_QualityCheckAlertDuplicateName,
             expected_return_code=ReturnCode.Error,
         )
@@ -31,7 +31,7 @@ class TestQualityCheckValidations(ValidationTestTemplate):
         - And the command fails
         """
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_quality_check_duplicate_metrics",
+            test_model_dir=f"{test_resource_dir}/models_quality_check_duplicate_metrics",
             expected_template=ValidationResult_QualityCheckMetricDuplicateName,
             expected_return_code=ReturnCode.Error,
         )

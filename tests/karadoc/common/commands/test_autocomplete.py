@@ -10,7 +10,7 @@ def simulate_autocomplete(command: str) -> List[str]:
     command = "coverage run -m karadoc.launcher " + command
     run_command = command  # + " 8>&1 9>&2 1>&9 2>&1"
     stdout_filename = "test_working_dir/autocomplete_output"
-    model_dir_path = get_resource_folder_path(__name__) + "/model"
+    model_dir_path = get_resource_folder_path(__name__) + "/models"
 
     env = dict(os.environ)
     env["IFS"] = "\013"

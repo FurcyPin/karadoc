@@ -22,7 +22,7 @@ class TestFindTablesToDisable(unittest.TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": get_resource_folder_path(__name__) + "/model",
+            "model_dir": get_resource_folder_path(__name__) + "/models",
         }
     )
     def test_find_tables_to_disable(self):
@@ -41,7 +41,7 @@ class TestFindTablesToDisable(unittest.TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": get_resource_folder_path(__name__) + "/model_single_table",
+            "model_dir": get_resource_folder_path(__name__) + "/models_single_table",
         }
     )
     def test_find_tables_to_disable_single_table(self):
@@ -59,7 +59,7 @@ class TestFindTablesToDisable(unittest.TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": get_resource_folder_path(__name__) + "/model",
+            "model_dir": get_resource_folder_path(__name__) + "/models",
         }
     )
     def show_graph_for_test_case(self):

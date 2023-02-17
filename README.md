@@ -7,8 +7,12 @@
 
 ### Breaking changes
 
-- Moved all spark-related code into a karadoc.spark module. Users must replace `from karadoc.common.run import Job`
-  and `from karadoc.common import Job` with `from karadoc.spark.batch import Job`
+- Moved all spark-related code into a `karadoc.spark` module.
+  Users must replace `from karadoc.common.run import Job` and `from karadoc.common import Job` 
+  with `from karadoc.spark.batch import Job`
+- Built-in connectors have been moved from `karadoc.connectors` to `karadoc.spark.connectors` 
+- The default configuration parameter `model_dir` has been changed from `"model"` to `"models"`
+
 
 ## 0.0.4
 

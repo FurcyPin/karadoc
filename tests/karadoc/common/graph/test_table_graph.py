@@ -54,7 +54,7 @@ def get_oriented_neighbor_subgraph(
 
 
 @mock_settings_for_test_class(
-    {"enable_file_index_cache": False, "model_dir": get_resource_folder_path(__name__) + "/model"}
+    {"enable_file_index_cache": False, "model_dir": get_resource_folder_path(__name__) + "/models"}
 )
 class TestTableGraph(TestCase):
     def test_build_graph(self):
@@ -193,7 +193,7 @@ class TestTableGraph(TestCase):
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": get_resource_folder_path(__name__) + "/model_graph_partitions",
+        "model_dir": get_resource_folder_path(__name__) + "/models_graph_partitions",
     }
 )
 class TestTableGraphPartitions(TestCase):

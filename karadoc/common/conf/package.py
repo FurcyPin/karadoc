@@ -20,7 +20,7 @@ OBSERVABILITY_GROUP = "observability"
 
 
 def get_model_folder_location() -> str:
-    return dynaconf.settings.get("model_dir", default="model")
+    return dynaconf.settings.get("model_dir", default="models")
 
 
 def get_conf_folder_location() -> str:

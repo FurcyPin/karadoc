@@ -19,7 +19,7 @@ class TestUnusedConnections(ValidationTestTemplate):
         """
         settings = {"connection": {"test_conn": {"type": "tests.resources.spark.connectors.dummy"}}}
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model",
+            test_model_dir=f"{test_resource_dir}/models",
             expected_template=ValidationResult_UnusedConnection,
             expected_return_code=ReturnCode.Success,
             settings=settings,
@@ -34,7 +34,7 @@ class TestUnusedConnections(ValidationTestTemplate):
         """
         settings = {"connection": {"test_conn": {"type": "tests.resources.spark.connectors.dummy"}}}
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_connection_could_be_disabled",
+            test_model_dir=f"{test_resource_dir}/models_connection_could_be_disabled",
             expected_template=ValidationResult_ConnectionCouldBeDisabled,
             expected_return_code=ReturnCode.Success,
             settings=settings,

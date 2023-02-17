@@ -27,7 +27,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         - And the command fails
         """
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_missing_connection",
+            test_model_dir=f"{test_resource_dir}/models_missing_connection",
             expected_template=ValidationResult_MissingConnection,
             expected_return_code=ReturnCode.Error,
         )
@@ -40,7 +40,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         - And the command fails
         """
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_missing_connection_conf",
+            test_model_dir=f"{test_resource_dir}/models_missing_connection_conf",
             expected_template=ValidationResult_MissingConnectionConfiguration,
             expected_return_code=ReturnCode.Error,
         )
@@ -53,7 +53,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         - And the command does not fail (because it is only a warning)
         """
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_missing_connection_conf_disabled_job",
+            test_model_dir=f"{test_resource_dir}/models_missing_connection_conf_disabled_job",
             expected_template=ValidationResult_MissingConnectionConfigurationDisabledJob,
             expected_return_code=ReturnCode.Success,
         )
@@ -67,7 +67,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         """
         settings = {"connection": {"test_conn": {"type": "unkown_connector_type"}}}
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_connection_loading_error",
+            test_model_dir=f"{test_resource_dir}/models_connection_loading_error",
             expected_template=ValidationResult_ConnectionLoadError,
             expected_return_code=ReturnCode.Error,
             settings=settings,
@@ -82,7 +82,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         """
         settings = {"connection": {"test_conn": {"disable": "true", "type": "tests.resources.spark.connectors.dummy"}}}
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_disabled_connection",
+            test_model_dir=f"{test_resource_dir}/models_disabled_connection",
             expected_template=ValidationResult_DisabledConnection,
             expected_return_code=ReturnCode.Error,
             settings=settings,
@@ -105,7 +105,7 @@ class TestConnectionValidations(ValidationTestTemplate):
             }
         }
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_ok",
+            test_model_dir=f"{test_resource_dir}/models_ok",
             expected_template=None,
             expected_return_code=ReturnCode.Success,
             settings=settings,
@@ -127,7 +127,7 @@ class TestConnectionValidations(ValidationTestTemplate):
             }
         }
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_ok",
+            test_model_dir=f"{test_resource_dir}/models_ok",
             expected_template=ValidationResult_MissingRequiredParam,
             expected_return_code=ReturnCode.Error,
             settings=settings,
@@ -150,7 +150,7 @@ class TestConnectionValidations(ValidationTestTemplate):
             }
         }
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_ok",
+            test_model_dir=f"{test_resource_dir}/models_ok",
             expected_template=ValidationResult_WrongParamType,
             expected_return_code=ReturnCode.Error,
             settings=settings,
@@ -174,7 +174,7 @@ class TestConnectionValidations(ValidationTestTemplate):
             }
         }
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_ok",
+            test_model_dir=f"{test_resource_dir}/models_ok",
             expected_template=ValidationResult_UnknownParam,
             expected_return_code=ReturnCode.Error,
             settings=settings,
@@ -197,7 +197,7 @@ class TestConnectionValidations(ValidationTestTemplate):
             }
         }
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_ok",
+            test_model_dir=f"{test_resource_dir}/models_ok",
             expected_template=ValidationResult_SecretParam,
             expected_return_code=ReturnCode.Success,
             settings=settings,
