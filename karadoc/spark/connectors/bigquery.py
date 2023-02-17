@@ -9,9 +9,9 @@ from pyspark.sql.streaming import DataStreamWriter
 
 from karadoc.common.conf import ConfBox
 from karadoc.common.conf.configurable_class import ConfParam
-from karadoc.common.connector import ConfigurableConnector
 from karadoc.common.table_utils import parse_table_name
 from karadoc.common.utils.assert_utils import assert_true
+from karadoc.spark.spark_connector import ConfigurableSparkConnector
 
 
 def _get_blob_location(bucket_name: str, table_name: str) -> str:
@@ -19,7 +19,7 @@ def _get_blob_location(bucket_name: str, table_name: str) -> str:
     return "gs://%s/tmp/big-query/%s.db/%s" % (bucket_name, schema_name, table_name)
 
 
-class BigQueryConnector(ConfigurableConnector):
+class BigQueryConnector(ConfigurableSparkConnector):
     project_name = ConfParam(
         required=True, description="Name of the bigquery project where the source/destination table is located."
     )
@@ -45,7 +45,7 @@ class BigQueryConnector(ConfigurableConnector):
     )
 
     def __init__(self, spark: SparkSession, connection_conf: ConfBox):
-        ConfigurableConnector.__init__(self, spark, connection_conf)
+        ConfigurableSparkConnector.__init__(self, spark, connection_conf)
 
     def __get_json_keyfile_path(self):
         json_keyfile_path = self.json_keyfile.get()

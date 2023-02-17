@@ -90,6 +90,6 @@ class HasStreamExternalInputs(HasSpark):
     def get_input_connector(self, source: Union[str, Dict]):
         if type(source) == str:
             source = self.external_inputs[source]
-        from karadoc.common.connector import load_connector
+        from karadoc.spark.spark_connector import load_connector
 
         return load_connector(source[CONNECTION_GROUP], self.spark)

@@ -18,7 +18,7 @@ from tests.karadoc.test_utils import get_resource_folder_path
         "warehouse_dir": "test_working_dir/hive/warehouse",
         "connection": {
             "dummy": {
-                "type": "tests.resources.connectors.dummy",
+                "type": "tests.resources.spark.connectors.dummy",
                 "url": "my_url",
             }
         },
@@ -43,7 +43,7 @@ class TestQualityCheck(unittest.TestCase):
         karadoc.cli.run_command("quality_check --tables test_schema.test_table")
 
     def test_run_with_output_alert_ok(self):
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
             karadoc.cli.run_command(
                 "quality_check --output-alert-table test_schema.output_table --tables test_schema.alert_ok"
             )
@@ -67,7 +67,7 @@ class TestQualityCheck(unittest.TestCase):
         self.assertEqual(expected, self.result_df)
 
     def test_run_with_output_alert_ko(self):
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
             karadoc.cli.run_command(
                 "quality_check --output-alert-table test_schema.output_table --tables test_schema.alert_ko"
             )
@@ -94,7 +94,7 @@ class TestQualityCheck(unittest.TestCase):
         self.assertEqual(expected, self.result_df)
 
     def test_run_with_output_alert_error(self):
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
             karadoc.cli.run_command(
                 "quality_check --output-alert-table test_schema.output_table --tables test_schema.alert_error"
             )
@@ -120,7 +120,7 @@ class TestQualityCheck(unittest.TestCase):
         self.assertEqual(expected, self.result_df)
 
     def test_run_with_output_alert_no_return(self):
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
             karadoc.cli.run_command(
                 "quality_check --output-alert-table test_schema.output_table --tables test_schema.alert_no_return"
             )
@@ -146,7 +146,7 @@ class TestQualityCheck(unittest.TestCase):
         self.assertEqual(expected, self.result_df)
 
     def test_run_multiple_alerts(self):
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
             karadoc.cli.run_command(
                 "quality_check --output-alert-table test_schema.output_table --tables test_schema.multiple_checks"
             )
@@ -182,7 +182,7 @@ class TestQualityCheck(unittest.TestCase):
         self.assertEqual(expected, self.result_df)
 
     def test_alert_gen(self):
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
             karadoc.cli.run_command(
                 "quality_check --output-alert-table test_schema.output_table --tables test_schema.alert_gen"
             )
@@ -231,7 +231,7 @@ class TestQualityCheck(unittest.TestCase):
         self.assertEqual(expected, self.result_df)
 
     def test_run_specific_alerts(self):
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
             karadoc.cli.run_command(
                 "quality_check --output-alert-table test_schema.output_table "
                 "--tables test_schema.multiple_checks --alerts test_alert_1"
@@ -256,7 +256,7 @@ class TestQualityCheck(unittest.TestCase):
         self.assertEqual(expected, self.result_df)
 
     def test_run_alerts_with_vars(self):
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
             karadoc.cli.run_command(
                 "quality_check --output-alert-table test_schema.output_table "
                 "--tables test_schema.alert_vars --vars day=2021-01-01"
@@ -284,7 +284,7 @@ class TestQualityCheck(unittest.TestCase):
         self.assertEqual(expected, self.result_df)
 
     def test_quality_check_has_inputs(self):
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write", side_effect=self.write_mock):
             karadoc.cli.run_command("run --tables test_schema.input_table")
             karadoc.cli.run_command(
                 "quality_check --output-alert-table test_schema.output_table --tables test_schema.has_inputs"

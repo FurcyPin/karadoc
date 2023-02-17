@@ -23,7 +23,7 @@ config_mock = mock_settings_for_test_class(
         "enable_file_index_cache": False,
         "model_dir": get_resource_folder_path(__name__) + "/model",
         "spark_stream_dir": "test_working_dir/spark/stream",
-        "connection": {"dummy": {"type": "tests.resources.connectors.dummy"}},
+        "connection": {"dummy": {"type": "tests.resources.spark.connectors.dummy"}},
         "warehouse_dir": "test_working_dir/hive/warehouse",
     }
 )
@@ -66,7 +66,9 @@ class TestStreamWithExternalIO(PySparkTest):
             self.assertEqual(MockDataFrame([MockRow(b="b")]), stream_to_batch(df))
 
         with mock.patch(
-            "tests.resources.connectors.dummy.DummyConnector.read_stream", side_effect=connector_read, autospec=True
+            "tests.resources.spark.connectors.dummy.DummyConnector.read_stream",
+            side_effect=connector_read,
+            autospec=True,
         ) as mock_read, mock.patch("karadoc.cli.commands.stream.inspect_df", side_effect=inspect_df) as mock_inspect_df:
             karadoc.cli.run_command("stream --tables test_schema.external_input --streaming-mode once")
 
@@ -83,7 +85,7 @@ class TestStreamWithExternalIO(PySparkTest):
             self.assertEqual(MockDataFrame([MockRow(b="b")]), df_processed)
             self.actual_df = df_processed
 
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write_stream") as mock_write, mock.patch(
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write_stream") as mock_write, mock.patch(
             "karadoc.cli.commands.stream.inspect_df", side_effect=inspect_df
         ) as mock_inspect_df:
             karadoc.cli.run_command("stream --tables test_schema.external_output --streaming-mode once")
@@ -174,7 +176,7 @@ class TestStreamWithExternalIO(PySparkTest):
         {
             "connection": {
                 "dummy": {
-                    "type": "tests.resources.connectors.dummy",
+                    "type": "tests.resources.spark.connectors.dummy",
                     "url": "my_url",
                     "disable": "true",
                 }

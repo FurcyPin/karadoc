@@ -2,7 +2,6 @@ import traceback
 from typing import Generator, List, Optional, Union
 
 from karadoc.common.conf import CONNECTION_GROUP, get_conn_conf_id
-from karadoc.common.connector import ConfigurableConnector, Connector, _load_connector_for_env
 from karadoc.common.exceptions import MissingConfigurationException
 from karadoc.common.job_core.has_disable import HasDisable
 from karadoc.common.validations import ValidationResult, ValidationResultTemplate, ValidationSeverity
@@ -10,6 +9,7 @@ from karadoc.spark.job_core.has_external_inputs import HasExternalInputs
 from karadoc.spark.job_core.has_external_outputs import HasExternalOutputs
 from karadoc.spark.job_core.has_stream_external_inputs import HasStreamExternalInputs
 from karadoc.spark.job_core.has_stream_external_output import HasStreamExternalOutput
+from karadoc.spark.spark_connector import ConfigurableSparkConnector, SparkConnector, _load_connector_for_env
 
 ValidationResult_DisabledConnection = ValidationResultTemplate(
     check_type="karadoc.connection.disabled",
@@ -43,14 +43,14 @@ ValidationResult_ConnectionLoadError = ValidationResultTemplate(
 
 
 def connection_is_not_disabled(
-    job: Union[HasExternalInputs, HasExternalOutputs, HasDisable], conn_conf_id: str, connection: Connector, **_
+    job: Union[HasExternalInputs, HasExternalOutputs, HasDisable], conn_conf_id: str, connection: SparkConnector, **_
 ) -> Generator[ValidationResult, None, None]:
     """Yield an error if the connection is disabled and the job is not"""
     if connection.conf.get("disable") and not job.disable:
         yield ValidationResult_DisabledConnection(conn_conf_id=conn_conf_id)
 
 
-def _validate_configurable_connection(connection: ConfigurableConnector, conn_conf_id: str):
+def _validate_configurable_connection(connection: ConfigurableSparkConnector, conn_conf_id: str):
     for validation_result in connection.validate_params():
         validation_result.message += f" in connection {conn_conf_id}"
         yield validation_result
@@ -67,7 +67,7 @@ def load_and_validate_external_io(
     else:
         try:
             connection = _load_connector_for_env(conn_name, None, env)
-            if isinstance(connection, ConfigurableConnector) and not connection.disable.get():
+            if isinstance(connection, ConfigurableSparkConnector) and not connection.disable.get():
                 yield from _validate_configurable_connection(connection, conn_conf_id)
         except MissingConfigurationException:
             if job.disable:

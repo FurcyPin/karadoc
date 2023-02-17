@@ -2,8 +2,8 @@
 model_dir = "tests/resources/karadoc/cli/commands/test_validate/model_with_connectors"
 
 [test1.connection.test_conn]
-type = "tests.resources.connectors.dummy"
+type = "tests.resources.spark.connectors.dummy"
 
 [test2.connection.test_conn]
-type = "tests.resources.connectors.dummy"
+type = "tests.resources.spark.connectors.dummy"
 

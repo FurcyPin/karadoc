@@ -8,8 +8,8 @@ from pyspark.storagelevel import StorageLevel
 from karadoc.common import conf
 from karadoc.common.conf import ConfBox
 from karadoc.common.conf.configurable_class import ConfParam
-from karadoc.common.connector import ConfigurableConnector
 from karadoc.common.utils.assert_utils import assert_true
+from karadoc.spark.spark_connector import ConfigurableSparkConnector
 from karadoc.spark.stream_utils import batch_to_stream
 
 
@@ -18,7 +18,7 @@ def side_effect(s, url):
     print("Performing a dummy side effect : %s" % s)
 
 
-class DummyConfigurableConnector(ConfigurableConnector):
+class DummyConfigurableConnector(ConfigurableSparkConnector):
     """This is a dummy implementation of a ConfigurableConnector.
     It doesn't write anything and is only useful for testing purposes."""
 

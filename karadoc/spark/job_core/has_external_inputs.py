@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING, Callable, Dict, Optional, Union
 
 from karadoc.common.conf import CONNECTION_GROUP
-from karadoc.common.connector import Connector
 from karadoc.spark.job_core.has_spark import HasSpark
+from karadoc.spark.spark_connector import SparkConnector
 
 if TYPE_CHECKING:
     from pyspark.sql import DataFrame
@@ -105,9 +105,9 @@ class HasExternalInputs(HasSpark):
                 df = df.cache()
             df.createOrReplaceTempView(alias)
 
-    def get_input_connector(self, source: Union[str, Dict]) -> Connector:
+    def get_input_connector(self, source: Union[str, Dict]) -> SparkConnector:
         if type(source) == str:
             source = self.external_inputs[source]
-        from karadoc.common.connector import load_connector
+        from karadoc.spark.spark_connector import load_connector
 
         return load_connector(source[CONNECTION_GROUP], self.spark)

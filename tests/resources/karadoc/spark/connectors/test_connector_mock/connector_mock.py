@@ -1,10 +1,10 @@
 from pyspark.sql import SparkSession
 
 from karadoc.common.conf import ConfBox
-from karadoc.common.connector import Connector
+from karadoc.spark.spark_connector import SparkConnector
 
 
-class ConnectorMock(Connector):
+class ConnectorMock(SparkConnector):
     def __init__(self, spark: SparkSession, connection_conf: ConfBox):
         super().__init__(spark, connection_conf)
 

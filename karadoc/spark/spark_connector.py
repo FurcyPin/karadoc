@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from pyspark.sql import DataFrame, SparkSession
 
 
-class Connector(ABC):
+class SparkConnector(ABC):
     """Users can implement this class to write their own custom connectors.
 
     Implementations may override the following methods:
@@ -93,7 +93,7 @@ class Connector(ABC):
         return NotImplemented
 
 
-class ConfigurableConnector(ConfigurableClass, Connector, ABC):
+class ConfigurableSparkConnector(ConfigurableClass, SparkConnector, ABC):
     """Improved version of the :class:`Connector` class, that also extends :class:`ConfigurableClass`.
 
     Connectors inheriting from this class will benefit from automatic parameter validation.
@@ -110,10 +110,10 @@ class ConfigurableConnector(ConfigurableClass, Connector, ABC):
 
     def __init__(self, spark: "SparkSession", conf: ConfBox):
         ConfigurableClass.__init__(self, conf)
-        Connector.__init__(self, spark, conf)
+        SparkConnector.__init__(self, spark, conf)
 
 
-def load_connector(connection_name: str, spark: "SparkSession") -> Connector:
+def load_connector(connection_name: str, spark: "SparkSession") -> SparkConnector:
     """Load a connector configured with the given connection.
 
     This method will look in the settings.toml for an entry that looks like this:
@@ -134,7 +134,7 @@ def load_connector(connection_name: str, spark: "SparkSession") -> Connector:
     return _load_connector_for_env(connection_name, spark, None)
 
 
-def _load_connector_for_env(connection_name: str, spark: "SparkSession", env: Optional[str]) -> Connector:
+def _load_connector_for_env(connection_name: str, spark: "SparkSession", env: Optional[str]) -> SparkConnector:
     """Load a connector for the specified connection name in the specified dynaconf environment.
 
     This method will look in the settings.toml for an entry that looks like this:
@@ -164,5 +164,5 @@ def _load_connector_for_env(connection_name: str, spark: "SparkSession", env: Op
     else:
         module_name = connection_conf["type"]
     module = importlib.import_module(module_name)
-    connector_class = find_class_from_module(module, Connector)
+    connector_class = find_class_from_module(module, SparkConnector)
     return connector_class(spark, connection_conf)

@@ -17,7 +17,7 @@ class TestUnusedConnections(ValidationTestTemplate):
         - Then a ValidationResult_UnusedConnection is yielded
         - And the command does not fail (because it is only a warning)
         """
-        settings = {"connection": {"test_conn": {"type": "tests.resources.connectors.dummy"}}}
+        settings = {"connection": {"test_conn": {"type": "tests.resources.spark.connectors.dummy"}}}
         self.validation_test_template(
             test_model_dir=f"{test_resource_dir}/model",
             expected_template=ValidationResult_UnusedConnection,
@@ -32,7 +32,7 @@ class TestUnusedConnections(ValidationTestTemplate):
         - Then a ValidationResult_UnusedConnection is yielded
         - And the command does not fail (because it is only a warning)
         """
-        settings = {"connection": {"test_conn": {"type": "tests.resources.connectors.dummy"}}}
+        settings = {"connection": {"test_conn": {"type": "tests.resources.spark.connectors.dummy"}}}
         self.validation_test_template(
             test_model_dir=f"{test_resource_dir}/model_connection_could_be_disabled",
             expected_template=ValidationResult_ConnectionCouldBeDisabled,

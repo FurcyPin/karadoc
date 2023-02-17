@@ -45,6 +45,6 @@ class HasStreamExternalOutput:
     def get_output_connector(self, dest: Union[str, Dict]):
         if type(dest) == str:
             dest = self.external_output[dest]
-        from karadoc.common.connector import load_connector
+        from karadoc.spark.spark_connector import load_connector
 
         return load_connector(dest[CONNECTION_GROUP], self.spark)
