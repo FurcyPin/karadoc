@@ -209,7 +209,9 @@ class TestTableGraphPartitions(TestCase):
             '"partitions.no_partition" [label=no_partition fillcolor=aliceblue shape=box style=filled]',
             '"partitions.dynamic_partition" [label="dynamic_partition/day" fillcolor=bisque shape=box style=filled]',
         ]
-        expected = """digraph {
+        expected = strip_margin(
+            """
+        |digraph {
         |\trankdir=LR
         |\tsubgraph cluster_partitions {
         |\t\tlabel=partitions
@@ -218,8 +220,7 @@ class TestTableGraphPartitions(TestCase):
         |\t\t{expected_node}
         |\t\t{expected_node}
         |\t}
-        |}""".replace(
-            "        |", ""
+        |}"""
         )
         str_dot = str(dot)
         for expected_node in expected_nodes:

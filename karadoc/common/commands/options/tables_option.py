@@ -7,9 +7,16 @@ from karadoc.common.model.file_index import list_schema_table_folders
 
 class TablesOption(Command, ABC):
     @staticmethod
-    def add_arguments(parser: ArgumentParser) -> None:
+    def add_arguments(parser: ArgumentParser, required=True) -> None:
         parser.add_argument(
-            "--tables", dest="tables", metavar="table", type=str, nargs="+", required=True, help="Names of the tables"
+            "--tables",
+            dest="tables",
+            metavar="table",
+            type=str,
+            nargs="+",
+            required=required,
+            help="Names of the tables",
+            default=[],
         ).completer = TablesOption.option_completer
 
     @staticmethod

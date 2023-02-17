@@ -3,7 +3,7 @@
 
 # Release notes
 
-## 0.1.0
+## 0.1.0 (Not released yet)
 
 ### Breaking changes
 
@@ -13,6 +13,10 @@
 - Built-in connectors have been moved from `karadoc.connectors` to `karadoc.spark.connectors` 
 - The default configuration parameter `model_dir` has been changed from `"model"` to `"models"`
 
+### New features
+
+- `show_graph` command can now be called without the `--tables` option. When done so, it will
+  display the dependency graph for all models.
 
 ## 0.0.4
 
