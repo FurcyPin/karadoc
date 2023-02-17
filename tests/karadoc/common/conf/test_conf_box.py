@@ -5,10 +5,7 @@ from dynaconf.base import Settings
 
 from karadoc.common import conf
 from karadoc.common.exceptions import MissingConfigurationException
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 from tests.karadoc.test_utils import get_resource_folder_path
 
 

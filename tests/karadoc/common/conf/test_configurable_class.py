@@ -1,10 +1,7 @@
 import unittest
 
 from karadoc.common.conf.configurable_class import ConfigurableClass, ConfParam
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 
 
 @mock_settings_for_test_class()

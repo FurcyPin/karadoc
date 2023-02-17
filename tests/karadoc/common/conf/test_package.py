@@ -4,10 +4,7 @@ from unittest.mock import MagicMock
 
 from karadoc.common import conf
 from karadoc.common.exceptions import MissingConfigurationException
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 
 
 @mock_settings_for_test_class()

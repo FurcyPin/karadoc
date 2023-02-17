@@ -3,11 +3,7 @@ from typing import Any, Dict, Generator, Iterable
 from airflow.models import DagBag
 
 from karadoc.airflow.utils import is_trigger
-from karadoc.common.validations import (
-    ValidationResult,
-    ValidationResultTemplate,
-    ValidationSeverity,
-)
+from karadoc.common.validations import ValidationResult, ValidationResultTemplate, ValidationSeverity
 
 ValidationResult_DagTriggeredMoreThanOnce = ValidationResultTemplate(
     check_type="karadoc.airflow.dag_triggered_more_than_once",

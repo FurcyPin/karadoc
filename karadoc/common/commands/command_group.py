@@ -3,11 +3,7 @@ from argparse import ArgumentParser, Namespace
 from typing import Dict, Optional, Type
 
 from karadoc.common.commands.command import Command
-from karadoc.common.commands.exec import (
-    add_commands_to_parser,
-    do_command,
-    load_commands_from_package,
-)
+from karadoc.common.commands.exec import add_commands_to_parser, do_command, load_commands_from_package
 from karadoc.common.commands.return_code import ReturnCode
 
 

@@ -5,10 +5,7 @@ from unittest import mock
 import karadoc
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.validations import ValidationResult, ValidationResultTemplate
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 
 
 class ValidationTestTemplate(unittest.TestCase):

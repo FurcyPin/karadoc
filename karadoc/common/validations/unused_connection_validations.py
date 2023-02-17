@@ -1,20 +1,12 @@
 from typing import Dict, Generator, List, Optional, Tuple
 
 from karadoc.common import conf
-from karadoc.common.conf import (
-    CONNECTION_GROUP,
-    get_conn_conf_id,
-    list_connection_names,
-)
+from karadoc.common.conf import CONNECTION_GROUP, get_conn_conf_id, list_connection_names
 from karadoc.common.job_core.has_disable import HasDisable
 from karadoc.common.job_core.job_base import JobBase
 from karadoc.common.job_core.load import load_non_runnable_action_file
 from karadoc.common.model import file_index
-from karadoc.common.validations import (
-    ValidationResult,
-    ValidationResultTemplate,
-    ValidationSeverity,
-)
+from karadoc.common.validations import ValidationResult, ValidationResultTemplate, ValidationSeverity
 from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 from karadoc.spark.job_core.has_external_inputs import HasExternalInputs
 from karadoc.spark.job_core.has_external_outputs import HasExternalOutputs

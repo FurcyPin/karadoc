@@ -17,11 +17,7 @@ class ShowAirflowDagGraphCommand(Command):
 
         dag_bag = build_dag_bag()
 
-        from karadoc.airflow.dag_graph import (
-            build_dag_graph,
-            build_graph,
-            render_dag_graph,
-        )
+        from karadoc.airflow.dag_graph import build_dag_graph, build_graph, render_dag_graph
 
         graph = build_graph(dag_bag)
         dag_graph = build_dag_graph(graph)

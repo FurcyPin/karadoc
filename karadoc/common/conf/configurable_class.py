@@ -3,11 +3,7 @@ from typing import Callable, Dict, Iterable, Type
 
 from karadoc.common.conf import ConfBox
 from karadoc.common.exceptions import MissingConfigurationParameterException
-from karadoc.common.validations import (
-    ValidationResult,
-    ValidationResultTemplate,
-    ValidationSeverity,
-)
+from karadoc.common.validations import ValidationResult, ValidationResultTemplate, ValidationSeverity
 
 ValidationResult_SecretParam = ValidationResultTemplate(
     check_type="karadoc.conf.secret_param",

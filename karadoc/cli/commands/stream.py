@@ -14,10 +14,7 @@ from karadoc.common.exceptions import JobDisabledException
 from karadoc.common.model import variables
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.connection_validations import validate_connections
-from karadoc.common.validations.job_validations import (
-    validate_inputs,
-    validate_output_partition,
-)
+from karadoc.common.validations.job_validations import validate_inputs, validate_output_partition
 from karadoc.spark.stream.spark_stream_job import SparkStreamJob
 
 if TYPE_CHECKING:

@@ -2,10 +2,7 @@ from unittest import TestCase
 
 from karadoc.spark.conf import get_spark_conf
 from karadoc.spark.utils import get_spark_session
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 
 
 @mock_settings_for_test_class({"spark.conf": {"spark.sql.shuffle.partitions": 9}})
