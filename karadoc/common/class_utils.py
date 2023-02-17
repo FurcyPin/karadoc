@@ -1,7 +1,7 @@
 import inspect
 from typing import Any, Type
 
-from karadoc.common.exceptions import ConnectorLoadError
+from karadoc.common.exceptions import ClassLoadingError
 
 
 def _is_defined_here(obj: Any, module) -> bool:
@@ -25,12 +25,12 @@ def find_class_from_module(module, class_type: Type[Any]):
     if len(found_classes) == 1:
         return found_classes[0]
     if len(found_classes) == 0:
-        raise ConnectorLoadError(
+        raise ClassLoadingError(
             f"Error while loading the module named '{module.__name__}' : "
             f"no class extending {class_full_name} was found"
         )
     if len(found_classes) > 1:
-        raise ConnectorLoadError(
+        raise ClassLoadingError(
             f"Error while loading the module named '{module.__name__}' : "
             f"we found more than one class extending {class_full_name}\n"
             f"Classes found: {found_classes}"

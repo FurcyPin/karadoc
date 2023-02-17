@@ -47,7 +47,7 @@ class CommandValidationError(Exception):
         Exception.__init__(self, msg)
 
 
-class ConnectorLoadError(Exception):
+class ClassLoadingError(Exception):
     """Error raised when a failing to load a connector"""
 
     def __init__(self, msg: str) -> None:
