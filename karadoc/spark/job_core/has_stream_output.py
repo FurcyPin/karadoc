@@ -1,9 +1,6 @@
 from typing import TYPE_CHECKING
 
-from karadoc.spark.conf import (
-    get_stream_default_output_format,
-    get_write_options_for_format,
-)
+from karadoc.spark.conf import get_stream_default_output_format, get_write_options_for_format
 from karadoc.spark.job_core.has_output import HasOutput
 
 if TYPE_CHECKING:

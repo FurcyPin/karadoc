@@ -6,10 +6,7 @@ import graphviz
 import networkx as nx
 from airflow.models import DAG, BaseOperator, DagBag
 
-from karadoc.airflow.conf import (
-    get_airflow_dag_folder_location,
-    get_airflow_plugin_folder_location,
-)
+from karadoc.airflow.conf import get_airflow_dag_folder_location, get_airflow_plugin_folder_location
 from karadoc.airflow.utils import is_external_sensor, is_trigger
 
 

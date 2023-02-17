@@ -7,10 +7,7 @@ from spark_frame.functions import empty_array, generic_struct
 from termcolor import colored
 
 from karadoc.common.exceptions.utils import display_exception
-from karadoc.common.job_core.load import (
-    load_non_runnable_action_file,
-    load_runnable_action_file,
-)
+from karadoc.common.job_core.load import load_non_runnable_action_file, load_runnable_action_file
 from karadoc.spark.batch import exec
 from karadoc.spark.batch.exec import load_runnable_populate
 from karadoc.spark.quality.checks import Alert, Metric

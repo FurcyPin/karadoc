@@ -1,10 +1,6 @@
 from typing import TYPE_CHECKING, Generator
 
-from karadoc.common.validations import (
-    ValidationResult,
-    ValidationResultTemplate,
-    ValidationSeverity,
-)
+from karadoc.common.validations import ValidationResult, ValidationResultTemplate, ValidationSeverity
 
 if TYPE_CHECKING:
     import networkx as nx

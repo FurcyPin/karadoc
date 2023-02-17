@@ -21,9 +21,7 @@ from karadoc.common.validations.quality_check_validations import (
     validate_alert_duplicate_names,
     validate_metric_duplicate_names,
 )
-from karadoc.common.validations.unused_connection_validations import (
-    validate_unused_connections,
-)
+from karadoc.common.validations.unused_connection_validations import validate_unused_connections
 from karadoc.spark.analyze.analyze_job import AnalyzeJob
 from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 from karadoc.spark.quality.quality_check_job import QualityCheckJob

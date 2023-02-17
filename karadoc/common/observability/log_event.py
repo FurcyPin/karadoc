@@ -2,10 +2,7 @@ import copy
 from dataclasses import dataclass
 from typing import Mapping, Optional
 
-from karadoc.common.observability.logging_context import (
-    LoggingContext,
-    get_logging_context,
-)
+from karadoc.common.observability.logging_context import LoggingContext, get_logging_context
 
 
 @dataclass(init=False)

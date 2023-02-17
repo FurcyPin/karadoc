@@ -2,18 +2,10 @@ import traceback
 from typing import Generator, List, Optional, Union
 
 from karadoc.common.conf import CONNECTION_GROUP, get_conn_conf_id
-from karadoc.common.connector import (
-    ConfigurableConnector,
-    Connector,
-    _load_connector_for_env,
-)
+from karadoc.common.connector import ConfigurableConnector, Connector, _load_connector_for_env
 from karadoc.common.exceptions import MissingConfigurationException
 from karadoc.common.job_core.has_disable import HasDisable
-from karadoc.common.validations import (
-    ValidationResult,
-    ValidationResultTemplate,
-    ValidationSeverity,
-)
+from karadoc.common.validations import ValidationResult, ValidationResultTemplate, ValidationSeverity
 from karadoc.spark.job_core.has_external_inputs import HasExternalInputs
 from karadoc.spark.job_core.has_external_outputs import HasExternalOutputs
 from karadoc.spark.job_core.has_stream_external_inputs import HasStreamExternalInputs

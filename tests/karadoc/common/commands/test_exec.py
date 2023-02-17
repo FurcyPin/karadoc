@@ -5,16 +5,9 @@ from unittest import mock
 import karadoc
 from karadoc.common.commands import exec
 from karadoc.common.commands.command import Command
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
-from tests.resources.karadoc.common.commands.test_exec.builtin_command_package.command_1 import (
-    BuiltinCommand1,
-)
-from tests.resources.karadoc.common.commands.test_exec.builtin_command_package.command_2 import (
-    BuiltinCommand2,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
+from tests.resources.karadoc.common.commands.test_exec.builtin_command_package.command_1 import BuiltinCommand1
+from tests.resources.karadoc.common.commands.test_exec.builtin_command_package.command_2 import BuiltinCommand2
 from tests.resources.karadoc.common.commands.test_exec.builtin_command_package.command_group.sub_command_1 import (
     BuiltInSubCommand1,
 )
@@ -24,15 +17,11 @@ from tests.resources.karadoc.common.commands.test_exec.builtin_command_package.c
 from tests.resources.karadoc.common.commands.test_exec.custom_command_group_package.custom_command_group.sub_command_1 import (  # noqa: E501
     CustomSubCommand1,
 )
-from tests.resources.karadoc.common.commands.test_exec.custom_command_package.custom_command import (
-    CustomCommand,
-)
+from tests.resources.karadoc.common.commands.test_exec.custom_command_package.custom_command import CustomCommand
 from tests.resources.karadoc.common.commands.test_exec.override_command_group_package.command_group.sub_command_1 import (  # noqa: E501
     OverrideSubCommand1,
 )
-from tests.resources.karadoc.common.commands.test_exec.override_command_package.command_1 import (
-    OverrideCommand1,
-)
+from tests.resources.karadoc.common.commands.test_exec.override_command_package.command_1 import OverrideCommand1
 
 test_exec = "tests.resources.karadoc.common.commands.test_exec"
 

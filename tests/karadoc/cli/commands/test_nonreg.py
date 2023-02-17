@@ -5,10 +5,7 @@ from unittest import mock
 from spark_frame.data_diff.diff_results import DiffResult
 
 import karadoc
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 from karadoc.test_utils.spark import MockDataFrame, MockRow
 from karadoc.test_utils.stdio import captured_output
 from tests.karadoc.test_utils import get_resource_folder_path

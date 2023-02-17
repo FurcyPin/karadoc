@@ -7,10 +7,7 @@ from karadoc.common.exceptions import ActionFileLoadingError
 from karadoc.common.observability import LogEvent
 from karadoc.common.observability.conf import setup_observability
 from karadoc.common.observability.console_event import ConsoleEvent
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 from karadoc.test_utils.stdio import captured_output
 from tests.karadoc.test_utils import get_resource_folder_path
 

@@ -5,9 +5,7 @@ from karadoc.common.validations.job_validations import (
     ValidationResult_SecondaryKeyWithoutPrimaryKey,
     ValidationResult_UnknownInput,
 )
-from tests.karadoc.common.validations.validation_test_template import (
-    ValidationTestTemplate,
-)
+from tests.karadoc.common.validations.validation_test_template import ValidationTestTemplate
 from tests.karadoc.test_utils import get_resource_folder_path
 
 test_resource_dir = get_resource_folder_path(__name__)

@@ -15,10 +15,7 @@ from karadoc.common.exceptions import JobDisabledException
 from karadoc.common.model import variables
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.connection_validations import validate_connections
-from karadoc.common.validations.job_validations import (
-    validate_inputs,
-    validate_output_partition,
-)
+from karadoc.common.validations.job_validations import validate_inputs, validate_output_partition
 from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 from karadoc.spark.job_core.has_spark import _partition_to_path
 

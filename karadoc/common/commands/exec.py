@@ -11,9 +11,7 @@ from typing import Dict, List, Optional, Sequence, Type, Union
 
 from karadoc.common import conf
 from karadoc.common.class_utils import find_class_from_module
-from karadoc.common.commands.autocomplete.custom_completion_finder import (
-    CustomCompletionFinder,
-)
+from karadoc.common.commands.autocomplete.custom_completion_finder import CustomCompletionFinder
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.conf import APPLICATION_DESCRIPTION, APPLICATION_NAME

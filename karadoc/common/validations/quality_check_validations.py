@@ -1,10 +1,6 @@
 from typing import Generator, Iterable, TypeVar
 
-from karadoc.common.validations import (
-    ValidationResult,
-    ValidationResultTemplate,
-    ValidationSeverity,
-)
+from karadoc.common.validations import ValidationResult, ValidationResultTemplate, ValidationSeverity
 from karadoc.spark.quality.quality_check_job import QualityCheckJob
 
 T = TypeVar("T")

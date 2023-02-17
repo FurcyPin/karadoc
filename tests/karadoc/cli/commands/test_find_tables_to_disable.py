@@ -3,10 +3,7 @@ import shutil
 import unittest
 
 import karadoc
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 from karadoc.test_utils.strings import strip_margin
 from tests.karadoc.test_utils import get_resource_folder_path
 

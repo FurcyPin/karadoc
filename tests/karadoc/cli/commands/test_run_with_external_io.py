@@ -10,10 +10,7 @@ from pyspark.sql import DataFrame
 import karadoc
 from karadoc.common.exceptions import ActionFileLoadingError
 from karadoc.test_utils.assertion import Anything
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 from karadoc.test_utils.spark import MockDataFrame, MockRow
 from tests.karadoc.test_utils import get_resource_folder_path
 

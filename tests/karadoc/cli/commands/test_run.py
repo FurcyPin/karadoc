@@ -6,10 +6,7 @@ from unittest import mock
 
 import karadoc
 from karadoc.common.exceptions import ActionFileLoadingError
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 from karadoc.test_utils.stdio import captured_output
 from tests.karadoc.test_utils import get_resource_folder_path
 
@@ -141,9 +138,7 @@ class TestRun(unittest.TestCase):
         The error that usually happens is "ModuleNotFoundError: No module named 'udfs' at pyspark/serializers.py"
         """
         # This simulates the first time the karadoc module is imported
-        from karadoc.common.conf.package import (  # noqa: E402
-            _add_libs_folder_to_python_path,
-        )
+        from karadoc.common.conf.package import _add_libs_folder_to_python_path  # noqa: E402
 
         _add_libs_folder_to_python_path()
 

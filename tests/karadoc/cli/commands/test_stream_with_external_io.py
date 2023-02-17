@@ -11,10 +11,7 @@ from karadoc.common import conf
 from karadoc.common.exceptions import ActionFileLoadingError
 from karadoc.spark.stream_utils import batch_to_stream, stream_to_batch
 from karadoc.test_utils.assertion import Anything
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 from karadoc.test_utils.pyspark_test_class import PySparkTest
 from karadoc.test_utils.spark import MockDataFrame, MockRow
 from tests.karadoc.test_utils import get_resource_folder_path

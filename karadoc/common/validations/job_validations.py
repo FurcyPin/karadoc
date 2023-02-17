@@ -3,11 +3,7 @@ from typing import Generator, Union
 from karadoc.common import table_utils
 from karadoc.common.job_core.has_keys import HasKeys
 from karadoc.common.job_core.job_base import JobBase
-from karadoc.common.validations import (
-    ValidationResult,
-    ValidationResultTemplate,
-    ValidationSeverity,
-)
+from karadoc.common.validations import ValidationResult, ValidationResultTemplate, ValidationSeverity
 from karadoc.spark.job_core.has_inputs import HasInputs
 from karadoc.spark.job_core.has_output import HasOutput
 

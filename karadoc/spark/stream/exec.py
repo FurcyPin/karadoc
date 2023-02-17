@@ -4,10 +4,7 @@ from pyspark.sql import DataFrame
 from pyspark.sql.streaming import DataStreamWriter
 
 from karadoc.common import conf
-from karadoc.common.job_core.load import (
-    load_non_runnable_action_file,
-    load_runnable_action_file,
-)
+from karadoc.common.job_core.load import load_non_runnable_action_file, load_runnable_action_file
 from karadoc.common.output.printing import pretty_format
 from karadoc.common.table_utils import parse_table_name
 from karadoc.spark.job_core.has_spark import _table_name_to_hdfs_path

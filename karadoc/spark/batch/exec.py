@@ -1,9 +1,6 @@
 from typing import TYPE_CHECKING, Dict, Optional
 
-from karadoc.common.job_core.load import (
-    load_non_runnable_action_file,
-    load_runnable_action_file,
-)
+from karadoc.common.job_core.load import load_non_runnable_action_file, load_runnable_action_file
 from karadoc.common.output.printing import pretty_format
 from karadoc.common.utils.assert_utils import assert_true
 from karadoc.spark.batch.spark_batch_job import SparkBatchJob

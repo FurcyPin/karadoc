@@ -4,10 +4,7 @@ from unittest import mock
 
 import karadoc
 from karadoc.common.exceptions import ActionFileLoadingError
-from karadoc.test_utils.mock_settings import (
-    mock_settings_for_test,
-    mock_settings_for_test_class,
-)
+from karadoc.test_utils.mock_settings import mock_settings_for_test, mock_settings_for_test_class
 from tests.karadoc.test_utils import get_resource_folder_path
 
 
