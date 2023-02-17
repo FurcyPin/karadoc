@@ -19,10 +19,6 @@ CUSTOM_GROUP = "custom"
 OBSERVABILITY_GROUP = "observability"
 
 
-def get_local_data_folder_location() -> str:
-    return "data"
-
-
 def get_model_folder_location() -> str:
     return dynaconf.settings.get("model_dir", default="model")
 
