@@ -2,10 +2,10 @@ from pyspark.sql import DataFrame, SparkSession
 
 from karadoc.common.conf import APPLICATION_NAME, ConfBox
 from karadoc.common.conf.configurable_class import ConfParam
-from karadoc.common.connector import ConfigurableConnector
+from karadoc.spark.spark_connector import ConfigurableSparkConnector
 
 
-class JdbcConnector(ConfigurableConnector):
+class JdbcConnector(ConfigurableSparkConnector):
     """This connector leverages `Spark's jdbc <https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html>`_
     connector.
 

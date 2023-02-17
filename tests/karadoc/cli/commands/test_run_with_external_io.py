@@ -22,7 +22,7 @@ from tests.karadoc.test_utils import get_resource_folder_path
         "warehouse_dir": "test_working_dir/hive/warehouse",
         "connection": {
             "dummy": {
-                "type": "tests.resources.connectors.dummy",
+                "type": "tests.resources.spark.connectors.dummy",
                 "url": "my_url",
             }
         },
@@ -48,7 +48,7 @@ class TestRunWithExternalIO(unittest.TestCase):
             self.assertEqual(MockDataFrame({MockRow(b="b")}), df)
 
         with mock.patch(
-            "tests.resources.connectors.dummy.DummyConnector.read", side_effect=connector_read, autospec=True
+            "tests.resources.spark.connectors.dummy.DummyConnector.read", side_effect=connector_read, autospec=True
         ) as mock_read, mock.patch("karadoc.cli.commands.run.inspect_df", side_effect=inspect_df) as mock_inspect_df:
             karadoc.cli.run_command("run --tables test_schema.external_input")
 
@@ -65,7 +65,7 @@ class TestRunWithExternalIO(unittest.TestCase):
             self.assertEqual(MockDataFrame({MockRow(b="b")}), df)
             self.actual_df = df
 
-        with mock.patch("tests.resources.connectors.dummy.DummyConnector.write") as mock_write, mock.patch(
+        with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write") as mock_write, mock.patch(
             "karadoc.cli.commands.run.inspect_df", side_effect=inspect_df
         ) as mock_inspect_df:
             karadoc.cli.run_command("run --tables test_schema.external_output")
@@ -169,7 +169,7 @@ class TestRunWithExternalIO(unittest.TestCase):
             self.assertEqual(MockDataFrame({MockRow(c="b")}), df)
 
         with mock.patch(
-            "tests.resources.connectors.dummy.DummyConnector.read", side_effect=connector_read, autospec=True
+            "tests.resources.spark.connectors.dummy.DummyConnector.read", side_effect=connector_read, autospec=True
         ) as mock_read, mock.patch("karadoc.cli.commands.run.inspect_df", side_effect=inspect_df) as mock_inspect_df:
             karadoc.cli.run_command("run --tables test_schema.load_external_inputs_as_view")
 
@@ -190,7 +190,7 @@ class TestRunWithExternalIO(unittest.TestCase):
             self.assertEqual(df.schema.simpleString(), "struct<a:string>")
 
         with mock.patch(
-            "tests.resources.connectors.dummy.DummyConnector.read", side_effect=connector_read, autospec=True
+            "tests.resources.spark.connectors.dummy.DummyConnector.read", side_effect=connector_read, autospec=True
         ) as mock_read, mock.patch("karadoc.cli.commands.run.inspect_df", side_effect=inspect_df) as mock_inspect_df:
             karadoc.cli.run_command("run --validate --tables test_schema.validate")
 
@@ -203,7 +203,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         {
             "connection": {
                 "dummy": {
-                    "type": "tests.resources.connectors.dummy",
+                    "type": "tests.resources.spark.connectors.dummy",
                     "url": "my_url",
                     "disable": "true",
                 }

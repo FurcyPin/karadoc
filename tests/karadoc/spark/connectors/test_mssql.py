@@ -1,7 +1,7 @@
 from unittest import mock
 
-from karadoc.common.connector import load_connector
-from karadoc.connectors.mssql import MssqlConnector
+from karadoc.spark.connectors.mssql import MssqlConnector
+from karadoc.spark.spark_connector import load_connector
 from karadoc.test_utils import pyspark_test_class
 from karadoc.test_utils.mock_settings import mock_settings_for_test_class
 from karadoc.test_utils.spark import MockDataFrame, MockRow
@@ -15,7 +15,7 @@ def token(*args):
     {
         "connection": {
             "sql-test": {
-                "type": "karadoc.connectors.mssql",
+                "type": "karadoc.spark.connectors.mssql",
                 "host": "test_host",
                 "database": "test_db",
             }

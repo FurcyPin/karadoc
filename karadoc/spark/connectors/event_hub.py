@@ -4,11 +4,11 @@ from pyspark.sql import SparkSession
 
 from karadoc.common.conf import ConfBox
 from karadoc.common.conf.configurable_class import ConfParam
-from karadoc.common.connector import ConfigurableConnector
 from karadoc.common.utils.assert_utils import assert_true
+from karadoc.spark.spark_connector import ConfigurableSparkConnector
 
 
-class EventHubConnector(ConfigurableConnector):
+class EventHubConnector(ConfigurableSparkConnector):
     HubName = ConfParam(required=True, type=str, description="Name of the Event Hub.")
     SharedAccessKeyName = ConfParam(
         required=True, type=str, description="Name of the shared access policy (SAS Policy)"
@@ -21,7 +21,7 @@ class EventHubConnector(ConfigurableConnector):
     )
 
     def __init__(self, spark: SparkSession, connection_conf: ConfBox):
-        ConfigurableConnector.__init__(self, spark, connection_conf)
+        ConfigurableSparkConnector.__init__(self, spark, connection_conf)
 
     def _configure(
         self,

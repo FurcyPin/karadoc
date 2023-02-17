@@ -9,7 +9,7 @@ from karadoc.test_utils.spark import MockDataFrame, MockRow
         "connection": {
             "test": {
                 "type": "connector_mock",
-                "mock": "tests.resources.karadoc.connectors.test_connector_mock.connector_mock",
+                "mock": "tests.resources.karadoc.spark.connectors.test_connector_mock.connector_mock",
             }
         }
     }

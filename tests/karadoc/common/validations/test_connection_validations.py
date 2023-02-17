@@ -80,7 +80,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         - Then a ValidationResult_DisabledConnection is yielded
         - And the command fails
         """
-        settings = {"connection": {"test_conn": {"disable": "true", "type": "tests.resources.connectors.dummy"}}}
+        settings = {"connection": {"test_conn": {"disable": "true", "type": "tests.resources.spark.connectors.dummy"}}}
         self.validation_test_template(
             test_model_dir=f"{test_resource_dir}/model_disabled_connection",
             expected_template=ValidationResult_DisabledConnection,
@@ -98,7 +98,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         settings = {
             "connection": {
                 "test_conn": {
-                    "type": "tests.resources.connectors.dummy_configurable",
+                    "type": "tests.resources.spark.connectors.dummy_configurable",
                     "a": "value",
                     "s.secret.vault": "secret_name",
                 }
@@ -121,7 +121,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         settings = {
             "connection": {
                 "test_conn": {
-                    "type": "tests.resources.connectors.dummy_configurable",
+                    "type": "tests.resources.spark.connectors.dummy_configurable",
                     "s.secret.vault": "secret_name",
                 }
             }
@@ -143,7 +143,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         settings = {
             "connection": {
                 "test_conn": {
-                    "type": "tests.resources.connectors.dummy_configurable",
+                    "type": "tests.resources.spark.connectors.dummy_configurable",
                     "a": 1,
                     "s.secret.vault": "secret_name",
                 }
@@ -166,7 +166,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         settings = {
             "connection": {
                 "test_conn": {
-                    "type": "tests.resources.connectors.dummy_configurable",
+                    "type": "tests.resources.spark.connectors.dummy_configurable",
                     "a": "value",
                     "b": "unknown",
                     "s.secret.vault": "secret_name",
@@ -190,7 +190,7 @@ class TestConnectionValidations(ValidationTestTemplate):
         settings = {
             "connection": {
                 "test_conn": {
-                    "type": "tests.resources.connectors.dummy_configurable",
+                    "type": "tests.resources.spark.connectors.dummy_configurable",
                     "a": "value",
                     "s": "should_be_secret",
                 }

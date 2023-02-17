@@ -2,12 +2,12 @@ import adal
 from pyspark.sql import DataFrame, SparkSession
 
 from karadoc.common.conf import ConfBox
-from karadoc.common.connector import Connector
+from karadoc.spark.spark_connector import SparkConnector
 
 JDBC_SPARK = "com.microsoft.sqlserver.jdbc.spark"
 
 
-class MssqlConnector(Connector):
+class MssqlConnector(SparkConnector):
     def __init__(self, spark: SparkSession, connection_conf: ConfBox):
         super().__init__(spark, connection_conf)
 

@@ -7,8 +7,8 @@ from pyspark.storagelevel import StorageLevel
 
 from karadoc.common import conf
 from karadoc.common.conf import ConfBox
-from karadoc.common.connector import Connector
 from karadoc.common.utils.assert_utils import assert_true
+from karadoc.spark.spark_connector import SparkConnector
 from karadoc.spark.stream_utils import batch_to_stream
 
 
@@ -17,7 +17,7 @@ def side_effect(s, url):
     print("Performing a dummy side effect : %s" % s)
 
 
-class DummyConnector(Connector):
+class DummyConnector(SparkConnector):
     """This is a dummy implementation of a Connector.
     It doesn't write anything and is only useful for testing purposes."""
 

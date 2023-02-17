@@ -25,19 +25,19 @@ class TestConfBox(unittest.TestCase):
         {
             "connection": {
                 "test_conn": {
-                    "type": "tests.resources.connectors.dummy",
+                    "type": "tests.resources.spark.connectors.dummy",
                 }
             }
         }
     )
     def test_conf_base_case(self):
-        self.assertEqual("tests.resources.connectors.dummy", conf.get_connection_conf("test_conn").get("type"))
+        self.assertEqual("tests.resources.spark.connectors.dummy", conf.get_connection_conf("test_conn").get("type"))
 
     @mock_settings_for_test(
         {
             "connection": {
                 "test_conn": {
-                    "type": "tests.resources.connectors.dummy",
+                    "type": "tests.resources.spark.connectors.dummy",
                 }
             }
         }
@@ -49,7 +49,7 @@ class TestConfBox(unittest.TestCase):
         "secret": {"keyvault": {"client_id": "test_client_id"}},
         "connection": {
             "test_conn": {
-                "type": "tests.resources.connectors.dummy",
+                "type": "tests.resources.spark.connectors.dummy",
                 "sensitive_value": {"secret": {"keyvault": "name-in-keyvault"}},
             }
         },
@@ -87,7 +87,7 @@ class TestConfBox(unittest.TestCase):
             "secret": {"keyvault": {"client_id": "test_client_id"}},
             "connection": {
                 "test_conn": {
-                    "type": "tests.resources.connectors.dummy",
+                    "type": "tests.resources.spark.connectors.dummy",
                     "sensitive_value": {"secret": {"INCORRECT_VAULT_NAME": "name-in-keyvault"}},
                 }
             },
@@ -102,7 +102,7 @@ class TestConfBox(unittest.TestCase):
             "secret": None,
             "connection": {
                 "test_conn": {
-                    "type": "tests.resources.connectors.dummy",
+                    "type": "tests.resources.spark.connectors.dummy",
                     "sensitive_value": {"secret": {"keyvault": "name-in-keyvault"}},
                 }
             },
