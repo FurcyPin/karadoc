@@ -1,4 +1,5 @@
 from argparse import ArgumentParser, Namespace
+from typing import TYPE_CHECKING
 
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.tables_option import TablesOption
@@ -7,13 +8,22 @@ from karadoc.common.model import table_index
 from karadoc.common.validations import fail_if_results
 from karadoc.common.validations.graph_validations import validate_graph
 
+if TYPE_CHECKING:
+    from networkx import DiGraph
+
+
+def inspect(graph: "DiGraph"):
+    """Function used for unit tests. Mock this function to be able to inspect the produced TableGraph
+    during the execution of the command."""
+    pass
+
 
 class ShowGraphCommand(Command):
     description = "display the dependency graph for the specified tables"
 
     @staticmethod
     def add_arguments(parser: ArgumentParser) -> None:
-        TablesOption.add_arguments(parser)
+        TablesOption.add_arguments(parser, required=False)
         parser.add_argument(
             "-b",
             "--before",
@@ -67,6 +77,13 @@ class ShowGraphCommand(Command):
         index = table_index.build_table_index()
         graph = table_graph.build_graph(index)
 
+        # When the --tables argument is omitted, we display the full graph
+        if args.tables == []:
+            args.before = None
+            args.after = None
+            args.tables = [table.full_name for table in index.values()]
+            args.tables = [table.full_name for table in index.values()]
+
         if args.reduce:
             graph = nx.transitive_reduction(graph)
         validation_results = validate_graph(graph)
@@ -84,6 +101,7 @@ class ShowGraphCommand(Command):
         graph = table_graph.get_filtered_subgraph(graph, graph_filters, ignored_edges)
 
         tables = [filter.node for filter in graph_filters]
+        inspect(graph)
         table_graph.render_graph(graph, index, tables, output_format=args.output_format)
 
         fail_if_results(validation_results)
