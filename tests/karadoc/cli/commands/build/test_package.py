@@ -13,7 +13,7 @@ test_dir = "test_working_dir/target"
 @mock_settings_for_test_class({
     'enable_file_index_cache': False,
     'libs': get_resource_folder_path(__name__) + '/libs',
-    'model_dir': get_resource_folder_path(__name__) + '/model',
+    'model_dir': get_resource_folder_path(__name__) + '/models',
 })
 class TestAnalyzeTimeline(unittest.TestCase):
 

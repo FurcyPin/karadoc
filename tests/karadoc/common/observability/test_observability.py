@@ -63,7 +63,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": get_resource_folder_path(__name__) + "/model",
+            "model_dir": get_resource_folder_path(__name__) + "/models",
             "warehouse_dir": "test_working_dir/hive/warehouse",
         }
     )
@@ -82,7 +82,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": get_resource_folder_path(__name__) + "/model",
+            "model_dir": get_resource_folder_path(__name__) + "/models",
             "warehouse_dir": "test_working_dir/hive/warehouse",
         }
     )
@@ -106,7 +106,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": get_resource_folder_path(__name__) + "/model",
+            "model_dir": get_resource_folder_path(__name__) + "/models",
             "warehouse_dir": "test_working_dir/hive/warehouse",
         }
     )
@@ -125,7 +125,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": get_resource_folder_path(__name__) + "/model",
+            "model_dir": get_resource_folder_path(__name__) + "/models",
             "warehouse_dir": "test_working_dir/hive/warehouse",
             "custom_command_packages": [
                 "tests.resources.karadoc.common.observability.test_observability.custom_command_package"
@@ -147,7 +147,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": get_resource_folder_path(__name__) + "/model",
+            "model_dir": get_resource_folder_path(__name__) + "/models",
             "warehouse_dir": "test_working_dir/hive/warehouse",
             "observability.handler.dummy": {"type": "tests.resources.observability.handlers.dummy", "level": "info"},
         }
@@ -168,7 +168,7 @@ class TestObservability(TestCase):
     @mock_settings_for_test(
         {
             "enable_file_index_cache": False,
-            "model_dir": get_resource_folder_path(__name__) + "/model",
+            "model_dir": get_resource_folder_path(__name__) + "/models",
             "warehouse_dir": "test_working_dir/hive/warehouse",
             "observability.handler.dummy": {
                 "type": "does.not.exists",

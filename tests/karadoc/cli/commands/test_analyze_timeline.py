@@ -13,7 +13,7 @@ test_dir = "test_working_dir/analyze_timeline"
 @mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": get_resource_folder_path(__name__) + "/model",
+        "model_dir": get_resource_folder_path(__name__) + "/models",
         "analyze_timeline_dir": test_dir,
     }
 )

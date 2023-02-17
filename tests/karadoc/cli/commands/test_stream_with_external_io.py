@@ -21,7 +21,7 @@ from tests.karadoc.test_utils import get_resource_folder_path
 config_mock = mock_settings_for_test_class(
     {
         "enable_file_index_cache": False,
-        "model_dir": get_resource_folder_path(__name__) + "/model",
+        "model_dir": get_resource_folder_path(__name__) + "/models",
         "spark_stream_dir": "test_working_dir/spark/stream",
         "connection": {"dummy": {"type": "tests.resources.spark.connectors.dummy"}},
         "warehouse_dir": "test_working_dir/hive/warehouse",

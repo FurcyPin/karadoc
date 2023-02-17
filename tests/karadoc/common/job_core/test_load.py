@@ -8,7 +8,7 @@ from karadoc.spark.quality.quality_check_job import QualityCheckJob
 from karadoc.spark.stream.spark_stream_job import SparkStreamJob
 from tests.karadoc.test_utils import get_resource_folder_path
 
-model_dir = get_resource_folder_path(__name__) + "/model"
+model_dir = get_resource_folder_path(__name__) + "/models"
 
 
 class TestLoad(TestCase):
@@ -41,9 +41,9 @@ class TestLoad(TestCase):
 
     def test_load_action_files_with_same_name(self):
         """
-        Given two action files from different models
-        When loading the two files one after the other
-        Then the second file should not have remains from the first
+        GIVEN two action files from different models
+        WHEN loading the two files one after the other
+        THEN the second file should not have remains from the first
         (this is a bug that happened during unit test suites)
         """
         load_file(
@@ -77,7 +77,7 @@ class TestLoad(TestCase):
             )
         self.assertIn(
             "Found no file matching the path '**/test_schema.db/table_does_not_exist/POPULATE.py' "
-            "for the table test_schema.table_does_not_exist in the directory 'model'",
+            "for the table test_schema.table_does_not_exist in the directory 'models'",
             str(e.exception),
         )
 
@@ -94,6 +94,6 @@ class TestLoad(TestCase):
             )
         self.assertIn(
             "Found no file matching the path '**/test_schema.db/table_does_not_exist/POPULATE.py' "
-            "for the table test_schema.table_does_not_exist in the directory 'model'",
+            "for the table test_schema.table_does_not_exist in the directory 'models'",
             str(e.exception),
         )

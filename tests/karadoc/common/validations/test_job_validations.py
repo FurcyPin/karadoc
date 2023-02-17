@@ -20,7 +20,7 @@ class TestJobValidations(ValidationTestTemplate):
         - And the command fails
         """
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_wrong_job_type",
+            test_model_dir=f"{test_resource_dir}/models_wrong_job_type",
             expected_template=ValidationResult_JobLoadError,
             expected_return_code=ReturnCode.Error,
         )
@@ -33,7 +33,7 @@ class TestJobValidations(ValidationTestTemplate):
         - And the command fails
         """
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_unknown_input",
+            test_model_dir=f"{test_resource_dir}/models_unknown_input",
             expected_template=ValidationResult_UnknownInput,
             expected_return_code=ReturnCode.Error,
         )
@@ -46,7 +46,7 @@ class TestJobValidations(ValidationTestTemplate):
         - And the command fails
         """
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_invalid_output_partition",
+            test_model_dir=f"{test_resource_dir}/models_invalid_output_partition",
             expected_template=ValidationResult_InvalidOutputPartition,
             expected_return_code=ReturnCode.Error,
         )
@@ -59,7 +59,7 @@ class TestJobValidations(ValidationTestTemplate):
         - And the command fails
         """
         self.validation_test_template(
-            test_model_dir=f"{test_resource_dir}/model_secondary_key_without_primary_key",
+            test_model_dir=f"{test_resource_dir}/models_secondary_key_without_primary_key",
             expected_template=ValidationResult_SecondaryKeyWithoutPrimaryKey,
             expected_return_code=ReturnCode.Error,
         )
