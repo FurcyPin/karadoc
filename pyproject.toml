@@ -63,7 +63,7 @@ matplotlib = "~3.1.1"
 pandas = "1.1.5|1.4.3"
 numpy = "1.23.1"
 bigquery-frame = "~0.2.11"
-spark-frame = "^0.3.0"
+spark-frame = "^0.3.2"
 
 [tool.poetry.scripts]
 karadoc = 'karadoc.launcher:main'
