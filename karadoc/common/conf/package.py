@@ -36,7 +36,7 @@ def get_template_package_name() -> str:
 
 
 def get_warehouse_folder_location() -> str:
-    return dynaconf.settings.get("warehouse_dir", default="data/hive/warehouse")
+    return dynaconf.settings.get("warehouse_dir", default="data/warehouse")
 
 
 def get_analyze_timeline_dir_location() -> str:

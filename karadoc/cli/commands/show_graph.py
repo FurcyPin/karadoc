@@ -2,7 +2,7 @@ from argparse import ArgumentParser, Namespace
 from typing import TYPE_CHECKING
 
 from karadoc.common.commands.command import Command
-from karadoc.common.commands.options.tables_option import TablesOption
+from karadoc.common.commands.options.tables_option import ModelsOption
 from karadoc.common.graph import table_graph
 from karadoc.common.model import table_index
 from karadoc.common.validations import fail_if_results
@@ -23,7 +23,7 @@ class ShowGraphCommand(Command):
 
     @staticmethod
     def add_arguments(parser: ArgumentParser) -> None:
-        TablesOption.add_arguments(parser, required=False)
+        ModelsOption.add_arguments(parser, required=False)
         parser.add_argument(
             "-b",
             "--before",
@@ -78,11 +78,11 @@ class ShowGraphCommand(Command):
         graph = table_graph.build_graph(index)
 
         # When the --tables argument is omitted, we display the full graph
-        if args.tables == []:
+        if args.models == []:
             args.before = None
             args.after = None
-            args.tables = [table.full_name for table in index.values()]
-            args.tables = [table.full_name for table in index.values()]
+            args.models = [table.full_name for table in index.values()]
+            args.models = [table.full_name for table in index.values()]
 
         if args.reduce:
             graph = nx.transitive_reduction(graph)
@@ -97,7 +97,7 @@ class ShowGraphCommand(Command):
                 for input_name in table.populate.input_tables
             ]
 
-        graph_filters = table_graph.build_graph_filters(args.tables, args.before, args.after)
+        graph_filters = table_graph.build_graph_filters(args.models, args.before, args.after)
         graph = table_graph.get_filtered_subgraph(graph, graph_filters, ignored_edges)
 
         tables = [filter.node for filter in graph_filters]

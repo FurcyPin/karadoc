@@ -5,7 +5,7 @@ from karadoc.common import conf
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.dry_option import DryOption
 from karadoc.common.commands.options.read_from_option import ReadFromOption
-from karadoc.common.commands.options.tables_option import TablesOption
+from karadoc.common.commands.options.tables_option import ModelsOption
 from karadoc.common.commands.options.vars_option import VarsOption
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.utils import run_job_with_logging
@@ -58,7 +58,7 @@ class QualityCheckCommand(Command):
 
     @staticmethod
     def add_arguments(parser: ArgumentParser):
-        TablesOption.add_arguments(parser)
+        ModelsOption.add_arguments(parser)
         DryOption.add_arguments(parser)
         ReadFromOption.add_arguments(parser)
         VarsOption.add_arguments(parser)
@@ -110,7 +110,7 @@ class QualityCheckCommand(Command):
 
         vars_list = variables.expand_vars(args.vars)
 
-        for model_id in args.tables:
+        for model_id in args.models:
             for job_vars in vars_list:
                 return_code &= run_job_with_logging(
                     func=_run_quality_check_for_model,

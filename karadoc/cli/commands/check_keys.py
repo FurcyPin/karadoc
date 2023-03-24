@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, List, Tuple
 
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.read_from_option import ReadFromOption
-from karadoc.common.commands.options.tables_option import TablesOption
+from karadoc.common.commands.options.tables_option import ModelsOption
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.spark import init_job
 from karadoc.spark.batch.spark_batch_job import SparkBatchJob
@@ -141,7 +141,7 @@ class CheckKeysCommand(Command):
 
     @staticmethod
     def add_arguments(parser: ArgumentParser):
-        TablesOption.add_arguments(parser)
+        ModelsOption.add_arguments(parser)
         ReadFromOption.add_arguments(parser)
 
         parser.add_argument(
@@ -160,7 +160,7 @@ class CheckKeysCommand(Command):
     def do_command(args) -> ReturnCode:
         from karadoc.spark.batch.exec import load_populate
 
-        for table in args.tables:
+        for table in args.models:
             job = load_populate(table)
             init_job(job=job, raw_args=args.raw_args)
             if args.remote_env is not None:

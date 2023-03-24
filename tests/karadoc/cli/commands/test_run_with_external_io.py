@@ -50,7 +50,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         with mock.patch(
             "tests.resources.spark.connectors.dummy.DummyConnector.read", side_effect=connector_read, autospec=True
         ) as mock_read, mock.patch("karadoc.cli.commands.run.inspect_df", side_effect=inspect_df) as mock_inspect_df:
-            karadoc.cli.run_command("run --tables test_schema.external_input")
+            karadoc.cli.run_command("run --models test_schema.external_input")
 
         mock_read.assert_called_once_with(Anything, {"connection": "dummy"})
         mock_inspect_df.assert_called_once()
@@ -68,7 +68,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write") as mock_write, mock.patch(
             "karadoc.cli.commands.run.inspect_df", side_effect=inspect_df
         ) as mock_inspect_df:
-            karadoc.cli.run_command("run --tables test_schema.external_output")
+            karadoc.cli.run_command("run --models test_schema.external_output")
 
         # First call on first output
         call_1 = call(self.actual_df, {"connection": "dummy", "test": "1"})
@@ -100,7 +100,7 @@ class TestRunWithExternalIO(unittest.TestCase):
             self.assertTrue(job.write_external_output_called)
 
         expected_df = MockDataFrame({MockRow(id=0), MockRow(id=1)})
-        command = "run --tables test_schema.external_input_output_overwrite"
+        command = "run --models test_schema.external_input_output_overwrite"
         self.__template_test_with_external_input_output_overwrite(expected_df, inspect_job, command)
 
     def test_run_with_external_inputs_outputs_overwrite(self):
@@ -111,7 +111,7 @@ class TestRunWithExternalIO(unittest.TestCase):
             self.assertTrue(job.write_external_outputs_called)
 
         expected_df = MockDataFrame({MockRow(id=0), MockRow(id=1)})
-        command = "run --tables test_schema.external_inputs_outputs_overwrite"
+        command = "run --models test_schema.external_inputs_outputs_overwrite"
         self.__template_test_with_external_input_output_overwrite(expected_df, inspect_job, command)
 
     def test_run_with_external_input_output_overwrite_with_limit_external_inputs(self):
@@ -122,7 +122,7 @@ class TestRunWithExternalIO(unittest.TestCase):
             self.assertTrue(job.write_external_output_called)
 
         expected_df = MockDataFrame({MockRow(id=0)})
-        command = "run --limit-external-inputs 1 --tables test_schema.external_input_output_overwrite"
+        command = "run --limit-external-inputs 1 --models test_schema.external_input_output_overwrite"
         self.__template_test_with_external_input_output_overwrite(expected_df, inspect_job, command)
 
     def test_run_with_external_inputs_outputs_overwrite_with_limit_external_inputs(self):
@@ -133,7 +133,7 @@ class TestRunWithExternalIO(unittest.TestCase):
             self.assertTrue(job.write_external_outputs_called)
 
         expected_df = MockDataFrame({MockRow(id=0)})
-        command = "run --limit-external-inputs 1 --tables test_schema.external_inputs_outputs_overwrite"
+        command = "run --limit-external-inputs 1 --models test_schema.external_inputs_outputs_overwrite"
         self.__template_test_with_external_input_output_overwrite(expected_df, inspect_job, command)
 
     def test_run_with_wrong_signatures(self):
@@ -154,7 +154,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         ]
         for table in tables:
             with self.assertRaises(ActionFileLoadingError) as cm:
-                karadoc.cli.run_command("run --dry --tables " + table)
+                karadoc.cli.run_command("run --dry --models " + table)
             the_exception = cm.exception
             self.assertIn(f"Could not load POPULATE.py file for table {table}", str(the_exception))
 
@@ -171,7 +171,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         with mock.patch(
             "tests.resources.spark.connectors.dummy.DummyConnector.read", side_effect=connector_read, autospec=True
         ) as mock_read, mock.patch("karadoc.cli.commands.run.inspect_df", side_effect=inspect_df) as mock_inspect_df:
-            karadoc.cli.run_command("run --tables test_schema.load_external_inputs_as_view")
+            karadoc.cli.run_command("run --models test_schema.load_external_inputs_as_view")
 
         mock_read.assert_called_once_with(Anything, {"connection": "dummy"})
         mock_inspect_df.assert_called_once()
@@ -192,7 +192,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         with mock.patch(
             "tests.resources.spark.connectors.dummy.DummyConnector.read", side_effect=connector_read, autospec=True
         ) as mock_read, mock.patch("karadoc.cli.commands.run.inspect_df", side_effect=inspect_df) as mock_inspect_df:
-            karadoc.cli.run_command("run --validate --tables test_schema.validate")
+            karadoc.cli.run_command("run --validate --models test_schema.validate")
 
         mock_read.assert_called_once_with(Anything, {"connection": "dummy"})
         mock_inspect_df.assert_called_once()
@@ -219,7 +219,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         """
         get_env.return_value = "test"
         with self.assertRaises(Exception) as cm:
-            karadoc.cli.run_command("run --tables test_schema.disabled_conn")
+            karadoc.cli.run_command("run --models test_schema.disabled_conn")
         the_exception = cm.exception
         self.assertIn("The connection test.connection.dummy is disabled", str(the_exception))
 
@@ -230,7 +230,7 @@ class TestRunWithExternalIO(unittest.TestCase):
         When we run it without the no_export option
         Then it should write external outputs
         """
-        karadoc.cli.run_command("run --tables test_schema.external_output")
+        karadoc.cli.run_command("run --models test_schema.external_output")
         mock_write_external_outputs.assert_called()
 
     @mock.patch("karadoc.spark.job_core.has_external_outputs.HasExternalOutputs.write_external_outputs")
@@ -240,5 +240,5 @@ class TestRunWithExternalIO(unittest.TestCase):
         When we run it with the no_export option
         Then it should not write external outputs
         """
-        karadoc.cli.run_command("run --no-export --tables test_schema.external_output")
+        karadoc.cli.run_command("run --no-export --models test_schema.external_output")
         mock_write_external_outputs.assert_not_called()

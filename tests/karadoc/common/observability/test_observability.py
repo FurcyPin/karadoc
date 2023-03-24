@@ -74,7 +74,7 @@ class TestObservability(TestCase):
         THEN only ConsoleEvents should be displayed on stdout and only their message should be displayed
         """
         with captured_output() as (out, err):
-            run_command("run --dry --tables test_schema.test_table")
+            run_command("run --dry --models test_schema.test_table")
         self.assertNotIn("[USER_OUTPUT]", out.getvalue())
         self.assertNotIn("ConsoleEvent(", out.getvalue())
         self.assertEqual("", err.getvalue())
@@ -93,12 +93,12 @@ class TestObservability(TestCase):
         THEN only ConsoleEvents should be displayed on stdout and only their message should be displayed
         """
         with captured_output() as (out, err):
-            run_command("-v run --dry --tables test_schema.test_table")
+            run_command("-v run --dry --models test_schema.test_table")
         self.assertIn("[USER_OUTPUT]", out.getvalue())
         self.assertIn("ConsoleEvent(", out.getvalue())
 
         with captured_output() as (out, err):
-            run_command("--verbose run --dry --tables test_schema.test_table")
+            run_command("--verbose run --dry --models test_schema.test_table")
         self.assertIn("[USER_OUTPUT]", out.getvalue())
         self.assertIn("ConsoleEvent(", out.getvalue())
         self.assertEqual("", err.getvalue())
@@ -117,7 +117,7 @@ class TestObservability(TestCase):
         THEN the error message and stack trace should be displayed exactly once.
         """
         with captured_output() as (out, err), self.assertRaises(ActionFileLoadingError):
-            run_command("run --tables test_schema.test_fail")
+            run_command("run --models test_schema.test_fail")
         self.assertIn("Traceback", out.getvalue())
         self._assertInOnce("ActionFileLoadingError:", out.getvalue())
         self.assertEqual("", err.getvalue())
@@ -159,7 +159,7 @@ class TestObservability(TestCase):
         THEN the custom handler should handle log events
         """
         with captured_output() as (out, err):
-            run_command("run --tables test_schema.test_table --dry")
+            run_command("run --models test_schema.test_table --dry")
         self._assertInOnce("DummyLogHandler: LogEvent[(]message='Command started:", out.getvalue())
         self._assertInOnce("DummyLogHandler: LogEvent[(]message='Command ended:", out.getvalue())
         self.assertEqual(2, len(logging.root.handlers))
@@ -182,7 +182,7 @@ class TestObservability(TestCase):
         THEN an error message, along with the stack trace and error message should be displayed.
         """
         with captured_output() as (out, err), self.assertRaises(ModuleNotFoundError):
-            run_command("run --tables test_schema.test_table --dry")
+            run_command("run --models test_schema.test_table --dry")
         self._assertInOnce("ERROR: An exception occurred before logging could be configured", err.getvalue())
         self._assertInOnce("Traceback", err.getvalue())
         self._assertInOnce("ModuleNotFoundError: No module named 'does'", err.getvalue())
@@ -201,7 +201,7 @@ class TestObservability(TestCase):
             out,
             err,
         ), self.assertRaises(ValueError):
-            run_command("run --tables test_schema.test_table --dry")
+            run_command("run --models test_schema.test_table --dry")
         mock_get.assert_called()
         self._assertInOnce("ERROR: An exception occurred before logging could be configured", err.getvalue())
         self._assertInOnce("Traceback", err.getvalue())

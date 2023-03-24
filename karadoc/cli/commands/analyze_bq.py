@@ -1,7 +1,7 @@
 from argparse import ArgumentParser, Namespace
 
 from karadoc.common.commands.command import Command
-from karadoc.common.commands.options.tables_option import TablesOption
+from karadoc.common.commands.options.tables_option import ModelsOption
 
 
 class AnalyzeBQCommand(Command):
@@ -9,7 +9,7 @@ class AnalyzeBQCommand(Command):
 
     @staticmethod
     def add_arguments(parser: ArgumentParser) -> None:
-        TablesOption.add_arguments(parser)
+        ModelsOption.add_arguments(parser)
         parser.add_argument(
             "--output",
             dest="output",
@@ -32,4 +32,4 @@ class AnalyzeBQCommand(Command):
         # We do this import here to avoid loading unnecessary libraries when running other commands
         from karadoc.biqguery.analyze import analyze_tables
 
-        analyze_tables(args.tables, args.env, args.output)
+        analyze_tables(args.models, args.env, args.output)

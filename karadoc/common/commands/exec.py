@@ -1,6 +1,6 @@
 import glob
 import importlib
-import logging as _logging
+import logging
 import pkgutil
 import re
 import sys
@@ -26,7 +26,7 @@ COMMAND_ROOT_DEPTH = 0
 BUILTIN_COMMAND_PACKAGE = "karadoc.cli.commands"
 modules = glob.glob(dirname(__file__) + "/*.py")
 __all__ = [basename(f)[:-3] for f in modules if isfile(f) and not f.endswith("__init__.py")]
-LOG = _logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 def __full_name(command: Type[Command]) -> str:
@@ -216,8 +216,8 @@ def run_command(command_line: Union[str, Sequence[str]]) -> ReturnCode:
 
     Examples:
 
-    - run_command("run --tables s.t1 s.t2")
-    - run_command(["run", "--tables", "s.t1", "s.t2"])
+    - run_command("run --models s.t1 s.t2")
+    - run_command(["run", "--models", "s.t1", "s.t2"])
 
     :param command_line: A plain string command, or a list of arguments
     """

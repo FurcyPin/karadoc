@@ -26,8 +26,8 @@ class TestAnalyzeTimeline(unittest.TestCase):
         shutil.rmtree(test_dir, ignore_errors=True)
 
     def test_dry_run(self):
-        karadoc.cli.run_command("analyze_timeline --dry --tables test_schema.test_table")
+        karadoc.cli.run_command("analyze_timeline --dry --models test_schema.test_table")
 
     def test_run(self):
-        karadoc.cli.run_command("analyze_timeline --tables test_schema.test_table")
+        karadoc.cli.run_command("analyze_timeline --models test_schema.test_table")
         self.assertTrue(Path(test_dir + "/test_schema.test_table.png").is_file())

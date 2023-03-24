@@ -20,8 +20,8 @@ DEBUG = False
 )
 class TestCheckKeys(unittest.TestCase):
     def _generic_test(self, table_name, expected_results: MockDataFrame):
-        karadoc.cli.run_command(f"run --tables {table_name}")
-        return_code = karadoc.cli.run_command(f"check_keys --tables {table_name} --output-alert quality_check.alerts")
+        karadoc.cli.run_command(f"run --models {table_name}")
+        return_code = karadoc.cli.run_command(f"check_keys --models {table_name} --output-alert quality_check.alerts")
         self.assertEqual(ReturnCode.Success, return_code)
         df = read_spark_table("quality_check.alerts").where("alert.status = 'ko'")
         if DEBUG:
@@ -45,9 +45,9 @@ class TestCheckKeys(unittest.TestCase):
         self._generic_test(table_name, expected_results)
 
     def test_run_without_indicated_keys(self):
-        karadoc.cli.run_command("run --tables test_schema.table_without_keys")
+        karadoc.cli.run_command("run --models test_schema.table_without_keys")
         with self.assertRaises(Exception) as cm:
-            karadoc.cli.run_command("check_keys --tables test_schema.table_without_keys")
+            karadoc.cli.run_command("check_keys --models test_schema.table_without_keys")
         the_exception = cm.exception
         self.assertEqual("ERROR: No key is defined for the job", str(the_exception))
 

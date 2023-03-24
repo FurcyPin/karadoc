@@ -36,7 +36,7 @@ class TestShowGraph(unittest.TestCase):
     def test_show_graph_without_tables_option(self):
         """
         GIVEN a model
-        WHEN we run the "show_graph" command without specifying the --tables option
+        WHEN we run the "show_graph" command without specifying the --models option
         THEN all tables should be displayed
         """
 
@@ -71,5 +71,5 @@ class TestShowGraph(unittest.TestCase):
             assert sorted(list(graph.edges)) == [("schema.t0", "schema.t1"), ("schema.t1", "schema.t12")]
 
         with mock.patch("karadoc.cli.commands.show_graph.inspect", side_effect=inspect) as mocked_inspect:
-            karadoc.cli.run_command("show_graph --tables +schema.t1+")
+            karadoc.cli.run_command("show_graph --models +schema.t1+")
         mocked_inspect.assert_called_once()

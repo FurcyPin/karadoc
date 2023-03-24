@@ -30,7 +30,7 @@ class TestNonReg(unittest.TestCase):
         When we perform a nonreg on it without modifying the model
         Then the nonreg_result is_ok attribute should be True
         """
-        karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
+        karadoc.cli.run_command("run --models test_schema.table_from_var --vars var=a")
 
         def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertTrue(nonreg_results.is_ok)
@@ -38,7 +38,7 @@ class TestNonReg(unittest.TestCase):
         with captured_output() as (out, err), mock.patch(
             "karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results
         ):
-            karadoc.cli.run_command("nonreg --tables test_schema.table_from_var --vars var=a")
+            karadoc.cli.run_command("nonreg --models test_schema.table_from_var --vars var=a")
             self.assertIn("diff ok!", out.getvalue())
 
     def test_nonreg_not_ok(self):
@@ -46,7 +46,7 @@ class TestNonReg(unittest.TestCase):
         When we perform a nonreg after modifying the model
         Then the nonreg_result is_ok attribute should be False
         """
-        karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
+        karadoc.cli.run_command("run --models test_schema.table_from_var --vars var=a")
 
         def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertFalse(nonreg_results.is_ok)
@@ -54,7 +54,7 @@ class TestNonReg(unittest.TestCase):
         with captured_output() as (out, err), mock.patch(
             "karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results
         ):
-            karadoc.cli.run_command("nonreg --tables test_schema.table_from_var --vars var=b")
+            karadoc.cli.run_command("nonreg --models test_schema.table_from_var --vars var=b")
             self.assertIn("Row count ok", out.getvalue())
             self.assertIn("diff NOT ok", out.getvalue())
             self.assertIn("1 (100.0%) rows have changed", out.getvalue())
@@ -68,7 +68,7 @@ class TestNonReg(unittest.TestCase):
         When we perform a nonreg after modifying the model with the --show-examples option
         Then the nonreg will print examples on the output
         """
-        karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
+        karadoc.cli.run_command("run --models test_schema.table_from_var --vars var=a")
 
         def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertFalse(nonreg_results.is_ok)
@@ -76,7 +76,7 @@ class TestNonReg(unittest.TestCase):
         with captured_output() as (out, err), mock.patch(
             "karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results
         ):
-            karadoc.cli.run_command("nonreg --tables test_schema.table_from_var --vars var=b --show-examples")
+            karadoc.cli.run_command("nonreg --models test_schema.table_from_var --vars var=b --show-examples")
             self.assertIn("Row count ok", out.getvalue())
             self.assertIn("diff NOT ok", out.getvalue())
             self.assertIn("Detailed examples :", out.getvalue())
@@ -88,8 +88,8 @@ class TestNonReg(unittest.TestCase):
         When run a nonreg after modifying the model
         Then table data shouldn't change
         """
-        karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
-        karadoc.cli.run_command("nonreg --tables test_schema.table_from_var --vars var=b --join-cols id")
+        karadoc.cli.run_command("run --models test_schema.table_from_var --vars var=a")
+        karadoc.cli.run_command("nonreg --models test_schema.table_from_var --vars var=b --join-cols id")
 
         from karadoc.spark.batch.spark_batch_job import SparkBatchJob
 
@@ -105,25 +105,25 @@ class TestNonReg(unittest.TestCase):
         Then nonreg should only be executed on that single partition
         """
 
-        karadoc.cli.run_command("run --tables test_schema.partitioned_table --vars day=2018-02-01")
-        karadoc.cli.run_command("run --tables test_schema.partitioned_table --vars day=2018-02-02")
+        karadoc.cli.run_command("run --models test_schema.partitioned_table --vars day=2018-02-01")
+        karadoc.cli.run_command("run --models test_schema.partitioned_table --vars day=2018-02-02")
 
         def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertTrue(nonreg_results.is_ok)
 
         with mock.patch("karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results):
-            karadoc.cli.run_command("nonreg --tables test_schema.partitioned_table --vars day=2018-02-02")
+            karadoc.cli.run_command("nonreg --models test_schema.partitioned_table --vars day=2018-02-02")
 
     def test_nonreg_compare_with_on_partitionned_table(self):
         """Given a partitioned table test_schema.partitioned_table
         When we perform a nonreg with compare-with argument on a single partition
         Then nonreg should only be executed on that single partition
         """
-        karadoc.cli.run_command("run --tables test_schema.partitioned_table --vars day=2018-02-01")
-        karadoc.cli.run_command("run --tables test_schema.partitioned_table --vars day=2018-02-02")
+        karadoc.cli.run_command("run --models test_schema.partitioned_table --vars day=2018-02-01")
+        karadoc.cli.run_command("run --models test_schema.partitioned_table --vars day=2018-02-02")
 
         with mock_settings_for_test({"warehouse_dir": "test_working_dir/hive/warehouse_2"}):
-            karadoc.cli.run_command("run --tables test_schema.partitioned_table --vars day=2018-02-02")
+            karadoc.cli.run_command("run --models test_schema.partitioned_table --vars day=2018-02-02")
 
         def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertTrue(nonreg_results.is_ok)
@@ -136,7 +136,7 @@ class TestNonReg(unittest.TestCase):
             "karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results
         ), mock_settings_for_test(test_env_conf):
             karadoc.cli.run_command(
-                "nonreg --tables test_schema.partitioned_table --vars day=2018-02-02 " "--compare-with remote"
+                "nonreg --models test_schema.partitioned_table --vars day=2018-02-02 " "--compare-with remote"
             )
 
     def test_nonreg_with_primary_key(self):
@@ -144,10 +144,10 @@ class TestNonReg(unittest.TestCase):
         When we perform a nonreg on it without modifying the model
         Then the nonreg_result is_ok attribute should be True
         """
-        karadoc.cli.run_command("run --tables test_schema.table_from_var --vars var=a")
+        karadoc.cli.run_command("run --models test_schema.table_from_var --vars var=a")
 
         def inspect_nonreg_results(nonreg_results: DiffResult):
             self.assertFalse(nonreg_results.is_ok)
 
         with mock.patch("karadoc.cli.commands.nonreg.inspect_nonreg_results", side_effect=inspect_nonreg_results):
-            karadoc.cli.run_command("nonreg --tables test_schema.table_from_var --vars var=b")
+            karadoc.cli.run_command("nonreg --models test_schema.table_from_var --vars var=b")

@@ -5,7 +5,7 @@ from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.dry_option import DryOption
 from karadoc.common.commands.options.read_from_option import ReadFromOption
 from karadoc.common.commands.options.spark_conf_option import SparkConfOption
-from karadoc.common.commands.options.tables_option import TablesOption
+from karadoc.common.commands.options.tables_option import ModelsOption
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.spark import init_job
 from karadoc.common.job_core.load import load_runnable_action_file
@@ -33,7 +33,7 @@ class AnalyzeTimelineCommand(Command):
 
     @staticmethod
     def add_arguments(parser: ArgumentParser):
-        TablesOption.add_arguments(parser)
+        ModelsOption.add_arguments(parser)
         DryOption.add_arguments(parser)
         ReadFromOption.add_arguments(parser)
         SparkConfOption.add_arguments(parser)
@@ -42,7 +42,7 @@ class AnalyzeTimelineCommand(Command):
     def do_command(args: Namespace) -> ReturnCode:
         from karadoc.spark.analyze import draw_timeline_analysis, timeline_analysis
 
-        for table in args.tables:
+        for table in args.models:
             print("starting analyzing table %s" % table)
             data_location = get_data_location(table)
             print(data_location)

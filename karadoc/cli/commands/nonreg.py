@@ -7,7 +7,7 @@ from karadoc.common.commands.help import LineBreakHelpFormatter
 from karadoc.common.commands.options.dry_option import DryOption
 from karadoc.common.commands.options.read_from_option import ReadFromOption
 from karadoc.common.commands.options.spark_conf_option import SparkConfOption
-from karadoc.common.commands.options.tables_option import TablesOption
+from karadoc.common.commands.options.tables_option import ModelsOption
 from karadoc.common.commands.options.vars_option import VarsOption
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.spark import init_job
@@ -130,7 +130,7 @@ class NonregCommand(Command):
     def add_arguments(parser: ArgumentParser):
         parser.formatter_class = LineBreakHelpFormatter
 
-        TablesOption.add_arguments(parser)
+        ModelsOption.add_arguments(parser)
         DryOption.add_arguments(parser)
         ReadFromOption.add_arguments(parser)
         VarsOption.add_arguments(parser)
@@ -180,7 +180,7 @@ class NonregCommand(Command):
 
         return_code = ReturnCode.Success
         vars_list = variables.expand_vars(args.vars)
-        for table in args.tables:
+        for table in args.models:
             for vars in vars_list:
                 print("\nStarting table %s" % table)
                 job: SparkBatchJob = load_runnable_populate(table, vars)

@@ -29,7 +29,7 @@ class TestRun(unittest.TestCase):
         - Then the run command shall fail.
         """
         with self.assertRaises(Exception) as cm:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_str")
+            karadoc.cli.run_command("run --dry --models test_schema.var_str")
         the_exception = cm.exception
         self.assertEqual("The following variables are required and missing: [var_str]", str(the_exception.__cause__))
 
@@ -45,7 +45,7 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {"var_str": "2018-02-02"})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("run --dry --vars var_str=2018-02-02 --tables test_schema.var_str")
+            karadoc.cli.run_command("run --dry --vars var_str=2018-02-02 --models test_schema.var_str")
         check_mock.assert_called_once()
 
     def test_run_with_var_bool(self):
@@ -60,7 +60,7 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {"var_bool": True})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("run --dry --vars var_bool=True --tables test_schema.var_bool")
+            karadoc.cli.run_command("run --dry --vars var_bool=True --models test_schema.var_bool")
         check_mock.assert_called_once()
 
     def test_run_with_var_int(self):
@@ -75,7 +75,7 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {"var_int": 1})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("run --dry --vars var_int=1 --tables test_schema.var_int")
+            karadoc.cli.run_command("run --dry --vars var_int=1 --models test_schema.var_int")
         check_mock.assert_called_once()
 
     def test_run_with_var_float(self):
@@ -90,7 +90,7 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {"var_float": 1.0})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("run --dry --vars var_float=1. --tables test_schema.var_float")
+            karadoc.cli.run_command("run --dry --vars var_float=1. --models test_schema.var_float")
         check_mock.assert_called_once()
 
     def test_run_with_bad_var_key_type(self):
@@ -100,7 +100,7 @@ class TestRun(unittest.TestCase):
         - Then an exception should be raised
         """
         with self.assertRaises(ActionFileLoadingError) as cm:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_bad_key_type")
+            karadoc.cli.run_command("run --dry --models test_schema.var_bad_key_type")
         the_exception = cm.exception
         self.assertIn("Could not load POPULATE.py file for table test_schema.var_bad_key_type", str(the_exception))
         self.assertEqual(
@@ -119,7 +119,7 @@ class TestRun(unittest.TestCase):
         - Then an exception should be raised
         """
         with self.assertRaises(ActionFileLoadingError) as cm:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_bad_value_type")
+            karadoc.cli.run_command("run --dry --models test_schema.var_bad_value_type")
         the_exception = cm.exception
         self.assertIn("Could not load POPULATE.py file for table test_schema.var_bad_value_type", str(the_exception))
         self.assertEqual(
@@ -135,7 +135,7 @@ class TestRun(unittest.TestCase):
         - Then an exception should be raised
         """
         with self.assertRaises(ActionFileLoadingError) as cm:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_bad_value_type")
+            karadoc.cli.run_command("run --dry --models test_schema.var_bad_value_type")
         the_exception = cm.exception
         self.assertIn("Could not load POPULATE.py file for table test_schema.var_bad_value_type", str(the_exception))
         self.assertEqual(
@@ -156,7 +156,7 @@ class TestRun(unittest.TestCase):
         - Then an exception should be raised
         """
         with self.assertRaises(ActionFileLoadingError) as cm:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_bad_key_type")
+            karadoc.cli.run_command("run --dry --models test_schema.var_bad_key_type")
         the_exception = cm.exception
         self.assertIn("Could not load POPULATE.py file for table test_schema.var_bad_key_type", str(the_exception))
         self.assertEqual(
@@ -181,7 +181,7 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {"var_str": "2018-01-01"})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_str")
+            karadoc.cli.run_command("run --dry --models test_schema.var_str")
         check_mock.assert_called_once()
 
     @mock_settings_for_test(
@@ -202,7 +202,7 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {"var_bool": False})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_bool")
+            karadoc.cli.run_command("run --dry --models test_schema.var_bool")
         check_mock.assert_called_once()
 
     @mock_settings_for_test(
@@ -223,7 +223,7 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {"var_int": 0})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_int")
+            karadoc.cli.run_command("run --dry --models test_schema.var_int")
         check_mock.assert_called_once()
 
     @mock_settings_for_test(
@@ -244,7 +244,7 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {"var_float": 0.0})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_float")
+            karadoc.cli.run_command("run --dry --models test_schema.var_float")
         check_mock.assert_called_once()
 
     @mock_settings_for_test(
@@ -260,14 +260,14 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {"var_str": "2018-02-02"})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job_1) as check_mock_1:
-            karadoc.cli.run_command("run --dry --vars var_str=2018-02-02 --tables test_schema.var_str")
+            karadoc.cli.run_command("run --dry --vars var_str=2018-02-02 --models test_schema.var_str")
         check_mock_1.assert_called_once()
 
         def inspect_job_2(job):
             self.assertEqual(job.vars, {"var_str": "2018-01-01"})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job_2) as check_mock_2:
-            karadoc.cli.run_command("run --dry --tables test_schema.var_str")
+            karadoc.cli.run_command("run --dry --models test_schema.var_str")
         check_mock_2.assert_called_once()
 
     def test_run_with_undeclared_vars(self):
@@ -278,5 +278,5 @@ class TestRun(unittest.TestCase):
             self.assertEqual(job.vars, {})
 
         with mock.patch("karadoc.cli.commands.run.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("run --dry --vars day=2018-02-02 --tables test_schema.no_var")
+            karadoc.cli.run_command("run --dry --vars day=2018-02-02 --models test_schema.no_var")
         check_mock.assert_called_once()
