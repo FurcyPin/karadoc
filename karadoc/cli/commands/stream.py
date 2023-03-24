@@ -6,7 +6,7 @@ from karadoc.common import conf
 from karadoc.common.commands.command import Command
 from karadoc.common.commands.options.dry_option import DryOption
 from karadoc.common.commands.options.spark_conf_option import SparkConfOption
-from karadoc.common.commands.options.tables_option import TablesOption
+from karadoc.common.commands.options.tables_option import ModelsOption
 from karadoc.common.commands.options.vars_option import VarsOption
 from karadoc.common.commands.return_code import ReturnCode
 from karadoc.common.commands.utils import run_job_with_logging
@@ -48,8 +48,8 @@ def _run_job(args: Namespace, job: SparkStreamJob, **kwargs):
     if args.batch_interval is not None and args.streaming_mode != "microbatch":
         print("ERROR: batch_interval is only specified when streaming mode is microbatch")
         sys.exit(1)
-    if len(args.tables) > 1:
-        print("ERROR: multiple tables are not supported for the moment for --tables argument")
+    if len(args.models) > 1:
+        print("ERROR: multiple models are not supported for the moment in streaming mode")
         sys.exit(1)
     if not args.dry:
         job.init(app_name=args.raw_args, spark_conf=args.spark_conf)
@@ -66,7 +66,7 @@ class StreamCommand(Command):
 
     @staticmethod
     def add_arguments(parser: ArgumentParser):
-        TablesOption.add_arguments(parser)
+        ModelsOption.add_arguments(parser)
         DryOption.add_arguments(parser)
         VarsOption.add_arguments(parser)
         SparkConfOption.add_arguments(parser)
@@ -100,7 +100,7 @@ class StreamCommand(Command):
         vars_list = variables.expand_vars(args.vars)
         jobs = [
             (table, job_vars, load_runnable_stream_file(table, job_vars))
-            for table in args.tables
+            for table in args.models
             for job_vars in vars_list
         ]
         for model_id, job_vars, job in jobs:

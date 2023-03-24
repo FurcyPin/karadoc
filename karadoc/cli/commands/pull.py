@@ -90,5 +90,5 @@ class PullCommand(Command):
 
     @staticmethod
     def do_command(args: Namespace):
-        for table in args.tables:
+        for table in args.models:
             pull_table(args, table)

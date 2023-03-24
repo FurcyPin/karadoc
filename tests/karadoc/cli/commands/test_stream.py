@@ -46,17 +46,17 @@ class TestStream(unittest.TestCase):
         shutil.rmtree(conf.get_spark_stream_tmp_dir(), ignore_errors=True)
 
     def test_dry_stream(self):
-        karadoc.cli.run_command("stream --dry --tables test_schema.test_table --streaming-mode once")
+        karadoc.cli.run_command("stream --dry --models test_schema.test_table --streaming-mode once")
 
     def test_stream(self):
-        karadoc.cli.run_command("stream --tables test_schema.test_table --streaming-mode once")
+        karadoc.cli.run_command("stream --models test_schema.test_table --streaming-mode once")
 
     def test_stream_with_missing_vars(self):
         """When running in distributed mode, if a var is declared in the STREAM.py file and is not
         passed in the arguments, the stream command shall fail.
         """
         with self.assertRaises(Exception) as cm:
-            karadoc.cli.run_command("stream --dry --tables test_schema.var_table --streaming-mode once")
+            karadoc.cli.run_command("stream --dry --models test_schema.var_table --streaming-mode once")
         the_exception = cm.exception
         self.assertEqual("The following variables are required and missing: [day]", str(the_exception.__cause__))
 
@@ -74,7 +74,7 @@ class TestStream(unittest.TestCase):
             self.assertEqual(job.vars, {"day": "2018-01-01"})
 
         with mock.patch("karadoc.cli.commands.stream.inspect_job", side_effect=inspect_job) as check_mock:
-            karadoc.cli.run_command("stream --dry --tables test_schema.var_table --streaming-mode once")
+            karadoc.cli.run_command("stream --dry --models test_schema.var_table --streaming-mode once")
         check_mock.assert_called_once()
 
     def test_run_with_vars(self):
@@ -83,14 +83,14 @@ class TestStream(unittest.TestCase):
 
         with mock.patch("karadoc.cli.commands.stream.inspect_job", side_effect=inspect_job) as check_mock:
             karadoc.cli.run_command(
-                "stream --dry --vars day=2018-02-02 --tables test_schema.var_table --streaming-mode once"
+                "stream --dry --vars day=2018-02-02 --models test_schema.var_table --streaming-mode once"
             )
         check_mock.assert_called_once()
 
     def test_stream_with_job_init_invalid(self):
         """When running a STREAM that calls job.init(), it should raise an exception."""
         with self.assertRaises(ActionFileLoadingError) as cm:
-            karadoc.cli.run_command("stream --tables test_schema.job_init_invalid --streaming-mode once")
+            karadoc.cli.run_command("stream --models test_schema.job_init_invalid --streaming-mode once")
         the_exception = cm.exception
         self.assertIn("Could not load STREAM.py file for table test_schema.job_init_invalid", str(the_exception))
         self.assertEqual(
@@ -104,7 +104,7 @@ class TestStream(unittest.TestCase):
         When we run it without the no_export option
         Then it should write the external output
         """
-        karadoc.cli.run_command("stream --tables test_schema.table_test_no_export_option --streaming-mode once")
+        karadoc.cli.run_command("stream --models test_schema.table_test_no_export_option --streaming-mode once")
         mock_write_external_output.assert_called()
 
     @mock.patch("karadoc.spark.job_core.has_stream_external_output.HasStreamExternalOutput.write_external_output")
@@ -115,7 +115,7 @@ class TestStream(unittest.TestCase):
         Then it should not write the external output
         """
         karadoc.cli.run_command(
-            "stream --no-export --tables test_schema.table_test_no_export_option --streaming-mode once"
+            "stream --no-export --models test_schema.table_test_no_export_option --streaming-mode once"
         )
         mock_write_external_output.assert_not_called()
 
@@ -126,7 +126,7 @@ class TestStream(unittest.TestCase):
         Then an exception should be raised
         """
         with self.assertRaises(Exception) as cm:
-            karadoc.cli.run_command("stream --tables test_schema.disabled_job --streaming-mode once")
+            karadoc.cli.run_command("stream --models test_schema.disabled_job --streaming-mode once")
         the_exception = cm.exception
         self.assertEqual("The job has been disabled, it should not be launched", str(the_exception))
 
@@ -137,17 +137,17 @@ class TestStream(unittest.TestCase):
         Then a warning should be raised
         """
         with captured_output() as (out, err):
-            karadoc.cli.run_command("stream --dry --tables test_schema.disabled_job --streaming-mode once")
+            karadoc.cli.run_command("stream --dry --models test_schema.disabled_job --streaming-mode once")
         self.assertIn("WARN: The job has been disabled, it should not be launched", out.getvalue())
 
     def test_stream_with_partitions(self):
         karadoc.cli.run_command(
-            "stream --vars day=2018-02-02 --tables test_schema.partition_table " "--streaming-mode once"
+            "stream --vars day=2018-02-02 --models test_schema.partition_table " "--streaming-mode once"
         )
         self.assertTrue(Path(f"{warehouse_dir}/test_schema.db/partition_table/day=2018-02-02").is_dir())
 
     def test_stream_with_dynamic_partitions(self):
-        karadoc.cli.run_command("stream --tables test_schema.dynamic_partition_only --streaming-mode once")
+        karadoc.cli.run_command("stream --models test_schema.dynamic_partition_only --streaming-mode once")
         self.assertTrue(Path(f"{warehouse_dir}/test_schema.db/dynamic_partition_only/day=2018-01-01/BU=US").is_dir())
         self.assertTrue(Path(f"{warehouse_dir}/test_schema.db/dynamic_partition_only/day=2018-01-01/BU=FR").is_dir())
         self.assertTrue(Path(f"{warehouse_dir}/test_schema.db/dynamic_partition_only/day=2018-01-02/BU=US").is_dir())
@@ -156,7 +156,7 @@ class TestStream(unittest.TestCase):
 
     def test_stream_with_static_and_dynamic_partitions(self):
         karadoc.cli.run_command(
-            "stream --vars day=2018-01-01 --tables test_schema.static_and_dynamic_partition " "--streaming-mode once"
+            "stream --vars day=2018-01-01 --models test_schema.static_and_dynamic_partition " "--streaming-mode once"
         )
         self.assertTrue(
             Path(f"{warehouse_dir}/test_schema.db/static_and_dynamic_partition/day=2018-01-01/BU=US/test=2").is_dir()
@@ -169,34 +169,34 @@ class TestStream(unittest.TestCase):
         )
 
     def test_run_with_write_options_set_in_populate(self):
-        karadoc.cli.run_command("stream --tables test_schema.with_write_options " "--streaming-mode once")
+        karadoc.cli.run_command("stream --models test_schema.with_write_options " "--streaming-mode once")
         output_files = os.listdir(f"{warehouse_dir}/test_schema.db/with_write_options/")
         is_gzip = any([x.endswith("gz") for x in output_files])
         self.assertTrue(is_gzip)
 
     @mock_settings_for_test({"spark.write.options.json": {"compression": "gzip"}})
     def test_run_write_options_in_settings(self):
-        karadoc.cli.run_command("stream --tables test_schema.without_write_options " "--streaming-mode once")
+        karadoc.cli.run_command("stream --models test_schema.without_write_options " "--streaming-mode once")
         output_files = os.listdir(f"{warehouse_dir}/test_schema.db/without_write_options/")
         is_gzip = any([x.endswith("gz") for x in output_files])
         self.assertTrue(is_gzip)
 
     @mock_settings_for_test({"spark.write.options.json": {"compression": "gzip"}})
     def test_run_write_options_in_settings_and_populate(self):
-        karadoc.cli.run_command("stream --tables test_schema.with_write_options " "--streaming-mode once")
+        karadoc.cli.run_command("stream --models test_schema.with_write_options " "--streaming-mode once")
         output_files = os.listdir(f"{warehouse_dir}/test_schema.db/with_write_options/")
         is_gzip = any([x.endswith("gz") for x in output_files])
         self.assertTrue(is_gzip)
 
     @mock_settings_for_test({"spark.write.stream.default_format": "json"})
     def test_write_with_default_output_format(self):
-        karadoc.cli.run_command("stream --tables test_schema.test_table " "--streaming-mode once")
+        karadoc.cli.run_command("stream --models test_schema.test_table " "--streaming-mode once")
         output_files = os.listdir(f"{warehouse_dir}/test_schema.db/test_table/")
         is_gzip = any([x.endswith("json") for x in output_files])
         self.assertTrue(is_gzip)
 
     def test_run_without_write_options(self):
-        karadoc.cli.run_command("stream --tables test_schema.without_write_options " "--streaming-mode once")
+        karadoc.cli.run_command("stream --models test_schema.without_write_options " "--streaming-mode once")
         output_files = os.listdir(f"{warehouse_dir}/test_schema.db/without_write_options/")
         is_gzip = any([x.endswith("gz") for x in output_files])
         self.assertFalse(is_gzip)
@@ -204,7 +204,7 @@ class TestStream(unittest.TestCase):
     def test_run_with_static_and_dynamic_partition_invalid(self):
         with self.assertRaises(Exception) as cm:
             karadoc.cli.run_command(
-                "stream --vars day=2018-01-01 --tables test_schema.static_and_dynamic_partition_invalid "
+                "stream --vars day=2018-01-01 --models test_schema.static_and_dynamic_partition_invalid "
                 "--streaming-mode once"
             )
         the_exception = cm.exception
@@ -212,12 +212,12 @@ class TestStream(unittest.TestCase):
 
     @mock_settings_for_test({"spark.conf.spark.sql.streaming.schemaInference": "true"})
     def test_stream_inputs(self):
-        karadoc.cli.run_command("stream --tables test_schema.test_table --streaming-mode once")
+        karadoc.cli.run_command("stream --models test_schema.test_table --streaming-mode once")
 
         def inspect_df(df: DataFrame):
             df_processed = stream_to_batch(df)
             self.assertEqual(MockDataFrame([MockRow(value="this is a test DataFrame")]), df_processed)
 
         with mock.patch("karadoc.cli.commands.stream.inspect_df", side_effect=inspect_df) as mock_inspect_df:
-            karadoc.cli.run_command("stream --tables test_schema.test_table_inputs --streaming-mode once")
+            karadoc.cli.run_command("stream --models test_schema.test_table_inputs --streaming-mode once")
         mock_inspect_df.assert_called_once()

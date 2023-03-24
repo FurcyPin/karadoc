@@ -24,7 +24,7 @@ class TestRun(unittest.TestCase):
         shutil.rmtree("test_working_dir/hive", ignore_errors=True)
 
     def test_run_with_template(self):
-        karadoc.cli.run_command("run --tables test_template.test_template")
+        karadoc.cli.run_command("run --models test_template.test_template")
         self.assertTrue(Path("test_working_dir/hive/warehouse/test_template.db/test_template").is_dir())
 
     def test_run_with_template_job_attributes(self):

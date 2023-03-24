@@ -104,6 +104,6 @@ class TestLauncher(unittest.TestCase):
         - Then it should exit with return code 1
         """
         with self.assertRaises(SystemExit) as e:
-            launcher.main(["run", "--dry", "--tables", "unknown_table"])
+            launcher.main(["run", "--dry", "--models", "unknown_table"])
         mock_print_help.assert_not_called()
         self.assertEqual((1,), e.exception.args)

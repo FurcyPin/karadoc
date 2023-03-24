@@ -65,4 +65,4 @@ class TestFindTablesToDisable(unittest.TestCase):
     def show_graph_for_test_case(self):
         """Method use to visualize the test case. Rename this method by prefixing it with 'test' then run it
         to visualize the graph of the corresponding test case"""
-        karadoc.cli.run_command("show_graph -a -b --tables dead.D3 alive.A3")
+        karadoc.cli.run_command("show_graph -a -b --models dead.D3 alive.A3")

@@ -38,11 +38,11 @@ def test_autocompletion():
     assert "--help" in completions
 
 
-def test_autocompletion_tables_option():
+def test_autocompletion_models_option():
     """This test performs end-to-end testing, but for some reason coverage data is not recorded"""
-    assert simulate_autocomplete("run --tables ") == ["schema_1.", "schema_2."]
-    assert simulate_autocomplete("run --tables sc") == ["schema_1.", "schema_2."]
-    assert simulate_autocomplete("run --tables schema_1") == ["schema_1."]
-    assert simulate_autocomplete("run --tables schema_1.") == ["schema_1.table_1", "schema_1.table_2"]
-    assert simulate_autocomplete("run --tables schema_1.ta") == ["schema_1.table_1", "schema_1.table_2"]
-    assert simulate_autocomplete("run --tables schema_1.table_1") == ["schema_1.table_1"]
+    assert simulate_autocomplete("run --models ") == ["schema_1.", "schema_2."]
+    assert simulate_autocomplete("run --models sc") == ["schema_1.", "schema_2."]
+    assert simulate_autocomplete("run --models schema_1") == ["schema_1."]
+    assert simulate_autocomplete("run --models schema_1.") == ["schema_1.table_1", "schema_1.table_2"]
+    assert simulate_autocomplete("run --models schema_1.ta") == ["schema_1.table_1", "schema_1.table_2"]
+    assert simulate_autocomplete("run --models schema_1.table_1") == ["schema_1.table_1"]

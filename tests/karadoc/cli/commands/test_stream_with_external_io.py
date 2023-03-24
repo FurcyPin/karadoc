@@ -52,7 +52,7 @@ class TestStreamWithExternalIO(PySparkTest):
             self.assertEqual(MockDataFrame([MockRow(a="a")]), stream_to_batch(df))
 
         with mock.patch("karadoc.cli.commands.stream.inspect_df", side_effect=inspect_df) as mock_inspect_df:
-            karadoc.cli.run_command("stream --tables test_schema.external_input --streaming-mode once")
+            karadoc.cli.run_command("stream --models test_schema.external_input --streaming-mode once")
         mock_inspect_df.assert_called_once()
 
     def test_stream_with_external_input_read_stream_called_once(self):
@@ -70,7 +70,7 @@ class TestStreamWithExternalIO(PySparkTest):
             side_effect=connector_read,
             autospec=True,
         ) as mock_read, mock.patch("karadoc.cli.commands.stream.inspect_df", side_effect=inspect_df) as mock_inspect_df:
-            karadoc.cli.run_command("stream --tables test_schema.external_input --streaming-mode once")
+            karadoc.cli.run_command("stream --models test_schema.external_input --streaming-mode once")
 
         mock_read.assert_called_once_with(Anything, {"connection": "dummy", "table": "external_input_test_table"})
         mock_inspect_df.assert_called_once()
@@ -88,7 +88,7 @@ class TestStreamWithExternalIO(PySparkTest):
         with mock.patch("tests.resources.spark.connectors.dummy.DummyConnector.write_stream") as mock_write, mock.patch(
             "karadoc.cli.commands.stream.inspect_df", side_effect=inspect_df
         ) as mock_inspect_df:
-            karadoc.cli.run_command("stream --tables test_schema.external_output --streaming-mode once")
+            karadoc.cli.run_command("stream --models test_schema.external_output --streaming-mode once")
 
         mock_write.assert_called_once()
         mock_inspect_df.assert_called_once()
@@ -109,7 +109,7 @@ class TestStreamWithExternalIO(PySparkTest):
         ) as mock_inspect_job, mock.patch(
             "karadoc.cli.commands.stream.inspect_df", side_effect=inspect_df
         ) as mock_inspect_df:
-            karadoc.cli.run_command("stream --tables test_schema.external_input_output_overwrite --streaming-mode once")
+            karadoc.cli.run_command("stream --models test_schema.external_input_output_overwrite --streaming-mode once")
 
         mock_inspect_df.assert_called_once()
         mock_inspect_job.assert_called_once()
@@ -131,7 +131,7 @@ class TestStreamWithExternalIO(PySparkTest):
             "karadoc.cli.commands.stream.inspect_df", side_effect=inspect_df
         ) as mock_inspect_df:
             karadoc.cli.run_command(
-                "stream --tables test_schema.external_inputs_output_overwrite --streaming-mode once"
+                "stream --models test_schema.external_inputs_output_overwrite --streaming-mode once"
             )
 
         mock_inspect_df.assert_called_once()
@@ -152,7 +152,7 @@ class TestStreamWithExternalIO(PySparkTest):
         ]
         for table in tables:
             with self.assertRaises(ActionFileLoadingError) as cm:
-                karadoc.cli.run_command("stream --dry --tables " + table)
+                karadoc.cli.run_command("stream --dry --models " + table)
             the_exception = cm.exception
             self.assertIn(f"Could not load STREAM.py file for table {table}", str(the_exception))
             self.assertIn("should have the following signature", str(the_exception.__cause__))
@@ -162,12 +162,12 @@ class TestStreamWithExternalIO(PySparkTest):
         output_tmp_path = os.path.join(conf.get_spark_stream_tmp_dir(), "test_external_output.table")
 
         karadoc.cli.run_command(
-            "stream --tables test_schema.checkpointing_activated --streaming-mode once --vars var=1"
+            "stream --models test_schema.checkpointing_activated --streaming-mode once --vars var=1"
         )
         stream_output = self.spark.read.load(output_tmp_path)
         self.assertEqual(MockDataFrame([MockRow(a=1)]), stream_output)
         karadoc.cli.run_command(
-            "stream --tables test_schema.checkpointing_activated --streaming-mode once --vars var=2"
+            "stream --models test_schema.checkpointing_activated --streaming-mode once --vars var=2"
         )
         stream_output = self.spark.read.load(output_tmp_path)
         self.assertEqual(MockDataFrame([MockRow(a=1), MockRow(a=2)]), stream_output)
@@ -192,6 +192,6 @@ class TestStreamWithExternalIO(PySparkTest):
         """
         get_env.return_value = "test"
         with self.assertRaises(Exception) as cm:
-            karadoc.cli.run_command("stream --tables test_schema.disabled_conn")
+            karadoc.cli.run_command("stream --models test_schema.disabled_conn")
         the_exception = cm.exception
         self.assertIn("The connection test.connection.dummy is disabled", str(the_exception))
