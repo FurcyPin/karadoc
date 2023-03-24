@@ -1,3 +1,0 @@
-global-include */version.txt
-include requirements/*
-include README.md
