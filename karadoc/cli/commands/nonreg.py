@@ -65,11 +65,11 @@ def _check_nonreg(job: SparkBatchJob, df: "DataFrame", args):
         df = df.drop(*ignore_cols)
 
     df.localCheckpoint()
-    nonreg = DataframeComparator(
-        DiffFormatOptions(nb_diffed_rows=args.nonreg_nb_rows, left_df_alias="before", right_df_alias="after")
+    nonreg_result = DataframeComparator().compare_df(previous_df, df, join_cols=join_cols)
+    diff_format_options = DiffFormatOptions(
+        nb_diffed_rows=args.nonreg_nb_rows, left_df_alias="before", right_df_alias="after"
     )
-    nonreg_result = nonreg.compare_df(previous_df, df, join_cols=join_cols)
-    nonreg_result.display(show_examples=args.show_examples)
+    nonreg_result.display(show_examples=args.show_examples, diff_format_options=diff_format_options)
     inspect_nonreg_results(nonreg_result)
     if nonreg_result.is_ok:
         return ReturnCode.Success
