@@ -1,38 +1,29 @@
 from typing import TYPE_CHECKING, Dict, Union
 
 from karadoc.common.conf import CONNECTION_GROUP
+from karadoc.common.job_core.package import OptionalMethod
 from karadoc.spark.job_core.has_spark import HasSpark
 
 if TYPE_CHECKING:
     from pyspark.sql import DataFrame
 
 
-def _read_stream_external_input_signature_check():
-    from pyspark.sql import DataFrame
-
-    def read_stream_external_input(source: Dict) -> DataFrame:
-        """Empty method used to check the signature of the equivalent method defined in the POPULATE files"""
-        pass
-
-    return read_stream_external_input
-
-
-def _read_stream_external_inputs_signature_check():
-    from pyspark.sql import DataFrame
-
-    def read_stream_external_inputs() -> Dict[str, DataFrame]:
-        """Empty method used to check the signature of the equivalent method defined in the POPULATE files"""
-        pass
-
-    return read_stream_external_inputs
-
-
 class HasStreamExternalInputs(HasSpark):
     def __init__(self) -> None:
         super().__init__()
+
         # Private attributes
-        self.__read_external_input = None
-        self.__read_external_inputs = None
+        from pyspark.sql import DataFrame
+
+        def read_external_input(source: Dict) -> DataFrame:
+            connector = self.get_input_connector(source)
+            return connector.read_stream(source)
+
+        def read_external_inputs() -> Dict[str, DataFrame]:
+            return {source_alias: self.read_external_input(source_alias) for source_alias in self.external_inputs}
+
+        self.__read_external_input = OptionalMethod(read_external_input)
+        self.__read_external_inputs = OptionalMethod(read_external_inputs)
 
         # Attributes that the user may change in action files
         self.external_inputs: Dict[str, dict] = {}
@@ -51,13 +42,6 @@ class HasStreamExternalInputs(HasSpark):
         }
         """
 
-    def _read_external_input_default(self, source: Dict) -> "DataFrame":
-        connector = self.get_input_connector(source)
-        return connector.read_stream(source)
-
-    def _read_external_inputs_default(self) -> Dict[str, "DataFrame"]:
-        return {source_alias: self.read_external_input(source_alias) for source_alias in self.external_inputs}
-
     def read_external_input(self, source_alias: str) -> "DataFrame":
         """Reads a given external input and returns it as a Spark DataFrame
 
@@ -65,20 +49,14 @@ class HasStreamExternalInputs(HasSpark):
         :return: a DataFrame
         """
         source = self.external_inputs[source_alias]
-        if self.__read_external_input is None:
-            return self._read_external_input_default(source)
-        else:
-            return self.__read_external_input(source)
+        return self.__read_external_input(source)
 
     def read_external_inputs(self) -> Dict[str, "DataFrame"]:
         """Reads all declared external inputs and returns them as Spark DataFrames
 
         :return: a Dict[alias, DataFrame]
         """
-        if self.__read_external_inputs is None:
-            return self._read_external_inputs_default()
-        else:
-            return self.__read_external_inputs()
+        return self.__read_external_inputs()
 
     def load_external_inputs_as_views(self, cache=False):
         for alias in self.external_inputs:

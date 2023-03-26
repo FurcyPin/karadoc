@@ -40,4 +40,4 @@ class TestStreamExec(TestCase):
         job.init()
         with self.assertRaises(Exception) as cm:
             job.stream()
-        self.assertIn("use load_runnable_action_file instead", str(cm.exception))
+        self.assertIn("Use load_runnable_action_file instead", str(cm.exception))

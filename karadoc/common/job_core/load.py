@@ -4,36 +4,17 @@ import sys
 from os.path import isfile, splitext
 from pathlib import Path
 from types import FunctionType, ModuleType
-from typing import Any, Callable, Dict, Optional, Type, TypeVar, Union, cast
+from typing import Dict, Optional, Type, TypeVar, Union, cast
 
 from karadoc.common import conf
 from karadoc.common.exceptions import ActionFileLoadingError, ForbiddenActionError
-from karadoc.common.job_core.has_before_after import HasBeforeAfter
 from karadoc.common.job_core.has_vars import HasVars
 from karadoc.common.job_core.job_base import JobBase
+from karadoc.common.job_core.package import ActionFileMethod
 from karadoc.common.model import file_index
 from karadoc.common.table_utils import parse_table_name
 from karadoc.common.utils.assert_utils import assert_true
-from karadoc.spark.job_core.has_external_inputs import (
-    HasExternalInputs,
-    _read_external_input_signature_check,
-    _read_external_inputs_signature_check,
-)
-from karadoc.spark.job_core.has_external_outputs import (
-    HasExternalOutputs,
-    _write_external_output_signature_check,
-    _write_external_outputs_signature_check,
-)
 from karadoc.spark.job_core.has_spark import HasSpark
-from karadoc.spark.job_core.has_stream_external_inputs import (
-    HasStreamExternalInputs,
-    _read_stream_external_input_signature_check,
-    _read_stream_external_inputs_signature_check,
-)
-from karadoc.spark.job_core.has_stream_external_output import (
-    HasStreamExternalOutput,
-    _write_stream_external_output_signature_check,
-)
 from karadoc.spark.quality.checks import Alert, Metric
 
 Job = TypeVar("Job", JobBase, JobBase)
@@ -58,15 +39,7 @@ def load_non_runnable_action_file(full_table_name: str, job_type: Type[Job]) -> 
     passed_vars = None
 
     job = __load_action_file(job_type, full_table_name, passed_vars)
-    if job._run_method_name is not None:
-
-        def empty_run() -> None:
-            raise ForbiddenActionError(
-                f"The {job._run_method_name} method of a job returned by the `load_non_runnable_action_file` "
-                "method cannot be called. use load_runnable_action_file instead."
-            )
-
-        job.__setattr__(job._run_method_name, empty_run)
+    __unset_all_action_methods(job)
     return job
 
 
@@ -175,46 +148,35 @@ def __load_module_file(module_name: str, module_path: Union[str, Path]) -> Modul
     return mod
 
 
-def __load_optional_method(
-    mod: ModuleType, tpe: type, method_name: str, signature_method: Optional[Callable[..., Any]] = None
-) -> None:
-    if hasattr(mod, method_name):
-        private_method_name = "_" + tpe.__name__ + "__" + method_name
-        if signature_method is not None:
-            signature_method = cast(FunctionType, signature_method)
-            check_method_signatures(method_name, getattr(mod, method_name), signature_method)
-        setattr(mod.job, private_method_name, getattr(mod, method_name))
+def __load_action_methods(mod: ModuleType) -> None:
+    action_methods = [method for name, method in inspect.getmembers(mod.job) if isinstance(method, ActionFileMethod)]
+    for method in action_methods:
+        if hasattr(mod, method.name):
+            method_defined_in_file = getattr(mod, method.name)
+            method.set_method(method_defined_in_file)
 
 
-def _set_spark_batch_job(mod: ModuleType) -> None:
-    from karadoc.spark.batch.spark_batch_job import SparkBatchJob
+def __unset_action_method(job: Job, method: ActionFileMethod):
+    def empty_run() -> None:
+        raise ForbiddenActionError(
+            f"The {method.name} method of a job returned by the `load_non_runnable_action_file` "
+            "method cannot be called. Use load_runnable_action_file instead."
+        )
 
-    if isinstance(mod.job, SparkBatchJob):
-        mod.job.run = mod.run
-
-
-def _set_spark_stream_job(mod: ModuleType) -> None:
-    from karadoc.spark.stream.spark_stream_job import SparkStreamJob
-
-    if isinstance(mod.job, SparkStreamJob):
-        mod.job.stream = mod.stream
+    job.__setattr__(method.name, empty_run)
 
 
-def _set_analyze_job(mod: ModuleType) -> None:
-    from karadoc.spark.analyze.analyze_job import AnalyzeJob
+def __unset_all_action_methods(job: Job) -> None:
+    action_methods = [method for name, method in inspect.getmembers(job) if isinstance(method, ActionFileMethod)]
 
-    if isinstance(mod.job, AnalyzeJob):
-        mod.job.analyze = mod.analyze
+    for method in action_methods:
+        __unset_action_method(job, method)
 
 
 def _set_quality_check_job(mod: ModuleType) -> None:
     from karadoc.spark.quality.quality_check_job import QualityCheckJob
 
     if isinstance(mod.job, QualityCheckJob):
-        __load_optional_method(mod, HasBeforeAfter, "before_all")
-        __load_optional_method(mod, HasBeforeAfter, "after_all")
-        __load_optional_method(mod, HasBeforeAfter, "before_each")
-        __load_optional_method(mod, HasBeforeAfter, "after_each")
         found_alerts = [obj for name, obj in inspect.getmembers(mod) if isinstance(obj, Alert)]
         for alert in found_alerts:
             mod.job.add_alert(alert)
@@ -223,48 +185,9 @@ def _set_quality_check_job(mod: ModuleType) -> None:
             mod.job.add_metric(metric)
 
 
-def _set_has_external_inputs(mod: ModuleType) -> None:
-    if isinstance(mod.job, HasExternalInputs):
-        __load_optional_method(mod, HasExternalInputs, "read_external_input", _read_external_input_signature_check())
-        __load_optional_method(mod, HasExternalInputs, "read_external_inputs", _read_external_inputs_signature_check())
-
-
-def _set_has_stream_external_inputs(mod: ModuleType) -> None:
-    if isinstance(mod.job, HasStreamExternalInputs):
-        __load_optional_method(
-            mod, HasStreamExternalInputs, "read_external_input", _read_stream_external_input_signature_check()
-        )
-        __load_optional_method(
-            mod, HasStreamExternalInputs, "read_external_inputs", _read_stream_external_inputs_signature_check()
-        )
-
-
-def _set_has_external_outputs(mod: ModuleType) -> None:
-    if isinstance(mod.job, HasExternalOutputs):
-        __load_optional_method(
-            mod, HasExternalOutputs, "write_external_output", _write_external_output_signature_check()
-        )
-        __load_optional_method(
-            mod, HasExternalOutputs, "write_external_outputs", _write_external_outputs_signature_check()
-        )
-
-
-def _set_has_stream_external_output(mod: ModuleType) -> None:
-    if isinstance(mod.job, HasStreamExternalOutput):
-        __load_optional_method(
-            mod, HasStreamExternalOutput, "write_external_output", _write_stream_external_output_signature_check()
-        )
-
-
 def __set_job_from_module(mod: ModuleType) -> JobBase:
-    _set_spark_batch_job(mod)
-    _set_spark_stream_job(mod)
-    _set_analyze_job(mod)
+    __load_action_methods(mod)
     _set_quality_check_job(mod)
-    _set_has_external_inputs(mod)
-    _set_has_stream_external_inputs(mod)
-    _set_has_external_outputs(mod)
-    _set_has_stream_external_output(mod)
     return mod.job
 
 
@@ -281,8 +204,8 @@ def __load_file(
     file_path: str,
     file_type: str,
     passed_vars: Optional[Dict[str, str]],
-    job_type: type,
-) -> JobBase:
+    job_type: Type[Job],
+) -> Job:
     full_table_name = schema_name + "." + table_name
     if file_path is None:
         raise ActionFileLoadingError(f"Could not find a {file_type} for table {full_table_name}")

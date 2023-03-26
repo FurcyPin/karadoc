@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING, Callable, Dict, Optional, Union
+from typing import TYPE_CHECKING, Dict, Optional, Union
 
 from karadoc.common.conf import CONNECTION_GROUP
+from karadoc.common.job_core.package import OptionalMethod
 from karadoc.spark.job_core.has_spark import HasSpark
 from karadoc.spark.spark_connector import SparkConnector
 
@@ -8,34 +9,22 @@ if TYPE_CHECKING:
     from pyspark.sql import DataFrame
 
 
-def _read_external_input_signature_check():
-    from pyspark.sql import DataFrame
-
-    def read_external_input(source: Dict) -> DataFrame:
-        """Empty method used to check the signature of the equivalent method defined in the POPULATE files"""
-        pass
-
-    return read_external_input
-
-
-def _read_external_inputs_signature_check():
-    from pyspark.sql import DataFrame
-
-    def read_external_inputs() -> Dict[str, DataFrame]:
-        """Empty method used to check the signature of the equivalent method defined in the POPULATE files"""
-        pass
-
-    return read_external_inputs
-
-
 class HasExternalInputs(HasSpark):
     def __init__(self) -> None:
         super().__init__()
+
         # Private attributes
-        self.__read_external_input: Optional[Callable] = None
-        """Stores the optional override of the read_external_input method by the user"""
-        self.__read_external_inputs: Optional[Callable] = None
-        """Stores the optional override of the read_external_inputs method by the user"""
+        from pyspark.sql import DataFrame
+
+        def read_external_input(source: Dict) -> DataFrame:
+            connector = self.get_input_connector(source)
+            return connector.read(source)
+
+        def read_external_inputs() -> Dict[str, DataFrame]:
+            return {source_alias: self.read_external_input(source_alias) for source_alias in self.external_inputs}
+
+        self.__read_external_input = OptionalMethod(read_external_input)
+        self.__read_external_inputs = OptionalMethod(read_external_inputs)
 
         self._limit_external_inputs: Optional[int] = None
         """When set, limits the size of every external input DataFrame to this number of row
@@ -58,26 +47,14 @@ class HasExternalInputs(HasSpark):
         }
         """
 
-    def _read_external_input_default(self, source: Dict) -> "DataFrame":
-        connector = self.get_input_connector(source)
-        return connector.read(source)
-
-    def _read_external_inputs_default(self) -> Dict[str, "DataFrame"]:
-        return {source_alias: self.read_external_input(source_alias) for source_alias in self.external_inputs}
-
     def read_external_input(self, source_alias: str) -> "DataFrame":
         """Reads a given external input and returns it as a Spark DataFrame
 
-        :param source_alias: the alias of the source in job.external_inputs
+        :param source_alias: alias of a source declared in job.external_inputs
         :return: a DataFrame
         """
         source = self.external_inputs[source_alias]
-        external_input: "DataFrame"
-        if self.__read_external_input is None:
-            external_input = self._read_external_input_default(source)
-        else:
-            external_input = self.__read_external_input(source)
-
+        external_input = self.__read_external_input(source)
         if self._limit_external_inputs is not None:
             external_input = external_input.limit(self._limit_external_inputs)
         return external_input
@@ -88,10 +65,7 @@ class HasExternalInputs(HasSpark):
         :return: a Dict[alias, DataFrame]
         """
         external_inputs: Dict[str, "DataFrame"]
-        if self.__read_external_inputs is None:
-            external_inputs = self._read_external_inputs_default()
-        else:
-            external_inputs = self.__read_external_inputs()
+        external_inputs = self.__read_external_inputs()
 
         if self._limit_external_inputs is not None:
             for alias, df in external_inputs.items():
