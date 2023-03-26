@@ -4,6 +4,7 @@ from karadoc.common.job_core.package import OptionalMethod
 class HasBeforeAfter:
     def __init__(self):
         def default() -> None:
+            # We do nothing by default
             pass
 
         self.before_each = OptionalMethod(default, "before_each")

@@ -1,11 +1,8 @@
-from typing import Optional
-
 from karadoc.common.utils.assert_utils import assert_true
 
 
 class JobBase:
     _action_file_name_conf_key: str
-    _run_method_name: Optional[str] = None
     output: str
 
     @classmethod

@@ -1,5 +1,6 @@
 from karadoc.common.job_core.has_disable import HasDisable
 from karadoc.common.job_core.has_vars import HasVars
+from karadoc.common.job_core.package import RequiredMethod
 from karadoc.spark.job_core.has_spark import HasSpark
 from karadoc.spark.job_core.has_stream_external_inputs import HasStreamExternalInputs
 from karadoc.spark.job_core.has_stream_external_output import HasStreamExternalOutput
@@ -17,7 +18,6 @@ class SparkStreamJob(
     HasSpark,
 ):
     _action_file_name_conf_key = "spark.stream"
-    _run_method_name = "stream"
 
     def __init__(self) -> None:
         HasSpark.__init__(self)
@@ -27,4 +27,5 @@ class SparkStreamJob(
         HasStreamInputs.__init__(self)
         HasStreamOutput.__init__(self)
         HasDisable.__init__(self)
-        self.stream = None
+
+        self.stream = RequiredMethod("stream")

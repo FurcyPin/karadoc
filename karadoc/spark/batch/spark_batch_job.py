@@ -1,6 +1,7 @@
 from karadoc.common.job_core.has_disable import HasDisable
 from karadoc.common.job_core.has_keys import HasKeys
 from karadoc.common.job_core.has_vars import HasVars
+from karadoc.common.job_core.package import RequiredMethod
 from karadoc.spark.job_core.has_batch_inputs import HasBatchInputs
 from karadoc.spark.job_core.has_batch_output import HasBatchOutput
 from karadoc.spark.job_core.has_external_inputs import HasExternalInputs
@@ -19,7 +20,6 @@ class SparkBatchJob(
     HasSpark,
 ):
     _action_file_name_conf_key = "spark.batch"
-    _run_method_name = "run"
 
     def __init__(self) -> None:
         HasSpark.__init__(self)
@@ -31,4 +31,4 @@ class SparkBatchJob(
         HasKeys.__init__(self)
         HasDisable.__init__(self)
 
-        self.run = None
+        self.run = RequiredMethod("run")

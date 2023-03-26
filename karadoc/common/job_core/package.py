@@ -1,4 +1,5 @@
 import inspect
+from abc import ABC, abstractmethod
 from types import FunctionType
 from typing import Callable, Optional
 
@@ -36,7 +37,20 @@ def check_method_signatures(method_name: str, actual: Callable, expected: Callab
         )
 
 
-class OptionalMethod:
+class ActionFileMethod(ABC):
+    name: str
+
+    @abstractmethod
+    def __call__(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def set_method(self, func: Callable) -> None:
+        """Description of the command which will be displayed in the help"""
+        pass
+
+
+class OptionalMethod(ActionFileMethod):
     def __init__(self, default_func: Callable, name: Optional[str] = None):
         self.func = default_func
         if name is None:
@@ -46,6 +60,21 @@ class OptionalMethod:
     def __call__(self, *args, **kwargs):
         return self.func(*args, **kwargs)
 
-    def set_method(self, func: Callable):
+    def set_method(self, func: Callable) -> None:
         check_method_signatures(self.name, func, self.func)
+        self.func = func
+
+
+class RequiredMethod(ActionFileMethod):
+    def __init__(self, name: str, signature_func: Optional[Callable] = None):
+        self.name = name
+        self.signature_func = signature_func
+        self.func = None
+
+    def __call__(self, *args, **kwargs) -> None:
+        return self.func(*args, **kwargs)
+
+    def set_method(self, func: Callable) -> None:
+        if self.signature_func is not None:
+            check_method_signatures(self.name, func, self.signature_func)
         self.func = func

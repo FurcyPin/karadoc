@@ -24,7 +24,7 @@ class TestRunExec(TestCase):
         job.init()
         with self.assertRaises(Exception) as cm:
             job.run()
-        self.assertIn("use load_runnable_action_file instead", str(cm.exception))
+        self.assertIn("Use load_runnable_action_file instead", str(cm.exception))
 
     def test_load_runnable_populate_with_relative_imports(self):
         job = load_runnable_populate("test_schema.relative_import", {})

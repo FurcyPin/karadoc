@@ -48,7 +48,7 @@ class Command(ABC):
     @abstractmethod
     def do_command(args: Namespace) -> Optional[ReturnCode]:
         """Entrypoint of the command.
-        This method can return nothing if it's only way of failing is raising an Exception.
+        This method can return nothing if its only way of failing is raising an Exception.
         Commands that can fail without raising exceptions (e.g. a validation command) should return a ReturnCode.
         """
         pass

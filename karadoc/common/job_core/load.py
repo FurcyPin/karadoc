@@ -10,7 +10,7 @@ from karadoc.common import conf
 from karadoc.common.exceptions import ActionFileLoadingError, ForbiddenActionError
 from karadoc.common.job_core.has_vars import HasVars
 from karadoc.common.job_core.job_base import JobBase
-from karadoc.common.job_core.package import OptionalMethod
+from karadoc.common.job_core.package import ActionFileMethod
 from karadoc.common.model import file_index
 from karadoc.common.table_utils import parse_table_name
 from karadoc.common.utils.assert_utils import assert_true
@@ -39,15 +39,7 @@ def load_non_runnable_action_file(full_table_name: str, job_type: Type[Job]) -> 
     passed_vars = None
 
     job = __load_action_file(job_type, full_table_name, passed_vars)
-    if job._run_method_name is not None:
-
-        def empty_run() -> None:
-            raise ForbiddenActionError(
-                f"The {job._run_method_name} method of a job returned by the `load_non_runnable_action_file` "
-                "method cannot be called. use load_runnable_action_file instead."
-            )
-
-        job.__setattr__(job._run_method_name, empty_run)
+    __unset_all_action_methods(job)
     return job
 
 
@@ -156,37 +148,29 @@ def __load_module_file(module_name: str, module_path: Union[str, Path]) -> Modul
     return mod
 
 
-def __load_optional_method(mod: ModuleType, method: OptionalMethod) -> None:
-    if hasattr(mod, method.name):
-        method_defined_in_file = getattr(mod, method.name)
-        method.set_method(method_defined_in_file)
+def __load_action_methods(mod: ModuleType) -> None:
+    action_methods = [method for name, method in inspect.getmembers(mod.job) if isinstance(method, ActionFileMethod)]
+    for method in action_methods:
+        if hasattr(mod, method.name):
+            method_defined_in_file = getattr(mod, method.name)
+            method.set_method(method_defined_in_file)
 
 
-def __load_optional_methods(mod: ModuleType) -> None:
-    optional_methods = [method for name, method in inspect.getmembers(mod.job) if isinstance(method, OptionalMethod)]
-    for method in optional_methods:
-        __load_optional_method(mod, method)
+def __unset_action_method(job: Job, method: ActionFileMethod):
+    def empty_run() -> None:
+        raise ForbiddenActionError(
+            f"The {method.name} method of a job returned by the `load_non_runnable_action_file` "
+            "method cannot be called. Use load_runnable_action_file instead."
+        )
+
+    job.__setattr__(method.name, empty_run)
 
 
-def _set_spark_batch_job(mod: ModuleType) -> None:
-    from karadoc.spark.batch.spark_batch_job import SparkBatchJob
+def __unset_all_action_methods(job: Job) -> None:
+    action_methods = [method for name, method in inspect.getmembers(job) if isinstance(method, ActionFileMethod)]
 
-    if isinstance(mod.job, SparkBatchJob):
-        mod.job.run = mod.run
-
-
-def _set_spark_stream_job(mod: ModuleType) -> None:
-    from karadoc.spark.stream.spark_stream_job import SparkStreamJob
-
-    if isinstance(mod.job, SparkStreamJob):
-        mod.job.stream = mod.stream
-
-
-def _set_analyze_job(mod: ModuleType) -> None:
-    from karadoc.spark.analyze.analyze_job import AnalyzeJob
-
-    if isinstance(mod.job, AnalyzeJob):
-        mod.job.analyze = mod.analyze
+    for method in action_methods:
+        __unset_action_method(job, method)
 
 
 def _set_quality_check_job(mod: ModuleType) -> None:
@@ -202,10 +186,7 @@ def _set_quality_check_job(mod: ModuleType) -> None:
 
 
 def __set_job_from_module(mod: ModuleType) -> JobBase:
-    __load_optional_methods(mod)
-    _set_spark_batch_job(mod)
-    _set_spark_stream_job(mod)
-    _set_analyze_job(mod)
+    __load_action_methods(mod)
     _set_quality_check_job(mod)
     return mod.job
 
