@@ -5,7 +5,7 @@ job = Job()
 job.inputs = {"input_table": "test_schema.input_table"}
 
 
-def before_all():
+def before_all() -> None:
     job.load_inputs_as_views()
 
 
