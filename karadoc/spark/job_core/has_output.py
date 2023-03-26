@@ -20,6 +20,7 @@ def _output_partition_to_dynamic_partitions(partition) -> List[str]:
 
 class HasOutput(HasSpark, ABC):
     def __init__(self) -> None:
+        super().__init__()
         # Attributes that the user may change
         self.output_partition: List[Union[Tuple[str, ...], str]] = []
         self.output_mode = "OVERWRITE"
@@ -30,37 +31,13 @@ class HasOutput(HasSpark, ABC):
         self.output_warehouse_dir = conf.get_warehouse_folder_location()
 
     @property
-    def output_partitioning_type(self) -> Optional[str]:
-        """Indicates the type of partitioning of the output.
-        Possible return values are:
-        - None: no partitioning
-        - "static": dynamic partitioning
-        - "dynamic": static partitioning
-
-        :return: either None, "static", or "dynamic"
-        """
-        if self.output_partition:
-            if type(self.output_partition[0]) == str:
-                return "dynamic"
-            else:
-                return "static"
-        else:
-            return None
-
-    @property
     def output_partition_names(self) -> List[str]:
         """Returns the names of the output partitions.
         Works whether dynamic or static partitioning is used.
 
         :return: a list of string
         """
-        output_partitioning_type = self.output_partitioning_type
-        if output_partitioning_type == "dynamic":
-            return [p_name for p_name in self.output_partition]
-        elif output_partitioning_type == "static":
-            return [p_name for p_name, p_value in self.output_partition]
-        else:
-            return []
+        return [p[0] if isinstance(p, Tuple) else p for p in self.output_partition]
 
     @abstractmethod
     def write_table(self, df: "DataFrame"):
